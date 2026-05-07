@@ -1,0 +1,17 @@
+{
+  "name": "Amory Store | عموري ستور",
+  "short_name": "عموري ستور",
+  "description": "المتجر الأول في اليمن للساعات الفاخرة والعطور العالمية والأناقة الراقية.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

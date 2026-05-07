@@ -1,0 +1,258 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A luxury product available in the store (Watches, Perfumes, etc.)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number", "description": "Price before discount" },
+        "category": { "type": "string", "enum": ["ساعات رجالية", "ساعات نسائية", "عطور رجالية", "عطور نسائية", "إكسسوارات وهدايا"] },
+        "brand": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "stock": { "type": "number", "default": 0 },
+        "stockStatus": { "type": "string", "enum": ["in_stock", "out_of_stock"] },
+        "rating": { "type": "number", "default": 0 },
+        "reviewsCount": { "type": "number", "default": 0 },
+        "specs": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "description", "price", "category", "images", "stockStatus", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string" },
+        "userId": { "type": "string" },
+        "customerInfo": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "phone": { "type": "string" },
+            "governorate": { "type": "string" },
+            "address": { "type": "string" }
+          }
+        },
+        "items": { "type": "array", "items": { "type": "object" } },
+        "subtotal": { "type": "number" },
+        "shippingFee": { "type": "number" },
+        "total": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["الدفع عند الاستلام", "التحويل البنكي", "المحافظ الإلكترونية المحلية"] },
+        "paymentProofUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "processing", "shipped", "delivered", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "adminMessage": { "type": "string" }
+      },
+      "required": ["orderNumber", "customerInfo", "items", "total", "paymentMethod", "status", "createdAt"]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Store banners and promotions",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "link": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "imageUrl", "active"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user of the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "phone": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role", "uid"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "An article or blog post.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "author": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "active", "createdAt"]
+    },
+    "Package": {
+      "title": "Package",
+      "description": "A gift package.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "price": { "type": "number" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "subtitle", "price"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "A promotional offer or bundle.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "discount": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "description", "active"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "A service offered by the business.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "shortDesc": { "type": "string" },
+        "icon": { "type": "string" },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["title", "shortDesc", "icon", "active"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A user rating and review for a service or product.",
+      "type": "object",
+      "properties": {
+        "targetId": { "type": "string", "description": "The ID of the service or product being reviewed." },
+        "targetType": { "type": "string", "enum": ["service", "product"] },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["targetId", "targetType", "userId", "userName", "rating", "comment", "status", "createdAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Store discount coupons",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "discountPercentage": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "discountPercentage", "active", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A notification for a user or admin.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The target user ID. If null and isAdmin is true, it's for admins." },
+        "isAdmin": { "type": "boolean" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["success", "error", "info"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "link": { "type": "string" }
+      },
+      "required": ["message", "type", "read", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "General settings for the luxury store",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string" },
+        "storeDescription": { "type": "string" },
+        "logoUrl": { "type": "string" },
+        "location": { "type": "string" },
+        "mapEmbedUrl": { "type": "string" },
+        "workingHours": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "socialMedia": {
+          "type": "object",
+          "properties": {
+            "facebook": { "type": "string" },
+            "instagram": { "type": "string" },
+            "twitter": { "type": "string" },
+            "whatsapp": { "type": "string" },
+            "tiktok": { "type": "string" },
+            "linkedin": { "type": "string" }
+          }
+        },
+        "privacyPolicy": { "type": "string" },
+        "termsOfService": { "type": "string" },
+        "aboutUs": { "type": "string" },
+        "aboutUsImage": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "products": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Collection of all products in the store."
+    },
+    "orders": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Collection of customer orders."
+    },
+    "banners": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Collection of homepage banners/promotions."
+    },
+    "users": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Collection of users and their roles."
+    },
+    "articles": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "Collection of blog articles."
+    },
+    "packages": {
+      "schema": { "$ref": "#/entities/Package" },
+      "description": "Collection of gift packages."
+    },
+    "services": {
+      "schema": { "$ref": "#/entities/Service" },
+      "description": "Collection of services provided."
+    },
+    "offers": {
+      "schema": { "$ref": "#/entities/Offer" },
+      "description": "Collection of promotional offers and bundles."
+    },
+    "coupons": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Collection of store discount coupons."
+    },
+    "reviews": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Collection of user reviews and ratings."
+    },
+    "notifications": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Collection of notifications."
+    },
+    "siteSettings/general": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "General site settings document."
+    }
+  }
+}

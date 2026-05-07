@@ -1,0 +1,146 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (
+          request.auth.token.email == "openclaw@emtiazsky.com" ||
+          request.auth.token.email == "salmanalsabahi775@gmail.com" ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'admin')
+        );
+    }
+    
+    match /users/{userId} {
+      allow read: if isAdmin() || request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAdmin() || (request.auth.uid == userId && (!request.resource.data.keys().hasAny(['role']) || request.resource.data.role == resource.data.role));
+      allow delete: if isAdmin();
+    }
+    
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /orders/{orderId} {
+      // Allow read if admin, or if it's the user's own order. 
+      // Also allow read based on orderNumber for tracking (enforced via queries usually, but allowing reading by ID)
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid) || true;
+      allow create: if true;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /banners/{bannerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /articles/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /packages/{packageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /offers/{offerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+    
+    match /appointments/{appointmentId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /availability/{date} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /siteSettings/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /consultations/{consultationId} {
+      allow write: if true;
+      allow read: if true;
+    }
+    
+    match /notifications/{notificationId} {
+      allow write: if true;
+      allow read: if true;
+    }
+
+    match /stock_notifications/{notificationId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    match /contactMessages/{messageId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true; 
+    }
+    
+    match /carts/{cartId} {
+      allow read, update, delete: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+    
+    match /password_reset_requests/{requestId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    match /doctors/{doctorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /paymentMethods/{methodId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
+
