@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { setDoc, addDoc } from '../../lib/safeFirestore';
 import { db, auth } from '../../firebase';
 import { Loader2, Save, AlertCircle, CheckCircle2, Bell, ShieldAlert } from 'lucide-react';
 import { useOnlineStatus } from '../../hooks/useOnlineStatus';

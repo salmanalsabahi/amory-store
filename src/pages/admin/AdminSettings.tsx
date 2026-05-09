@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signOut } from 'firebase/auth';
-import { updateDoc, doc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
+import { updateDoc } from '../../lib/safeFirestore';
 import { auth, db } from '../../firebase';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 

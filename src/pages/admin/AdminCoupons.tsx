@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, getDocs, doc, serverTimestamp } from 'firebase/firestore';
+import { setDoc, deleteDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Plus, Trash2, Edit2, Ticket, Loader2, X } from 'lucide-react';
 import { handleFirestoreError, OperationType } from '../../lib/firebaseErrorHandler';

@@ -122,8 +122,12 @@ export function Navbar() {
           } else {
             setIsAdmin(false);
           }
-        } catch (error) {
-          console.error("Error checking role:", error);
+        } catch (error: any) {
+          if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+            console.warn("أنت غير متصل بالإنترنت. تعذر التحقق من الصلاحيات.");
+          } else {
+            console.error("Error checking role:", error);
+          }
           setIsAdmin(false);
         }
       } else {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, doc, deleteDoc, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc } from 'firebase/firestore';
+import { deleteDoc, addDoc, updateDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Loader2, Plus, Edit2, Trash2, X, Shield } from 'lucide-react';
 import { useOnlineStatus } from '../../hooks/useOnlineStatus';

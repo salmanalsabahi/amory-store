@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, doc, updateDoc, orderBy, getDocs, where, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, orderBy, getDocs, where, serverTimestamp } from 'firebase/firestore';
+import { updateDoc, addDoc } from '../../lib/safeFirestore';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { db, auth } from '../../firebase';
 import { Loader2, Check, X, Clock, User, Mail, Phone, Key, Send, AlertCircle } from 'lucide-react';

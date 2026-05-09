@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, doc, updateDoc, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, serverTimestamp, orderBy } from 'firebase/firestore';
+import { updateDoc, addDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Loader2, Check, X, Clock, User, Mail, Tag, Calendar, Send, MessageCircle } from 'lucide-react';
 

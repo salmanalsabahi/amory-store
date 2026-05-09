@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, getDocs, doc, serverTimestamp } from 'firebase/firestore';
+import { setDoc, deleteDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { FileText, Search, Trash2, Edit2, Plus, Loader2, Image as ImageIcon } from 'lucide-react';
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
+import { updateDoc, deleteDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Trash2, CheckCircle2, XCircle, Clock, Loader2, MessageSquare, Filter, ShieldCheck, ShieldAlert } from 'lucide-react';

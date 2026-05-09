@@ -37,7 +37,18 @@ export function ProductDetail() {
       if (!id) return;
       try {
         const docRef = doc(db, 'products', id);
-        const docSnap = await getDoc(docRef);
+        let docSnap;
+        try {
+          docSnap = await getDoc(docRef);
+        } catch (error: any) {
+          if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+             const { getDocFromCache } = await import('firebase/firestore');
+             docSnap = await getDocFromCache(docRef);
+          } else {
+             throw error;
+          }
+        }
+
         if (docSnap.exists()) {
           const data = docSnap.data();
           setProduct({ id: docSnap.id, ...data });
@@ -49,7 +60,18 @@ export function ProductDetail() {
             where('category', '==', data.category),
             limit(15)
           );
-          const snapshot = await getDocs(q);
+          let snapshot;
+          try {
+            snapshot = await getDocs(q);
+          } catch (error: any) {
+             if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+                const { getDocsFromCache } = await import('firebase/firestore');
+                snapshot = await getDocsFromCache(q);
+             } else {
+                throw error;
+             }
+          }
+
           const related = snapshot.docs
             .map(d => ({ id: d.id, ...d.data() }))
             .filter(p => p.id !== docSnap.id);

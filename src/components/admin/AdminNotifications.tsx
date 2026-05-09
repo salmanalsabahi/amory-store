@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { collection, query, where, onSnapshot, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy, doc } from 'firebase/firestore';
+import { updateDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Bell, X, Info, Calendar, Key, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';

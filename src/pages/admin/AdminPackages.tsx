@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, getDocs, doc } from 'firebase/firestore';
+import { setDoc, deleteDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Package as PackageIcon, Search, Trash2, Edit2, Plus, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { LoadingSpinner } from '../../components/ui/LoadingSpinner';

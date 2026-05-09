@@ -27,8 +27,15 @@ interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null, auth: Auth) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  // Do not throw for offline errors to allow app to continue gracefully
+  if (errorMessage.includes('offline') || errorMessage.includes('unavailable') || (error as any)?.code === 'unavailable') {
+    console.warn("Offline or unavailable: ", errorMessage);
+    return;
+  }
+
   const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
+    error: errorMessage,
     authInfo: {
       userId: auth.currentUser?.uid,
       email: auth.currentUser?.email,

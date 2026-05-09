@@ -69,10 +69,14 @@ const SYSTEM_INSTRUCTION = `أنت "سند - المستشار الرقمي لع�
 export async function generateChatResponse(history: any[], userMessage: string, userContext?: { isLoggedIn: boolean, userName?: string | null }) {
   try {
     if (!ai) {
-      if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is not defined in environment variables");
+      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+      
+      if (!apiKey) {
+        console.error("Gemini API Key missing. Please check your environment variables (GEMINI_API_KEY or VITE_GEMINI_API_KEY).");
+        throw new Error("لم يتم العثور على مفتاح البرمجة (API Key) المخصص للذكاء الاصطناعي. إذا كنت قد رفعت الموقع للتو، فتأكد من إضافة المفتاح في إعدادات البيئة بالاستضافة.");
       }
-      ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      ai = new GoogleGenAI({ apiKey });
     }
 
     const MAX_HISTORY = 10;

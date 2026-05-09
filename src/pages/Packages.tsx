@@ -1,14 +1,13 @@
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Gift, GraduationCap, Heart, Package as PackageIcon, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { useCart } from '../contexts/CartContext';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
-import { AnimatePresence } from 'motion/react';
 
 export function Packages() {
   const [packages, setPackages] = useState<any[]>([]);
@@ -20,17 +19,23 @@ export function Packages() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const qs = await getDocs(collection(db, 'packages'));
-        setPackages(qs.docs.map(d => ({ id: d.id, ...d.data() })));
-      } catch (error) {
-        console.error("Error fetching packages:", error);
-      } finally {
+    const q = collection(db, 'packages');
+    const unsubscribe = onSnapshot(q, {
+      next: (snapshot) => {
+        setPackages(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+        setLoading(false);
+      },
+      error: (error: any) => {
+        if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+          console.warn("أنت غير متصل بالإنترنت. تُعرض الباقات من الذاكرة المؤقتة.");
+        } else {
+          console.error("Error fetching packages:", error);
+        }
         setLoading(false);
       }
-    };
-    fetchPackages();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleAddToCart = async (pkg: any) => {

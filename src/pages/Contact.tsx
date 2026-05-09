@@ -6,8 +6,12 @@ import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 
-const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_KEY = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || '';
 const ai = GEMINI_KEY ? new GoogleGenAI({ apiKey: GEMINI_KEY }) : null;
+
+if (!GEMINI_KEY && typeof window !== 'undefined') {
+  console.warn("Gemini API Key is missing. Maps grounding and AI features in Contact page may not work.");
+}
 
 export function Contact() {
   const { settings, loading: settingsLoading } = useSiteSettings();

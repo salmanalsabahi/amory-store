@@ -9,7 +9,10 @@ import { Truck, CheckCircle2, Loader2, CreditCard, Wallet, Banknote, Tag, Shoppi
 import { useCart } from '../contexts/CartContext';
 import imageCompression from 'browser-image-compression';
 
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
+
 export function Checkout() {
+  const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { items: cartItems, subtotal, shipping: shippingFee, totalPrice: initialTotal, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
@@ -36,6 +39,10 @@ export function Checkout() {
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return;
+    if (!isOnline) {
+      setCouponMessage('يجب أن تكون متصلاً بالإنترنت للتحقق من الكوبون');
+      return;
+    }
     setValidatingCoupon(true);
     setCouponMessage('');
     try {
@@ -76,6 +83,12 @@ export function Checkout() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submit started");
+    
+    if (!isOnline) {
+      alert('يجب أن تكون متصلاً بالإنترنت لإتمام الطلب.');
+      return;
+    }
+
     if (cartItems.length === 0) {
       alert('سلتك فارغة، يرجى إضافة منتجات قبل إتمام الطلب');
       return;

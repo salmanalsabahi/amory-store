@@ -32,10 +32,14 @@ export function Offers() {
         setOffers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         setLoading(false);
       },
-      error: (err) => {
-        console.error("Error fetching offers:", err);
+      error: (err: any) => {
+        if (err?.message?.includes('offline') || err?.code === 'unavailable') {
+          console.warn("أنت غير متصل بالإنترنت. تُعرض العروض من الذاكرة المؤقتة.");
+        } else {
+          console.error("Error fetching offers:", err);
+          setMessage({ type: 'error', text: 'نعتذر، تعذر جلب العروض.' });
+        }
         setLoading(false);
-        setMessage({ type: 'error', text: 'نعتذر، تعذر جلب العروض للاتصال بالإنترنت.' });
       }
     });
 

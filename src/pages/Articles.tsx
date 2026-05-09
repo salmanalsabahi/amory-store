@@ -14,7 +14,17 @@ export function Articles() {
     const fetchArticles = async () => {
       try {
         const q = query(collection(db, 'articles'), where('active', '==', true), orderBy('createdAt', 'desc'));
-        const qs = await getDocs(q);
+        let qs;
+        try {
+           qs = await getDocs(q);
+        } catch (error: any) {
+           if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+              const { getDocsFromCache } = await import('firebase/firestore');
+              qs = await getDocsFromCache(q);
+           } else {
+              throw error;
+           }
+        }
         setArticles(qs.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       } catch (error) {
         console.error("Error fetching articles:", error);

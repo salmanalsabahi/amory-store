@@ -167,9 +167,14 @@ export function Chatbot() {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chat error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: 'المعذرة منك، واجهت مشكلة بسيطة في الاتصال. حاول مرة ثانية وبساعدك بعيوني.' }]);
+      const isKeyMissing = error?.message?.includes('مفتاح البرمجة') || error?.message?.includes('API Key');
+      const errorMessage = isKeyMissing 
+        ? "عذراً، يبدو أن مفتاح الذكاء الاصطناعي غير مفعل في هذه الاستضافة. يرجى التأكد من إعدادات البيئة (API Key)."
+        : "المعذرة منك، واجهت مشكلة بسيطة في الاتصال. حاول مرة ثانية وبساعدك بعيوني.";
+      
+      setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
     } finally {
       setIsTyping(false);
     }

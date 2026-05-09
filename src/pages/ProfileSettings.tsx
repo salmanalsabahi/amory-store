@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { updateProfile, updateEmail } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { setDoc } from '../lib/safeFirestore';
 import { auth, db } from '../firebase';
 import { Loader2, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -14,9 +15,17 @@ export function ProfileSettings() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!auth.currentUser) return;
-      const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-      if (userDoc.exists()) {
-        setPhone(userDoc.data().phone || '');
+      try {
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (userDoc.exists()) {
+          setPhone(userDoc.data().phone || '');
+        }
+      } catch (error: any) {
+        if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+          console.warn("أنت غير متصل بالإنترنت. تعذر جلب بيانات المستخدم.");
+        } else {
+          console.error("Error fetching user data:", error);
+        }
       }
     };
     fetchUserData();

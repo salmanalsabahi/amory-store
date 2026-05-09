@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -20,6 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { requireAuth } = useRequireAuth();
+  const isOnline = useOnlineStatus();
   const [adding, setAdding] = useState(false);
   const [notified, setNotified] = useState(false);
   const navigate = useNavigate();
@@ -45,6 +47,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const handleNotifyMe = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!isOnline) {
+      alert('يجب أن تكون متصلاً بالإنترنت لتلقي الإشعارات.');
+      return;
+    }
     try {
       await addDoc(collection(db, 'stock_notifications'), {
         productId: product.id,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, doc, setDoc, deleteDoc, addDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc } from 'firebase/firestore';
+import { setDoc, deleteDoc, addDoc } from '../../lib/safeFirestore';
 import { db, auth } from '../../firebase';
 import { Grid, Plus, Trash2, Edit2, Loader2, X, Save, Database, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';

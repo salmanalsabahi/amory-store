@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { addDoc, updateDoc, deleteDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
 import { Plus, Trash2, Edit2, Loader2, CreditCard, Wallet, Banknote, ToggleLeft, ToggleRight, Save, X } from 'lucide-react';
 

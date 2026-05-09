@@ -36,8 +36,12 @@ export function useSiteSettings() {
         setSettings(docSnap.data() as SiteSettings);
       }
       setLoading(false);
-    }, (error) => {
-      console.error("Error fetching site settings:", error);
+    }, (error: any) => {
+      if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+        console.warn("أنت الآن غير متصل بالإنترنت. تعذر جلب الإعدادات، سيتم الاعتماد على النسخة المخبأة إن وجدت.");
+      } else {
+        console.error("Error fetching site settings:", error);
+      }
       setLoading(false);
     });
 

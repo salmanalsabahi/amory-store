@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { collection, query, getDocs, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { ShoppingBag, Star, Search, Filter, Heart, Loader2, Plus, Minus, Check, ChevronDown, Package } from 'lucide-react';
@@ -30,7 +30,10 @@ export function Store() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       setLoading(false);
-    }, (error) => handleFirestoreError(error, OperationType.LIST, 'products', auth));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'products', auth);
+      setLoading(false);
+    });
 
     const unsubCats = onSnapshot(collection(db, 'categories'), (snapshot) => {
       // Deduplicate category names to avoid duplicate keys and redundant filter buttons

@@ -54,13 +54,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ...doc.data()
       })) as CartItem[];
       setItems(cartItems);
+    }, (error: any) => {
+      if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+         console.warn("أنت غير متصل بالإنترنت. تُعرض السلة من الذاكرة المؤقتة.");
+      } else {
+         console.error("Cart error:", error);
+      }
     });
 
     return () => unsubscribe();
   }, [user]);
 
   const addToCart = async (product: any, quantity: number = 1) => {
-    if (!user || !isOnline) {
+    if (!isOnline) {
+      alert('يجب أن تكون متصلاً بالإنترنت لإضافة منتجات للسلة.');
+      throw new Error('OFFLINE_REQUIRED');
+    }
+    if (!user) {
       requireAuth(() => {}); // This will trigger the alert and redirect
       throw new Error('AUTH_REQUIRED'); // This intercepts the success flow
     }

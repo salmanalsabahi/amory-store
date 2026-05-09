@@ -13,43 +13,47 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { CartProvider } from './contexts/CartContext';
 import { seedInitialData } from './lib/seedData';
+import { useCachePreloader } from './hooks/useCachePreloader';
 import { InstallAppPrompt } from './components/InstallAppPrompt';
+import { OfflineIndicator } from './components/OfflineIndicator';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-// Lazy Loaded Public Pages
-const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
-const Consultation = lazy(() => import('./pages/Consultation').then(m => ({ default: m.Consultation })));
-const Store = lazy(() => import('./pages/Store').then(m => ({ default: m.Store })));
-const ProductDetail = lazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
-const Cart = lazy(() => import('./pages/Cart').then(m => ({ default: m.Cart })));
-const Wishlist = lazy(() => import('./pages/Wishlist').then(m => ({ default: m.Wishlist })));
-const Checkout = lazy(() => import('./pages/Checkout').then(m => ({ default: m.Checkout })));
-const OrderTracking = lazy(() => import('./pages/OrderTracking').then(m => ({ default: m.OrderTracking })));
-const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
-const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
-const Auth = lazy(() => import('./pages/Auth').then(m => ({ default: m.Auth })));
-const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
-const Articles = lazy(() => import('./pages/Articles').then(m => ({ default: m.Articles })));
-const ArticleDetail = lazy(() => import('./pages/ArticleDetail').then(m => ({ default: m.ArticleDetail })));
-const Packages = lazy(() => import('./pages/Packages').then(m => ({ default: m.Packages })));
-const Offers = lazy(() => import('./pages/Offers').then(m => ({ default: m.Offers })));
-const Services = lazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
+// Public Pages
+import { Home } from './pages/Home';
+import { Consultation } from './pages/Consultation';
+import { Store } from './pages/Store';
+import { ProductDetail } from './pages/ProductDetail';
+import { Cart } from './pages/Cart';
+import { Wishlist } from './pages/Wishlist';
+import { Checkout } from './pages/Checkout';
+import { OrderTracking } from './pages/OrderTracking';
+import { Contact } from './pages/Contact';
+import { Profile } from './pages/Profile';
+import { Auth } from './pages/Auth';
+import { About } from './pages/About';
+import { Articles } from './pages/Articles';
+import { ArticleDetail } from './pages/ArticleDetail';
+import { Packages } from './pages/Packages';
+import { Offers } from './pages/Offers';
+import { Services } from './pages/Services';
+import { ProfileSettings } from './pages/ProfileSettings';
 
 // Admin Imports
 import { AdminLayout } from './components/layout/AdminLayout';
-const AdminOrders = lazy(() => import('./pages/admin/AdminOrders').then(m => ({ default: m.AdminOrders })));
-const AdminProducts = lazy(() => import('./pages/admin/AdminProducts').then(m => ({ default: m.AdminProducts })));
-const AdminCategories = lazy(() => import('./pages/admin/AdminCategories').then(m => ({ default: m.AdminCategories })));
-const AdminUsers = lazy(() => import('./pages/admin/AdminUsers').then(m => ({ default: m.AdminUsers })));
-const AdminConsultations = lazy(() => import('./pages/admin/AdminConsultations').then(m => ({ default: m.AdminConsultations })));
-const AdminPackages = lazy(() => import('./pages/admin/AdminPackages').then(m => ({ default: m.AdminPackages })));
-const AdminOffers = lazy(() => import('./pages/admin/AdminOffers').then(m => ({ default: m.AdminOffers })));
-const AdminCoupons = lazy(() => import('./pages/admin/AdminCoupons').then(m => ({ default: m.AdminCoupons })));
-const AdminSiteSettings = lazy(() => import('./pages/admin/AdminSiteSettings').then(m => ({ default: m.AdminSiteSettings })));
-const AdminArticles = lazy(() => import('./pages/admin/AdminArticles').then(m => ({ default: m.AdminArticles })));
-const AdminReviews = lazy(() => import('./pages/admin/AdminReviews').then(m => ({ default: m.AdminReviews })));
-const AdminMessages = lazy(() => import('./pages/admin/AdminMessages').then(m => ({ default: m.AdminMessages })));
-const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
-const AdminPaymentSettings = lazy(() => import('./pages/admin/AdminPaymentSettings').then(m => ({ default: m.AdminPaymentSettings })));
+import { AdminOrders } from './pages/admin/AdminOrders';
+import { AdminProducts } from './pages/admin/AdminProducts';
+import { AdminCategories } from './pages/admin/AdminCategories';
+import { AdminUsers } from './pages/admin/AdminUsers';
+import { AdminConsultations } from './pages/admin/AdminConsultations';
+import { AdminPackages } from './pages/admin/AdminPackages';
+import { AdminOffers } from './pages/admin/AdminOffers';
+import { AdminCoupons } from './pages/admin/AdminCoupons';
+import { AdminSiteSettings } from './pages/admin/AdminSiteSettings';
+import { AdminArticles } from './pages/admin/AdminArticles';
+import { AdminReviews } from './pages/admin/AdminReviews';
+import { AdminMessages } from './pages/admin/AdminMessages';
+import { AdminAnalytics } from './pages/admin/AdminAnalytics';
+import { AdminPaymentSettings } from './pages/admin/AdminPaymentSettings';
 
 // Loading component
 function PageLoader() {
@@ -98,17 +102,22 @@ export default function App() {
     seedInitialData().catch(console.error);
   }, []);
 
+  useCachePreloader();
+
   return (
     <BrowserRouter>
       <WishlistProvider>
         <CartProvider>
           <TooltipProvider>
+            <OfflineIndicator />
             <InstallAppPrompt />
             <RouteProgress />
             <ScrollToTop />
-            <Suspense fallback={<PageLoader />}>
-              <AppRoutes />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<PageLoader />}>
+                <AppRoutes />
+              </Suspense>
+            </ErrorBoundary>
           </TooltipProvider>
         </CartProvider>
       </WishlistProvider>

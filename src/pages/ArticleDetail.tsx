@@ -15,7 +15,17 @@ export function ArticleDetail() {
       if (!id) return;
       try {
         const docRef = doc(db, 'articles', id);
-        const docSnap = await getDoc(docRef);
+        let docSnap;
+        try {
+           docSnap = await getDoc(docRef);
+        } catch (error: any) {
+           if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+              const { getDocFromCache } = await import('firebase/firestore');
+              docSnap = await getDocFromCache(docRef);
+           } else {
+              throw error;
+           }
+        }
         if (docSnap.exists()) {
           setArticle({ id: docSnap.id, ...docSnap.data() });
         }
