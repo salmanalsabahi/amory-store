@@ -6,6 +6,7 @@
 import React, { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { Toaster } from 'react-hot-toast';
 import NProgress from 'nprogress';
 import { Layout } from './components/layout/Layout';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -15,7 +16,6 @@ import { CartProvider } from './contexts/CartContext';
 import { seedInitialData } from './lib/seedData';
 import { useCachePreloader } from './hooks/useCachePreloader';
 import { InstallAppPrompt } from './components/InstallAppPrompt';
-import { OfflineIndicator } from './components/OfflineIndicator';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Public Pages
@@ -109,7 +109,36 @@ export default function App() {
       <WishlistProvider>
         <CartProvider>
           <TooltipProvider>
-            <OfflineIndicator />
+            <Toaster 
+              position="top-center"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#333',
+                  color: '#fff',
+                  borderRadius: '16px',
+                  padding: '12px 24px',
+                  fontSize: '0.95rem',
+                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                  marginTop: '10px',
+                },
+                success: {
+                  style: {
+                    background: '#f59e0b',
+                    color: '#fff',
+                  },
+                  iconTheme: {
+                    primary: '#fff',
+                    secondary: '#f59e0b',
+                  },
+                },
+                error: {
+                  style: {
+                    background: '#ef4444',
+                  },
+                },
+              }}
+            />
             <InstallAppPrompt />
             <RouteProgress />
             <ScrollToTop />

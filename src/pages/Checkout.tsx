@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Truck, CheckCircle2, Loader2, CreditCard, Wallet, Banknote, Tag, ShoppingBag, Upload } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import imageCompression from 'browser-image-compression';
+import toast from 'react-hot-toast';
 
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
@@ -85,17 +86,17 @@ export function Checkout() {
     console.log("Submit started");
     
     if (!isOnline) {
-      alert('يجب أن تكون متصلاً بالإنترنت لإتمام الطلب.');
+      toast.error('المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت لإتمام طلبك.');
       return;
     }
 
     if (cartItems.length === 0) {
-      alert('سلتك فارغة، يرجى إضافة منتجات قبل إتمام الطلب');
+      toast('سلتك فارغة يا غالي، ضيف منتجات عشان تكمل طلبك.', { icon: '🛒' });
       return;
     }
     
     if (formData.paymentMethod !== 'الدفع عند الاستلام' && !paymentProof) {
-      alert('إلزامي إرفاق سند التسديد عند الدفع عبر بنك أو محفظة إلكترونية.');
+      toast.error('ياحبوب إلزامي ترفق رسالة او صورة التسديد عشان نكمل الطلب.');
       return;
     }
     
@@ -214,9 +215,9 @@ export function Checkout() {
       setLoading(false);
       try {
         const errorInfo = JSON.parse(error instanceof Error ? error.message : String(error));
-        alert('حدث خطأ: ' + errorInfo.error);
+        toast.error('حدث خطأ ياحبوب: ' + errorInfo.error);
       } catch (e) {
-        alert(error instanceof Error ? error.message : 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+        toast.error(error instanceof Error ? error.message : 'حدث خطأ غير متوقع ياحبوب. جرب مرة ثانية.');
       }
     } finally {
       setLoading(false);

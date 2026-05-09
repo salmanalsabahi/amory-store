@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 import { generateChatResponse } from '../services/geminiService';
 import { auth } from '../firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 interface Message {
   role: 'user' | 'model';
@@ -25,6 +26,7 @@ export function Chatbot() {
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -73,6 +75,11 @@ export function Chatbot() {
     // UI feedback first
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsTyping(true);
+
+    if (!isOnline) {
+      setMessages(prev => [...prev, { role: 'model', text: 'الإنترنت مقطوع ياحبوب، تأكد من اتصالك بالشبكة وخلاص.' }]);
+      return;
+    }
 
     try {
       // Use current messages for history
@@ -172,7 +179,7 @@ export function Chatbot() {
       const isKeyMissing = error?.message?.includes('مفتاح البرمجة') || error?.message?.includes('API Key');
       const errorMessage = isKeyMissing 
         ? "عذراً، يبدو أن مفتاح الذكاء الاصطناعي غير مفعل في هذه الاستضافة. يرجى التأكد من إعدادات البيئة (API Key)."
-        : "المعذرة منك، واجهت مشكلة بسيطة في الاتصال. حاول مرة ثانية وبساعدك بعيوني.";
+        : "الإنترنت مقطوع ياحبوب، تأكد من اتصالك بالشبكة وخلاص.";
       
       setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
     } finally {

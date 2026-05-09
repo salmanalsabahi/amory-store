@@ -111,7 +111,7 @@ export function Auth() {
       } else if (err.code === 'auth/account-exists-with-different-credential') {
         errorMessage = 'هذا البريد مسجل مسبقاً بطريقة دخول مختلفة (مثل جوجل). يرجى المتابعة باستخدام جوجل.';
       } else if (err.code === 'auth/network-request-failed') {
-        errorMessage = 'فشل الاتصال بالشبكة. يرجى التأكد من استقرار الإنترنت، وإيقاف أي مانع إعلانات (AdBlocker)، أو المحاولة من متصفح آخر. إذا كنت تستخدم التطبيق داخل (AI Studio)، يرجى الضغط على "Open in new tab" في الزاوية العلوية.';
+        errorMessage = 'الإنترنت مقطوع ياحبوب، تأكد من اتصالك بالشبكة وخلاص.';
       } else if (err.message?.includes('Identity Toolkit API') || err.code?.includes('identity-toolkit-api')) {
         errorMessage = 'يجب تفعيل Identity Toolkit API في لوحة تحكم Google Cloud للمشروع الخاص بك.';
       } else {
@@ -143,7 +143,7 @@ export function Auth() {
       } else if (err.code === 'auth/popup-blocked') {
         setError('تم حظر النافذة المنبثقة بواسطة المتصفح. يرجى فتح الموقع في نافذة جديدة (Open in new tab) أو السماح بالنوافذ المنبثقة.');
       } else if (err.code === 'auth/network-request-failed') {
-        setError('فشل الاتصال بالشبكة أثناء محاولة الاتصال بجوجل. يرجى التأكد من أن الإنترنت يعمل ولا يوجد حظر لمواقع جوجل، أو جرب فتح الموقع في نافذة جديدة.');
+        setError('الإنترنت مقطوع ياحبوب، تأكد من اتصالك بالشبكة وخلاص.');
       } else {
         setError(`حدث خطأ أثناء تسجيل الدخول باستخدام Google: ${err.message || 'يرجى المحاولة مرة أخرى.'}`);
       }
@@ -220,38 +220,6 @@ export function Auth() {
                 <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-500" />
                 <div className="flex flex-col gap-2 w-full">
                   <p className="font-bold">{error}</p>
-                  {error.includes('فشل الاتصال بالشبكة') && (
-                    <>
-                      <div className="mt-2 p-3 bg-white/50 rounded-lg text-xs flex flex-col gap-2 border border-red-100/50">
-                        <p className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                          تأكد من إيقاف أي مانع إعلانات (AdBlocker) لهذا الموقع.
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                          تأكد من أن تاريخ ووقت جهازك مضبوطان بشكل تلقائي.
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                          إذا كنت تستخدم التطبيق داخل (AI Studio)، هذا الخطأ شائع بسبب الحماية.
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        <button 
-                          onClick={() => window.location.reload()}
-                          className="text-xs bg-red-100 hover:bg-red-200 text-red-800 py-2 px-3 rounded-lg font-bold transition-colors"
-                        >
-                          إعادة تحميل الصفحة
-                        </button>
-                        <button 
-                          onClick={() => window.open(window.location.href, '_blank')}
-                          className="text-xs bg-slate-900 hover:bg-slate-800 text-white py-2 px-3 rounded-lg font-bold transition-colors flex items-center gap-1"
-                        >
-                          فتح في نافذة جديدة ↗
-                        </button>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             )}

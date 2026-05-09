@@ -9,6 +9,7 @@ import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: any;
@@ -35,6 +36,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
     setAdding(true);
     try {
       await addToCart(product, quantity);
+      toast.success(`تم إضافة ${product.name} لسلتك ياحبوب!`, { icon: '🛒' });
       setTimeout(() => {
         setAdding(false);
         setIsModalOpen(false);
@@ -48,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!isOnline) {
-      alert('يجب أن تكون متصلاً بالإنترنت لتلقي الإشعارات.');
+      toast.error('المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت لتلقي الإشعارات.');
       return;
     }
     try {
@@ -59,6 +61,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
         status: 'pending'
       });
       setNotified(true);
+      toast.success('ولا يهمك، بنبلغك أول ما يتوفر ياحبوب!', { icon: '🔔' });
     } catch (error) {
       console.error("Error signing up for notification:", error);
     }
@@ -96,7 +99,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
         imageUrl: product.images?.[0],
         brand: product.brand
       });
-    });
+    }, { redirect: false, customMessage: 'ياحبوب يرجى تسجيل الدخول أو إنشاء حساب لكي تتمكن من الإضافة للمفضلة.' });
   };
 
   return (

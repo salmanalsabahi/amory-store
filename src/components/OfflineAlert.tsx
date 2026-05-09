@@ -1,70 +1,63 @@
-import { useState, useEffect } from 'react';
+import { WifiOff, Wifi, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { WifiOff, Wifi, AlertTriangle, X } from 'lucide-react';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import { useState, useEffect } from 'react';
 
 export function OfflineAlert() {
   const isOnline = useOnlineStatus();
-  const [show, setShow] = useState(false);
-  const [status, setStatus] = useState<'offline' | 'online'>('online');
+  const [showOnline, setShowOnline] = useState(false);
+  const [wasOffline, setWasOffline] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     if (!isOnline) {
-      setStatus('offline');
-      setShow(true);
-      // Don't auto-hide offline message? 
-      // The user said "don't let it stay visible", so we hide it after 5 seconds.
-      const timer = setTimeout(() => setShow(false), 5000);
+      setWasOffline(true);
+      setShowOnline(false);
+      setDismissed(false);
+      // Auto dismiss offline message after 4 seconds to match user request
+      const timer = setTimeout(() => {
+        setDismissed(true);
+      }, 4000);
       return () => clearTimeout(timer);
-    } else {
-      if (status === 'offline') {
-        setStatus('online');
-        setShow(true);
-        const timer = setTimeout(() => setShow(false), 3000);
-        return () => clearTimeout(timer);
-      }
+    } else if (isOnline && wasOffline) {
+      setShowOnline(true);
+      const timer = setTimeout(() => {
+        setShowOnline(false);
+        setWasOffline(false);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  }, [isOnline]);
+  }, [isOnline, wasOffline]);
 
   return (
     <AnimatePresence>
-      {show && (
+      {!isOnline && !dismissed && (
         <motion.div
-          initial={{ opacity: 0, y: -20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          className="fixed top-6 inset-x-0 z-[9999] px-4 pointer-events-none flex justify-center"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -50, opacity: 0 }}
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-red-600/95 backdrop-blur-md text-white py-2.5 px-6 rounded-2xl flex items-center gap-3 text-sm font-medium shadow-xl border border-white/20 w-11/12 max-w-md"
         >
-          <div className={`
-            ${status === 'offline' ? 'bg-red-600' : 'bg-green-600'} 
-            text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 pointer-events-auto backdrop-blur-md border border-white/20
-          `}>
-            {status === 'offline' ? (
-              <>
-                <WifiOff className="w-5 h-5 animate-pulse" />
-                <div className="flex flex-col">
-                  <span className="font-bold text-sm">أنت غير متصل بالإنترنت</span>
-                  <span className="text-[10px] opacity-90">ستظل البيانات المحملة متاحة، ولكن العمليات الجديدة تتطلب اتصالاً</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <Wifi className="w-5 h-5" />
-                <div className="flex flex-col">
-                  <span className="font-bold text-sm">تم استعادة الاتصال</span>
-                  <span className="text-[10px] opacity-90">تم تحديث الاتصال بالخادم بنجاح</span>
-                </div>
-              </>
-            )}
-            <button 
-              onClick={() => setShow(false)}
-              className="p-1 hover:bg-white/10 rounded-lg transition-colors ms-2"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+          <WifiOff className="w-5 h-5 shrink-0" />
+          <span className="flex-1">المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت كي تتمكن من اجراء العمليات</span>
+          <button onClick={() => setDismissed(true)} className="p-1 hover:bg-white/20 rounded-full transition-colors shrink-0">
+            <X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      )}
+      
+      {showOnline && (
+        <motion.div
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -50, opacity: 0 }}
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-green-600/95 backdrop-blur-md text-white py-2.5 px-6 rounded-2xl flex items-center gap-3 text-sm font-medium shadow-xl border border-white/20 w-11/12 max-w-md"
+        >
+          <Wifi className="w-5 h-5 shrink-0" />
+          <span className="flex-1">تم استعادة الاتصال بالشبكة ياحبوب! 😊</span>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
+

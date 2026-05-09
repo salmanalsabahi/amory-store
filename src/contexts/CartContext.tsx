@@ -3,6 +3,7 @@ import { db, auth } from '../firebase';
 import { collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import toast from 'react-hot-toast';
 
 interface CartItem {
   id: string;
@@ -67,11 +68,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (product: any, quantity: number = 1) => {
     if (!isOnline) {
-      alert('يجب أن تكون متصلاً بالإنترنت لإضافة منتجات للسلة.');
+      toast.error('المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.');
       throw new Error('OFFLINE_REQUIRED');
     }
     if (!user) {
-      requireAuth(() => {}); // This will trigger the alert and redirect
+      requireAuth(() => {}, { redirect: false, customMessage: 'ياحبوب يرجى تسجيل الدخول أو إنشاء حساب لكي تتمكن من الإضافة للسلة.' });
       throw new Error('AUTH_REQUIRED'); // This intercepts the success flow
     }
     

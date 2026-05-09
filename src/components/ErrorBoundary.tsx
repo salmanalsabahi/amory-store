@@ -38,11 +38,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
             <WifiOff className="w-16 h-16 text-slate-400 mb-6" />
             <h2 className="text-2xl font-bold text-slate-800 mb-4">
-              نعتذر، هذه الصفحة غير متوفرة حالياً
+              المعذرة منك ياحبوب..
             </h2>
             <p className="text-slate-600 max-w-md mx-auto mb-8 leading-relaxed">
-              يبدو أنك غير متصل بالإنترنت حالياً، وهذه الصفحة لم يتم تحميلها مسبقاً.
-              يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.
+              يبدو ان الانترنت انقطع لديك الرجاء الاتصال بالنت كي تتمكن من التصفح ورؤية هذه الصفحة.
             </p>
             <div className="flex gap-4">
               <button 
@@ -66,10 +65,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
       return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
           <h2 className="text-2xl font-bold text-slate-800 mb-4">
-            حدث خطأ غير متوقع
+            حدث خطأ غير متوقع ياحبوب!
           </h2>
           <p className="text-slate-600 mb-8">
-            نعتذر عن هذا الخلل. يرجى تحديث الصفحة للمحاولة مرة أخرى.
+            ولا يهمك، جرب تحدث الصفحة وبيرجع كل شي تمام إن شاء الله.
           </p>
           <button 
             onClick={() => window.location.reload()}

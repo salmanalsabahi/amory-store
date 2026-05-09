@@ -8,6 +8,7 @@ import { ConfirmationModal } from '../components/ui/ConfirmationModal';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import toast from 'react-hot-toast';
 
 export function Consultation() {
   const isOnline = useOnlineStatus();
@@ -31,7 +32,7 @@ export function Consultation() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isOnline) {
-      alert('يجب أن تكون متصلاً بالإنترنت لحجز الاستشارة.');
+      toast.error('المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت يالغالي للحجز.');
       return;
     }
     requireAuth(async () => {

@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { useOnlineStatus } from './useOnlineStatus';
+import toast from 'react-hot-toast';
 
 export function useRequireAuth() {
   const navigate = useNavigate();
@@ -8,15 +9,17 @@ export function useRequireAuth() {
   const { user, loading } = useAuth();
   const isOnline = useOnlineStatus();
 
-  const requireAuth = (callback: () => void) => {
+  const requireAuth = (callback: () => void, options: { redirect?: boolean, customMessage?: string } = { redirect: true }) => {
     if (!isOnline) {
-      alert("أنت غير متصل بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.");
+      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.");
       return;
     }
     if (loading) return; // Prevent action while checking auth status
     if (!user) {
-      alert("يجب تسجيل الدخول أولاً");
-      navigate('/auth', { state: { from: location } });
+      toast.error(options.customMessage || "المعذرة منك ياحبوب.. لازم تسجل دخولك أو تنشئ حساب عشان تقدر تسوي كذا.");
+      if (options.redirect) {
+        navigate('/auth', { state: { from: location } });
+      }
     } else {
       callback();
     }
@@ -24,7 +27,7 @@ export function useRequireAuth() {
 
   const requireOnline = (callback: () => void) => {
     if (!isOnline) {
-      alert("أنت غير متصل بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.");
+      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.");
       return;
     }
     callback();

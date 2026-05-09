@@ -124,7 +124,7 @@ export function ProductDetail() {
       } catch (err) {
         setAdding(false);
       }
-    });
+    }, { redirect: false, customMessage: 'ياحبوب يرجى تسجيل الدخول أو إنشاء حساب لكي تتمكن من الإضافة للسلة.' });
   };
 
   const handleNotifyMe = async () => {
@@ -256,7 +256,7 @@ export function ProductDetail() {
                           isInWishlist(product.id) ? removeFromWishlist(product.id) : addToWishlist({
                             id: product.id, name: product.name, price: product.price, imageUrl: images[0], brand: product.brand
                           });
-                        });
+                        }, { redirect: false, customMessage: 'ياحبوب يرجى تسجيل الدخول أو إنشاء حساب لكي تتمكن من الإضافة للمفضلة.' });
                      }}
                      className={cn(
                          "p-3 rounded-full border transition-all",
