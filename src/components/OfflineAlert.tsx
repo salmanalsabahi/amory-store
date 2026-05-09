@@ -1,37 +1,51 @@
 import { WifiOff, Wifi, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export function OfflineAlert() {
   const isOnline = useOnlineStatus();
-  const [showOnline, setShowOnline] = useState(false);
-  const [wasOffline, setWasOffline] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [alertType, setAlertType] = useState<'offline' | 'online' | null>(null);
+  const wasOffline = useRef(!isOnline);
+  const mountTime = useRef(Date.now());
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
+
     if (!isOnline) {
-      setWasOffline(true);
-      setShowOnline(false);
-      setDismissed(false);
-      // Auto dismiss offline message after 4 seconds to match user request
-      const timer = setTimeout(() => {
-        setDismissed(true);
-      }, 4000);
-      return () => clearTimeout(timer);
-    } else if (isOnline && wasOffline) {
-      setShowOnline(true);
-      const timer = setTimeout(() => {
-        setShowOnline(false);
-        setWasOffline(false);
+      wasOffline.current = true;
+      
+      const timeSinceMount = Date.now() - mountTime.current;
+      if (timeSinceMount < 1500) {
+          // Delay showing initial offline state slightly to avoid false positives on mobile browser refresh
+          timer = setTimeout(() => {
+              setAlertType('offline');
+              // auto dismiss after 5s
+              setTimeout(() => setAlertType(null), 5000);
+          }, 1500);
+      } else {
+        setAlertType('offline');
+        // Auto dismiss after 4 seconds
+        timer = setTimeout(() => {
+          setAlertType(null);
+        }, 4000);
+      }
+    } else if (isOnline && wasOffline.current) {
+      wasOffline.current = false;
+      setAlertType('online');
+      timer = setTimeout(() => {
+        setAlertType(null);
       }, 3000);
-      return () => clearTimeout(timer);
     }
-  }, [isOnline, wasOffline]);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isOnline]);
 
   return (
     <AnimatePresence>
-      {!isOnline && !dismissed && (
+      {alertType === 'offline' && (
         <motion.div
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -40,13 +54,13 @@ export function OfflineAlert() {
         >
           <WifiOff className="w-5 h-5 shrink-0" />
           <span className="flex-1">المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت كي تتمكن من اجراء العمليات</span>
-          <button onClick={() => setDismissed(true)} className="p-1 hover:bg-white/20 rounded-full transition-colors shrink-0">
+          <button onClick={() => setAlertType(null)} className="p-1 hover:bg-white/20 rounded-full transition-colors shrink-0">
             <X className="w-4 h-4" />
           </button>
         </motion.div>
       )}
       
-      {showOnline && (
+      {alertType === 'online' && (
         <motion.div
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

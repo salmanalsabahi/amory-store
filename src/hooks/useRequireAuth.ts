@@ -11,12 +11,16 @@ export function useRequireAuth() {
 
   const requireAuth = (callback: () => void, options: { redirect?: boolean, customMessage?: string } = { redirect: true }) => {
     if (!isOnline) {
-      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.");
+      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.", {
+        style: { background: '#ef4444', color: '#fff' }
+      });
       return;
     }
     if (loading) return; // Prevent action while checking auth status
     if (!user) {
-      toast.error(options.customMessage || "المعذرة منك ياحبوب.. لازم تسجل دخولك أو تنشئ حساب عشان تقدر تسوي كذا.");
+      toast.error(options.customMessage || "المعذرة منك ياحبوب.. لازم تسجل دخولك أو تنشئ حساب عشان تقدر تسوي كذا.", {
+        style: { background: '#ef4444', color: '#fff' }
+      });
       if (options.redirect) {
         navigate('/auth', { state: { from: location } });
       }
@@ -27,7 +31,9 @@ export function useRequireAuth() {
 
   const requireOnline = (callback: () => void) => {
     if (!isOnline) {
-      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.");
+      toast.error("المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت أولاً.", {
+        style: { background: '#ef4444', color: '#fff' }
+      });
       return;
     }
     callback();
