@@ -41,7 +41,7 @@ export function Doctors() {
     return (
       <div className="pt-32 pb-20 bg-slate-50 min-h-screen flex items-center justify-center px-4 text-center">
         <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 max-w-lg mx-auto">
-          <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mb-6 text-amber-600 mx-auto">
+          <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mb-6 text-rose-600 mx-auto">
             <WifiOff className="w-10 h-10" />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">المعذرة، أنت خارج التغطية</h2>

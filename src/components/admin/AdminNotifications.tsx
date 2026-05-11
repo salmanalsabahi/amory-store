@@ -68,11 +68,11 @@ export function AdminNotifications() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="relative p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
+        className="relative p-2 text-slate-400 hover:text-white rounded-xl transition-all"
       >
         <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-5 h-5 bg-amber-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
+          <span className="absolute top-1 right-1 w-5 h-5 bg-rose-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900">
             {unreadCount}
           </span>
         )}
@@ -110,7 +110,7 @@ export function AdminNotifications() {
                     const linkPath = n.link ? String(n.link) : null;
                     const content = (
                       <div className="flex gap-4">
-                        <div className="mt-1 w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
+                        <div className="mt-1 w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100">
                           {Icon ? <Icon className="w-5 h-5" /> : <Bell className="w-5 h-5" />}
                         </div>
                         <div className="flex-1 text-right">
@@ -119,7 +119,7 @@ export function AdminNotifications() {
                           </p>
                           <div className="flex items-center gap-2 justify-end">
                             {!n.read && (
-                              <span className="w-2 h-2 bg-amber-500 rounded-full shrink-0" />
+                              <span className="w-2 h-2 bg-rose-500 rounded-full shrink-0" />
                             )}
                             <span className="text-[10px] text-slate-400">
                               {n.createdAt && typeof n.createdAt.toDate === 'function' 
@@ -133,7 +133,7 @@ export function AdminNotifications() {
                       </div>
                     );
 
-                    const baseClasses = `block w-full p-5 transition-all hover:bg-slate-50 active:bg-slate-100 border-b border-transparent last:border-0 ${n.read ? 'bg-white' : 'bg-amber-50/20'}`;
+                    const baseClasses = `block w-full p-5 transition-all hover:bg-slate-50 active:bg-slate-100 border-b border-transparent last:border-0 ${n.read ? 'bg-white' : 'bg-rose-50/20'}`;
 
                     if (linkPath) {
                       const isExternal = linkPath.startsWith('http');

@@ -103,7 +103,7 @@ export function Notifications({ isAdmin = false, isDark = false }: { isAdmin?: b
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const buttonClasses = isDark 
-    ? "text-slate-600 hover:text-teal-600"
+    ? "text-slate-600 hover:text-rose-600"
     : "text-white/80 hover:text-white";
 
   return (
@@ -114,7 +114,7 @@ export function Notifications({ isAdmin = false, isDark = false }: { isAdmin?: b
       >
         <Bell className="w-6 h-6 transition-transform group-hover:scale-110 active:scale-95" />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900 shadow-sm animate-pulse">
+          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-slate-900 shadow-sm animate-pulse">
             {unreadCount}
           </span>
         )}
@@ -166,7 +166,7 @@ export function Notifications({ isAdmin = false, isDark = false }: { isAdmin?: b
                           </p>
                           <div className="flex items-center gap-2 justify-end">
                             {!n.read && (
-                              <span className="w-2 h-2 bg-primary-500 rounded-full shrink-0" />
+                              <span className="w-2 h-2 bg-rose-500 rounded-full shrink-0" />
                             )}
                             <span className="text-[10px] text-slate-400">
                               {n.createdAt && typeof n.createdAt.toDate === 'function' 
@@ -181,7 +181,7 @@ export function Notifications({ isAdmin = false, isDark = false }: { isAdmin?: b
                     );
   
                     const linkPath = n.link ? String(n.link) : null;
-                    const baseClasses = `block w-full p-5 transition-all hover:bg-slate-50 active:bg-slate-100 border-b border-transparent last:border-0 cursor-pointer ${n.read ? 'bg-white' : 'bg-primary-50/20'}`;
+                    const baseClasses = `block w-full p-5 transition-all hover:bg-slate-50 active:bg-slate-100 border-b border-transparent last:border-0 cursor-pointer ${n.read ? 'bg-white' : 'bg-rose-50/20'}`;
                     
                     if (linkPath) {
                       const isExternal = linkPath.startsWith('http');

@@ -93,7 +93,7 @@ export function AdminCategories() {
           </button>
           <button 
             onClick={() => { setName(''); setEditingId(null); setIsModalOpen(true); }}
-            className="bg-amber-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-amber-700"
+            className="bg-rose-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-rose-700"
           >
             <Plus className="w-5 h-5" /> إضافة صنف جديد
           </button>
@@ -113,7 +113,7 @@ export function AdminCategories() {
               <tr key={cat.id}>
                 <td className="py-4 font-bold">{cat.name}</td>
                 <td className="py-4 flex justify-center gap-2">
-                  <button onClick={() => openEdit(cat)} className="text-amber-600 p-2 hover:bg-amber-50 rounded-lg transition-colors"><Edit2 className="w-5 h-5"/></button>
+                  <button onClick={() => openEdit(cat)} className="text-rose-600 p-2 hover:bg-rose-50 rounded-lg transition-colors"><Edit2 className="w-5 h-5"/></button>
                   <button onClick={() => setDeleteId(cat.id)} className="text-rose-600 p-2 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="w-5 h-5"/></button>
                 </td>
               </tr>
@@ -137,8 +137,8 @@ export function AdminCategories() {
                </button>
 
                <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Grid className="w-8 h-8 text-amber-600" />
+                <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Grid className="w-8 h-8 text-rose-600" />
                 </div>
                 <h2 className="text-2xl font-black text-slate-900">{editingId ? 'تعديل الصنف' : 'إضافة صنف جديد'}</h2>
                 <p className="text-slate-500 font-medium">أدخل اسم الصنف لتنظيم منتجات متجرك</p>
@@ -149,14 +149,14 @@ export function AdminCategories() {
                    <label className="block text-sm font-bold text-slate-700 mb-2 mr-1">اسم الصنف</label>
                    <input 
                      type="text" value={name} onChange={e => setName(e.target.value)}
-                     className="w-full p-4 rounded-2xl border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50 transition-all font-bold" 
+                     className="w-full p-4 rounded-2xl border border-slate-200 focus:border-rose-500 focus:ring-4 focus:ring-rose-50 transition-all font-bold" 
                      required placeholder="مثال: عطور رجالية"
                    />
                  </div>
                  <button 
                    type="submit" 
                    disabled={submitting}
-                   className="w-full bg-amber-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-amber-700 shadow-xl shadow-amber-100 disabled:opacity-70 active:scale-95 transition-all"
+                   className="w-full bg-rose-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-rose-700 shadow-xl shadow-rose-100 disabled:opacity-70 active:scale-95 transition-all"
                  >
                    {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Save className="w-5 h-5" /> حفظ التغييرات</>}
                  </button>

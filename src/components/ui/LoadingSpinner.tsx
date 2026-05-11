@@ -23,7 +23,7 @@ export function LoadingSpinner({ className, size = 'md', label }: LoadingSpinner
         animate={{ opacity: 1, scale: 1 }}
         className="relative"
       >
-        <Loader2 className={cn("animate-spin text-amber-500", sizeClasses[size])} />
+        <Loader2 className={cn("animate-spin text-rose-500", sizeClasses[size])} />
         <motion.div
            animate={{ 
              scale: [1, 1.2, 1],
@@ -34,7 +34,7 @@ export function LoadingSpinner({ className, size = 'md', label }: LoadingSpinner
              repeat: Infinity,
              ease: "easeInOut"
            }}
-           className={cn("absolute inset-0 bg-amber-500 rounded-full blur-xl", sizeClasses[size])}
+           className={cn("absolute inset-0 bg-rose-500 rounded-full blur-xl", sizeClasses[size])}
         />
       </motion.div>
       {label && (

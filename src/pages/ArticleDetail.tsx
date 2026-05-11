@@ -41,7 +41,7 @@ export function ArticleDetail() {
   if (loading) {
     return (
       <div className="pt-32 pb-32 flex justify-center items-center">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
       </div>
     );
   }
@@ -50,7 +50,7 @@ export function ArticleDetail() {
     return (
       <div className="pt-32 pb-32 text-center">
         <h1 className="text-2xl font-bold mb-4">المقال غير موجود</h1>
-        <Link to="/articles" className="text-amber-600 hover:underline">العودة إلى المقالات</Link>
+        <Link to="/articles" className="text-rose-600 hover:underline">العودة إلى المقالات</Link>
       </div>
     );
   }

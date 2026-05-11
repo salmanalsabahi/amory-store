@@ -32,28 +32,28 @@ export function FloatingSocialButtons() {
       id: 'whatsapp',
       icon: CalendarDays,
       href: settings.socialMedia.whatsapp ? `https://wa.me/${settings.socialMedia.whatsapp}` : null,
-      color: 'bg-[#25D366]',
+      color: 'bg-rose-500',
       label: 'حجز استشارة'
     },
     {
       id: 'facebook',
       icon: Facebook,
       href: settings.socialMedia.facebook || null,
-      color: 'bg-[#1877F2]',
+      color: 'bg-rose-600',
       label: 'فيسبوك'
     },
     {
       id: 'instagram',
       icon: Instagram,
       href: settings.socialMedia.instagram || null,
-      color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]',
+      color: 'bg-gradient-to-tr from-rose-400 via-rose-500 to-rose-700',
       label: 'إنستغرام'
     },
     {
       id: 'twitter',
       icon: Twitter,
       href: settings.socialMedia.twitter || null,
-      color: 'bg-[#1DA1F2]',
+      color: 'bg-rose-400',
       label: 'تويتر'
     }
   ].filter(link => link.href !== null);
@@ -91,7 +91,7 @@ export function FloatingSocialButtons() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-[44px] h-[44px] lg:w-14 lg:h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 border-2 lg:border-2 border-white/20 ${
-          isOpen ? 'bg-slate-800 rotate-45' : 'bg-teal-600 hover:bg-teal-700'
+          isOpen ? 'bg-rose-800 rotate-45' : 'bg-rose-600 hover:bg-rose-700 active:bg-rose-800'
         } text-white p-0`}
       >
         <Plus className="w-6 h-6 lg:w-7 lg:h-7" />

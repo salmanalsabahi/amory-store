@@ -5,7 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { cn } from '../lib/utils';
 
 export function Cart() {
-  const { items, removeFromCart, updateQuantity, totalPrice, subtotal, shipping, clearCart } = useCart();
+  const { items, removeFromCart, updateQuantity, subtotal, clearCart } = useCart();
   const navigate = useNavigate();
 
   return (
@@ -14,13 +14,13 @@ export function Cart() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12">
           <div>
             <nav className="flex items-center gap-2 md:gap-3 text-xs md:text-sm font-bold text-slate-400 mb-3 md:mb-4">
-               <Link to="/" className="hover:text-amber-600 transition-colors">الرئيسية</Link>
+               <Link to="/" className="hover:text-rose-600 transition-colors">الرئيسية</Link>
                <ArrowRight className="w-3 h-3" />
                <span className="text-slate-900">سلة المشتريات</span>
             </nav>
             <h1 className="text-2xl md:text-4xl lg:text-5xl font-display font-black text-slate-900 flex items-center gap-3 md:gap-4">
               حقيبة التسوق
-              <span className="text-[10px] md:text-sm bg-amber-50 text-amber-600 px-3 py-0.5 md:px-4 md:py-1 rounded-full font-black mt-1 md:mt-2">
+              <span className="text-[10px] md:text-sm bg-rose-50 text-rose-600 px-3 py-0.5 md:px-4 md:py-1 rounded-full font-black mt-1 md:mt-2">
                 {items.length} منتجات
               </span>
             </h1>
@@ -50,7 +50,7 @@ export function Cart() {
             <p className="text-xs md:text-sm text-slate-400 mb-8 md:mb-10 max-w-sm mx-auto font-medium">يبدو أنك لم تضف أي منتجات حصرية بعد. ابدأ بالتسوق الآن واكتشف أرقى أنواع الساعات والعطور.</p>
             <Link 
               to="/store"
-              className="inline-flex items-center gap-2 md:gap-3 bg-amber-600 hover:bg-amber-700 text-white px-8 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base shadow-xl shadow-amber-600/30 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 md:gap-3 bg-rose-600 hover:bg-rose-700 text-white px-8 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base shadow-xl shadow-rose-600/30 transition-all hover:scale-105 active:scale-95"
             >
               اذهب للمتجر
               <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 shadow-sm" />
@@ -76,7 +76,7 @@ export function Cart() {
                     <div className="flex-1 min-w-0 text-right">
                       <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-1 md:gap-4 mb-2 md:mb-4">
                         <div className="w-full sm:w-auto">
-                          <h3 className="text-sm md:text-xl font-bold md:font-black text-slate-900 mb-0.5 md:mb-1 group-hover:text-amber-600 transition-colors truncate">{item.name}</h3>
+                          <h3 className="text-sm md:text-xl font-bold md:font-black text-slate-900 mb-0.5 md:mb-1 group-hover:text-rose-600 transition-colors truncate">{item.name}</h3>
                           <div className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wider">{item.brand}</div>
                         </div>
                         <div className="text-base md:text-2xl font-display font-black text-slate-900 mt-1 sm:mt-0 whitespace-nowrap">{item.price.toLocaleString()} <span className="text-[10px] md:text-xs font-bold text-slate-400 italic">ريال</span></div>
@@ -86,7 +86,7 @@ export function Cart() {
                         <div className="flex items-center gap-1 md:gap-2 bg-slate-100 rounded-lg md:rounded-2xl p-1 border border-slate-200">
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity + 1)} 
-                            className="w-7 h-7 md:w-10 md:h-10 bg-white rounded-md md:rounded-xl flex items-center justify-center shadow-sm text-amber-600 hover:bg-amber-600 hover:text-white transition-all active:scale-90"
+                            className="w-7 h-7 md:w-10 md:h-10 bg-white rounded-md md:rounded-xl flex items-center justify-center shadow-sm text-rose-600 hover:bg-rose-700 hover:text-white transition-all active:scale-90"
                           >
                             <Plus className="w-3.5 h-3.5 md:w-5 md:h-5" />
                           </button>
@@ -116,8 +116,8 @@ export function Cart() {
               </AnimatePresence>
 
               <div className="p-3 md:p-4 rounded-xl md:rounded-2xl bg-white border border-slate-100 flex flex-row items-center justify-between gap-3 shadow-sm">
-                <div className="flex items-center gap-2 md:gap-3 text-teal-700">
-                   <div className="bg-teal-50 p-1.5 md:p-2 rounded-lg flex-shrink-0">
+                <div className="flex items-center gap-2 md:gap-3 text-rose-700">
+                   <div className="bg-rose-50 p-1.5 md:p-2 rounded-lg flex-shrink-0">
                       <Truck className="w-4 h-4 md:w-5 md:h-5" />
                    </div>
                    <span className="font-bold text-[10px] md:text-sm">شحن مجاني للطلبات الكبيرة</span>
@@ -143,16 +143,12 @@ export function Cart() {
                     </span>
                     <span className="font-black text-sm md:text-base text-slate-900">{subtotal.toLocaleString()} ريال</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] md:text-sm text-slate-400 font-bold">رسوم التوصيل</span>
-                    <span className="font-black text-sm md:text-base text-emerald-500">{shipping === 0 ? 'مجاني' : `${shipping.toLocaleString()} ريال`}</span>
-                  </div>
                   
                   <div className="pt-4 md:pt-6 border-t border-slate-100">
                     <div className="flex justify-between items-end">
                       <div>
-                         <div className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">المبلغ الإجمالي</div>
-                         <div className="text-2xl md:text-4xl font-display font-black text-amber-600">{totalPrice.toLocaleString()}</div>
+                         <div className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">المبلغ الإجمالي (غير شامل التوصيل)</div>
+                         <div className="text-2xl md:text-4xl font-display font-black text-rose-600">{subtotal.toLocaleString()}</div>
                       </div>
                       <div className="text-xs md:text-sm font-black text-slate-900 mb-1">ريال يمني</div>
                     </div>
@@ -162,7 +158,7 @@ export function Cart() {
                 <div className="space-y-3 md:space-y-4">
                   <Link 
                     to="/checkout"
-                    className="w-full flex items-center justify-center gap-2 md:gap-3 bg-slate-900 hover:bg-slate-800 text-white py-3 md:py-5 rounded-xl md:rounded-[1.5rem] font-black text-sm md:text-lg shadow-xl shadow-slate-900/20 transition-all hover:scale-[1.02] active:scale-95"
+                    className="w-full flex items-center justify-center gap-2 md:gap-3 bg-rose-600 hover:bg-rose-700 text-white py-3 md:py-5 rounded-xl md:rounded-[1.5rem] font-black text-sm md:text-lg shadow-xl shadow-rose-600/20 transition-all hover:scale-[1.02] active:scale-95"
                   >
                     متابعة عملية الدفع
                     <CreditCard className="w-4 h-4 md:w-6 md:h-6" />
@@ -170,11 +166,11 @@ export function Cart() {
                   
                   <div className="grid grid-cols-2 gap-2 md:gap-4 mt-4 md:mt-8">
                      <div className="flex flex-col items-center gap-1.5 md:gap-2 p-3 md:p-4 bg-slate-50 rounded-xl md:rounded-2xl text-center">
-                        <ShieldCheck className="w-5 h-5 md:w-6 md:h-6 text-amber-600" />
+                        <ShieldCheck className="w-5 h-5 md:w-6 md:h-6 text-rose-600" />
                         <span className="text-[9px] md:text-[10px] font-black text-slate-500">دفع آمن 100%</span>
                      </div>
                      <div className="flex flex-col items-center gap-1.5 md:gap-2 p-3 md:p-4 bg-slate-50 rounded-xl md:rounded-2xl text-center">
-                        <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-amber-600" />
+                        <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-rose-600" />
                         <span className="text-[9px] md:text-[10px] font-black text-slate-500">جودة مضمونة</span>
                      </div>
                   </div>

@@ -53,7 +53,7 @@ export function AdminConsultations() {
 
   if (loading) return (
     <div className="min-h-[60vh] flex items-center justify-center">
-      <Loader2 className="animate-spin w-10 h-10 text-teal-600" />
+      <Loader2 className="animate-spin w-10 h-10 text-rose-600" />
     </div>
   );
 
@@ -66,7 +66,7 @@ export function AdminConsultations() {
         </div>
         <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
           <span className="text-slate-400 font-bold">إجمالي الطلبات:</span>
-          <span className="text-2xl font-black text-teal-600">{consultations.length}</span>
+          <span className="text-2xl font-black text-rose-600">{consultations.length}</span>
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export function AdminConsultations() {
                   {/* Consultation Details */}
                   <div className="space-y-3 bg-slate-50/50 rounded-2xl p-4">
                     <div className="flex items-center gap-3 text-sm">
-                      <Tag className="w-4 h-4 text-teal-600 shrink-0" />
+                      <Tag className="w-4 h-4 text-rose-600 shrink-0" />
                       <span className="font-black text-slate-600">{c.serviceType || 'استشارة عامة'}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
@@ -151,7 +151,7 @@ export function AdminConsultations() {
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
                         <MessageSquare className="w-3 h-3" /> تفاصيل الطلب
                       </label>
-                      <p className="text-xs font-medium text-slate-600 bg-teal-50/30 p-3 rounded-xl border border-teal-50 leading-relaxed italic max-h-24 overflow-y-auto">
+                      <p className="text-xs font-medium text-slate-600 bg-rose-50/30 p-3 rounded-xl border border-rose-50 leading-relaxed italic max-h-24 overflow-y-auto">
                         {c.notes || c.details}
                       </p>
                     </div>
@@ -175,7 +175,7 @@ export function AdminConsultations() {
                     </button>
                     <a 
                       href={`tel:${c.phone}`}
-                      className="w-12 h-12 bg-white border-2 border-slate-100 text-slate-400 hover:text-teal-600 hover:border-teal-100 rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-95"
+                      className="w-12 h-12 bg-white border-2 border-slate-100 text-slate-400 hover:text-rose-600 hover:border-rose-100 rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-95"
                     >
                       <Phone className="w-5 h-5" />
                     </a>

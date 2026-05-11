@@ -39,14 +39,14 @@ export function OfferModal({ offer, onClose, onClaim, bookingLoading }: {
                 className="w-full h-full object-cover" 
               />
               <div className="absolute top-6 right-6">
-                <div className="bg-amber-500 text-slate-950 font-black px-4 py-2 rounded-2xl shadow-xl border border-white/20">
+                <div className="bg-rose-500 text-slate-950 font-black px-4 py-2 rounded-2xl shadow-xl border border-white/20">
                   -{offer.discount}% خصم
                 </div>
               </div>
             </div>
 
             <div className="p-8 md:p-10">
-              <div className="flex items-center gap-2 text-amber-600 font-bold text-sm uppercase tracking-widest mb-4">
+              <div className="flex items-center gap-2 text-rose-600 font-bold text-sm uppercase tracking-widest mb-4">
                 <Clock className="w-4 h-4" /> عرض لفترة محدودة
               </div>
               <h2 className="text-3xl md:text-4xl font-display font-black text-slate-900 mb-6">{offer.title}</h2>
@@ -55,7 +55,7 @@ export function OfferModal({ offer, onClose, onClaim, bookingLoading }: {
               <button
                 onClick={() => onClaim(offer)}
                 disabled={bookingLoading === offer.id}
-                className="w-full bg-slate-900 text-white px-8 py-5 rounded-2xl font-black text-lg hover:bg-amber-600 hover:text-slate-900 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-xl shadow-slate-900/20"
+                className="w-full bg-rose-600 text-white hover:bg-rose-700 px-8 py-5 rounded-2xl font-black text-lg hover:text-slate-900 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-xl shadow-slate-900/20"
               >
                 {bookingLoading === offer.id ? (
                   <span className="animate-pulse">جاري الطلب...</span>

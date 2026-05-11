@@ -86,7 +86,7 @@ export function AdminOrders() {
 
   const statusMap: Record<string, { label: string, color: string, icon: any }> = {
     'pending': { label: 'جديد', color: 'bg-slate-100 text-slate-600', icon: Clock },
-    'processing': { label: 'قيد التجهيز', color: 'bg-amber-100/10 text-amber-600', icon: Package },
+    'processing': { label: 'قيد التجهيز', color: 'bg-rose-100/10 text-rose-600', icon: Package },
     'shipped': { label: 'تم الشحن', color: 'bg-blue-100/10 text-blue-600', icon: ArrowLeftRight },
     'delivered': { label: 'تم التسليم', color: 'bg-emerald-100/10 text-emerald-600', icon: CheckCircle2 },
     'cancelled': { label: 'مرفوض', color: 'bg-rose-100/10 text-rose-600', icon: X }
@@ -120,7 +120,7 @@ export function AdminOrders() {
               placeholder="ابحث برقم الطلب، الاسم، أو الهاتف..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+              className="w-full pl-4 pr-10 py-2 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors"
             />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -128,7 +128,7 @@ export function AdminOrders() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="flex-1 sm:w-48 px-4 py-2 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors bg-white"
+              className="flex-1 sm:w-48 px-4 py-2 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors bg-white"
             >
               <option value="all">جميع الحالات</option>
               <option value="pending">طلبات جديدة</option>
@@ -158,7 +158,7 @@ export function AdminOrders() {
               {loading ? (
                 <tr>
                   <td colSpan={8} className="px-6 py-12 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-amber-500" />
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-rose-500" />
                   </td>
                 </tr>
               ) : filteredOrders.length === 0 ? (
@@ -207,14 +207,14 @@ export function AdminOrders() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       {updating === order.id ? (
-                        <Loader2 className="w-5 h-5 animate-spin mx-auto text-amber-500" />
+                        <Loader2 className="w-5 h-5 animate-spin mx-auto text-rose-500" />
                       ) : (
                         <div className="relative inline-block w-32">
                           <select
                             value={order.status}
                             onChange={(e) => updateOrder(order.id, { status: e.target.value }, order)}
                             className={cn(
-                              "appearance-none w-full px-4 py-2 rounded-full text-xs font-bold text-center cursor-pointer transition-all border-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-500",
+                              "appearance-none w-full px-4 py-2 rounded-full text-xs font-bold text-center cursor-pointer transition-all border-none focus:ring-2 focus:ring-offset-1 focus:ring-rose-500",
                               statusMap[order.status]?.color || "bg-slate-100 text-slate-700"
                             )}
                           >

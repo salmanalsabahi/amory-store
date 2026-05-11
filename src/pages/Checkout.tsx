@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { collection, addDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../lib/firebaseErrorHandler';
 import { db, auth, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
@@ -15,7 +15,7 @@ import { useOnlineStatus } from '../hooks/useOnlineStatus';
 export function Checkout() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
-  const { items: cartItems, subtotal, shipping: shippingFee, totalPrice: initialTotal, clearCart } = useCart();
+  const { items: cartItems, subtotal, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('جاري إرسال الطلب...');
   const [success, setSuccess] = useState(false);
@@ -29,14 +29,59 @@ export function Checkout() {
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
 
-  React.useEffect(() => {
-    const fetchMethods = async () => {
-      const q = query(collection(db, 'paymentMethods'), where('isEnabled', '==', true), orderBy('name'));
-      const qs = await getDocs(q);
-      setPaymentMethods(qs.docs.map(d => ({ id: d.id, ...d.data() })));
+  const [shippingRates, setShippingRates] = useState<any[]>([]);
+  const [shippingFee, setShippingFee] = useState(0);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    governorate: '',
+    address: '',
+    paymentMethod: 'الدفع عند الاستلام'
+  });
+
+  useEffect(() => {
+    const fetchMethodsAndShipping = async () => {
+      try {
+        const q = query(collection(db, 'paymentMethods'), where('isEnabled', '==', true), orderBy('name'));
+        const qs = await getDocs(q);
+        setPaymentMethods(qs.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (error) {
+        console.error("Error fetching payment methods:", error);
+      }
+
+      try {
+        const docRef = doc(db, 'siteSettings', 'shipping');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().rates) {
+          const activeRates = docSnap.data().rates.filter((r: any) => r.isActive);
+          setShippingRates(activeRates);
+          if (activeRates.length > 0) {
+            setFormData(prev => ({ ...prev, governorate: activeRates[0].name }));
+            setShippingFee(activeRates[0].cost || 0);
+          }
+        } else {
+          // Fallback basic governorates
+          const defaultGovs = ['صنعاء', 'عدن', 'تعز', 'حجة', 'الحديدة', 'إب'];
+          const rates = defaultGovs.map(name => ({ name, cost: 0, isActive: true }));
+          setShippingRates(rates);
+          setFormData(prev => ({ ...prev, governorate: rates[0].name }));
+        }
+      } catch (error) {
+        console.error("Error fetching shipping rates:", error);
+      }
     };
-    fetchMethods();
+    fetchMethodsAndShipping();
   }, []);
+
+  const handleGovernorateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const govName = e.target.value;
+    setFormData({ ...formData, governorate: govName });
+    const selectedGov = shippingRates.find(r => r.name === govName);
+    if (selectedGov) {
+      setShippingFee(selectedGov.cost || 0);
+    }
+  };
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -70,16 +115,6 @@ export function Checkout() {
 
   const discountAmount = appliedCoupon ? (subtotal * appliedCoupon.discount / 100) : 0;
   const total = subtotal - discountAmount + shippingFee;
-
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    governorate: 'صنعاء',
-    address: '',
-    paymentMethod: 'الدفع عند الاستلام'
-  });
-
-  const governorates = ['صنعاء', 'عدن', 'تعز', 'إب', 'الحديدة', 'حضرموت', 'ذمار', 'عمران', 'مأرب', 'شبوة', 'أخرى'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -239,14 +274,14 @@ export function Checkout() {
           
           <div className="bg-white p-6 rounded-2xl inline-block text-right mb-8 w-full max-w-md shadow-sm">
             <div className="text-sm text-slate-500 mb-1">رقم الطلب الخاص بك:</div>
-            <div className="text-2xl font-bold text-amber-600 font-mono tracking-wider">{orderNum}</div>
+            <div className="text-2xl font-bold text-rose-600 font-mono tracking-wider">{orderNum}</div>
             <p className="text-xs text-slate-400 mt-2">يرجى الاحتفاظ بهذا الرقم لتتبع حالة طلبك.</p>
           </div>
 
           <div>
             <button 
               onClick={() => navigate('/tracking')}
-              className="bg-slate-900 text-white px-8 py-3 rounded-xl font-medium hover:bg-slate-800 transition-colors"
+              className="bg-rose-600 text-white hover:bg-rose-700 px-8 py-3 rounded-xl font-medium transition-colors"
             >
               تتبع الطلب
             </button>
@@ -265,7 +300,7 @@ export function Checkout() {
                 <p className="text-slate-500 mb-8 font-medium">لا يمكنك إتمام الطلب بدون إضافة منتجات إلى السلة أولاً.</p>
                 <button 
                     onClick={() => navigate('/store')}
-                    className="bg-amber-600 text-white px-8 py-3 rounded-2xl font-black hover:bg-amber-700 transition-all active:scale-95 shadow-lg shadow-amber-600/20"
+                    className="bg-rose-600 text-white px-8 py-3 rounded-2xl font-black hover:bg-rose-700 transition-all active:scale-95 shadow-lg shadow-rose-600/20"
                 >
                     اذهب للمتجر
                 </button>
@@ -283,7 +318,7 @@ export function Checkout() {
         {/* Shipping details */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <Truck className="w-5 h-5 text-amber-500" />
+            <Truck className="w-5 h-5 text-rose-500" />
             معلومات التوصيل
           </h2>
           
@@ -295,7 +330,7 @@ export function Checkout() {
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors"
                 placeholder="الاسم الثلاثي"
               />
             </div>
@@ -307,7 +342,7 @@ export function Checkout() {
                 type="tel"
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors text-left"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors text-left"
                 placeholder="770000000"
                 dir="ltr"
               />
@@ -317,11 +352,14 @@ export function Checkout() {
               <label className="text-sm font-medium text-slate-700">المحافظة *</label>
               <select
                 value={formData.governorate}
-                onChange={e => setFormData({...formData, governorate: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                onChange={handleGovernorateChange}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors"
+                disabled={shippingRates.length === 0}
               >
-                {governorates.map(gov => (
-                  <option key={gov} value={gov}>{gov}</option>
+                {shippingRates.map(gov => (
+                  <option key={gov.name} value={gov.name}>
+                    {gov.name} {gov.cost > 0 ? `(+${gov.cost} ريال)` : '(توصيل مجاني)'}
+                  </option>
                 ))}
               </select>
             </div>
@@ -333,7 +371,7 @@ export function Checkout() {
                 type="text"
                 value={formData.address}
                 onChange={e => setFormData({...formData, address: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors"
                 placeholder="المدينة، الشارع، أقرب معلم"
               />
             </div>
@@ -343,7 +381,7 @@ export function Checkout() {
         {/* Coupon */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <Tag className="w-5 h-5 text-amber-500" />
+            <Tag className="w-5 h-5 text-rose-500" />
             هل لديك كود خصم؟
           </h2>
           <div className="flex gap-2 relative flex-wrap sm:flex-nowrap">
@@ -352,14 +390,14 @@ export function Checkout() {
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
               placeholder="أدخل كود الخصم هنا"
-              className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors uppercase min-w-[200px]"
+              className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors uppercase min-w-[200px]"
               disabled={!!appliedCoupon || validatingCoupon}
             />
             <button
               type="button"
               onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCode(''); setCouponMessage(''); } : handleApplyCoupon}
               disabled={validatingCoupon || (!couponCode && !appliedCoupon)}
-              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 justify-center flex-shrink-0 ${appliedCoupon ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 justify-center flex-shrink-0 ${appliedCoupon ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-rose-600 text-white hover:bg-rose-700'}`}
             >
               {validatingCoupon ? <Loader2 className="w-5 h-5 animate-spin" /> : appliedCoupon ? 'إلغاء' : 'تطبيق'}
             </button>
@@ -374,19 +412,19 @@ export function Checkout() {
         {/* Payment Method */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-amber-500" />
+            <CreditCard className="w-5 h-5 text-rose-500" />
             طريقة الدفع
           </h2>
           
           <div className="space-y-4">
-            <label className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'الدفع عند الاستلام' ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-amber-300'}`}>
+            <label className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'الدفع عند الاستلام' ? 'border-rose-500 bg-rose-50' : 'border-slate-200 hover:border-rose-300'}`}>
               <input 
                 type="radio" 
                 name="payment" 
                 value="الدفع عند الاستلام"
                 checked={formData.paymentMethod === 'الدفع عند الاستلام'}
                 onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                className="w-5 h-5 text-amber-600 focus:ring-amber-500 border-slate-300"
+                className="w-5 h-5 text-rose-600 focus:ring-rose-500 border-slate-300"
               />
               <Banknote className="w-6 h-6 text-slate-600" />
               <div>
@@ -397,14 +435,14 @@ export function Checkout() {
 
             {paymentMethods.map(method => (
               <div key={method.id} className="space-y-4">
-                <label className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === method.name ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-amber-300'}`}>
+                <label className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === method.name ? 'border-rose-500 bg-rose-50' : 'border-slate-200 hover:border-rose-300'}`}>
                   <input 
                     type="radio" 
                     name="payment" 
                     value={method.name}
                     checked={formData.paymentMethod === method.name}
                     onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                    className="w-5 h-5 text-amber-600 focus:ring-amber-500 border-slate-300"
+                    className="w-5 h-5 text-rose-600 focus:ring-rose-500 border-slate-300"
                   />
                   {method.type === 'bank' ? <CreditCard className="w-6 h-6 text-slate-600"/> : <Wallet className="w-6 h-6 text-slate-600"/>}
                   <div>
@@ -414,7 +452,7 @@ export function Checkout() {
                 </label>
                 
                 {formData.paymentMethod === method.name && (
-                  <div className="text-sm text-amber-800 bg-amber-100 p-4 rounded-xl space-y-2">
+                  <div className="text-sm text-rose-800 bg-rose-100 p-4 rounded-xl space-y-2">
                     <p className="font-bold">يرجى التحويل إلى المعلومة التالية:</p>
                     <p>{method.accountName}: {method.accountNumber}</p>
                     <p>بعد التحويل، قم بتصوير سند أو إشعار التحويل وأرفقه بالأسفل لإتمام الطلب.</p>
@@ -425,16 +463,16 @@ export function Checkout() {
           </div>
 
           {formData.paymentMethod !== 'الدفع عند الاستلام' && (
-            <div className="mt-6 p-4 border border-dashed border-amber-300 rounded-xl space-y-3 bg-amber-50/50">
+            <div className="mt-6 p-4 border border-dashed border-rose-300 rounded-xl space-y-3 bg-rose-50/50">
               <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                <Upload className="w-4 h-4 text-amber-600" />
+                <Upload className="w-4 h-4 text-rose-600" />
                 إرفاق صورة التحويل/الحوالة *
               </label>
               <input 
                 type="file"
                 accept="image/*"
                 onChange={(e) => setPaymentProof(e.target.files ? e.target.files[0] : null)}
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-600 file:text-white hover:file:bg-amber-700 file:cursor-pointer"
+                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-600 file:text-white hover:file:bg-rose-700 file:cursor-pointer"
               />
               <p className="text-xs text-slate-500">يجب إرفاق صورة واضحة للحوالة البنكية أو إشعار التحويل.</p>
             </div>
@@ -442,32 +480,32 @@ export function Checkout() {
         </div>
 
         {/* Submit */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-slate-900 text-white p-6 rounded-3xl">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-rose-600 text-white hover:bg-rose-700 p-6 rounded-3xl">
           <div className="flex-1 w-full max-w-sm space-y-2">
-            <div className="flex items-center justify-between text-sm text-slate-400">
+            <div className="flex items-center justify-between text-sm text-white/80">
               <span>المجموع الفرعي:</span>
               <span>{subtotal.toLocaleString()} ريال</span>
             </div>
             {discountAmount > 0 && (
-              <div className="flex items-center justify-between text-sm text-green-400">
+               <div className="flex items-center justify-between text-sm text-green-300">
                 <span>الخصم ({appliedCoupon?.discount}%):</span>
                 <span>-{discountAmount.toLocaleString()} ريال</span>
               </div>
             )}
-            <div className="flex items-center justify-between text-sm text-slate-400 border-b border-slate-700/50 pb-2">
+            <div className="flex items-center justify-between text-sm text-white/80 border-b border-white/20 pb-2">
               <span>التوصيل:</span>
               <span>{shippingFee.toLocaleString()} ريال</span>
             </div>
-            <div className="flex items-center justify-between font-bold text-amber-400 text-xl pt-1">
+            <div className="flex items-center justify-between font-bold text-white text-xl pt-1">
               <span>الإجمالي:</span>
-              <span>{total.toLocaleString()} <span className="text-sm font-normal text-slate-300">ريال</span></span>
+              <span>{total.toLocaleString()} <span className="text-sm font-normal text-white/80">ريال</span></span>
             </div>
           </div>
           
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-amber-500/25 disabled:opacity-70 flex items-center justify-center min-w-[200px]"
+            className="w-full sm:w-auto bg-white text-rose-600 px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:bg-rose-50 disabled:opacity-70 flex items-center justify-center min-w-[200px] active:scale-95"
           >
             {loading ? (
                 <div className="flex items-center gap-2">

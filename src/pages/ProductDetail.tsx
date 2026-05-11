@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs, limit, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { motion } from 'motion/react';
 import { 
   ShoppingCart, Star, ShieldCheck, Truck, 
@@ -11,6 +11,7 @@ import { cn } from '../lib/utils';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import toast from 'react-hot-toast';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { RatingsAndReviews } from '../components/ui/RatingsAndReviews';
 import { ProductCard } from '../components/ProductCard';
@@ -108,7 +109,7 @@ export function ProductDetail() {
     return (
       <div className="pt-20 pb-20 text-center bg-slate-50/30 min-h-screen">
         <h1 className="text-xl font-bold text-slate-800 mb-4">المنتج غير متوفر</h1>
-        <Link to="/store" className="bg-amber-600 text-white px-6 py-2 rounded-lg font-bold">العودة للمتجر</Link>
+        <Link to="/store" className="bg-rose-600 text-white px-6 py-2 rounded-lg font-bold">العودة للمتجر</Link>
       </div>
     );
   }
@@ -128,17 +129,25 @@ export function ProductDetail() {
   };
 
   const handleNotifyMe = async () => {
-    try {
-      await addDoc(collection(db, 'stock_notifications'), {
-        productId: product.id,
-        productName: product.name,
-        requestedAt: serverTimestamp(),
-        status: 'pending'
-      });
-      setNotified(true);
-    } catch (error) {
-      console.error("Error signing up for notification:", error);
-    }
+    requireAuth(async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) return;
+
+        await addDoc(collection(db, 'stock_notifications'), {
+          productId: product.id,
+          productName: product.name,
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          requestedAt: serverTimestamp(),
+          status: 'pending'
+        });
+        setNotified(true);
+        toast.success("ولا يهمك، بنبلغك أول ما يتوفر ياحبوب!", { icon: "🔔" });
+      } catch (error) {
+        console.error("Error signing up for notification:", error);
+      }
+    }, { customMessage: 'لازم تسجل دخول عشان نقدر نبلغك أول ما يتوفر المنتج!' });
   };
 
   const increment = () => setQuantity(prev => prev + 1);
@@ -182,9 +191,9 @@ export function ProductDetail() {
         
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-6 text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-wider">
-          <Link to="/" className="hover:text-teal-700 transition-colors">الرئيسية</Link>
+          <Link to="/" className="hover:text-rose-700 transition-colors">الرئيسية</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to="/store" className="hover:text-teal-700 transition-colors">المنتجات</Link>
+          <Link to="/store" className="hover:text-rose-700 transition-colors">المنتجات</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-slate-900 font-bold">{product.name}</span>
         </nav>
@@ -195,7 +204,7 @@ export function ProductDetail() {
             
             {/* Top Labels */}
             <div className="flex justify-between items-center mb-2 md:mb-4 text-[10px] md:text-sm font-medium">
-               <span className="text-teal-700 bg-teal-50 px-2 py-0.5 md:px-3 md:py-1 rounded-sm">{product.brand || 'PharmaCare'}</span>
+               <span className="text-rose-700 bg-rose-50 px-2 py-0.5 md:px-3 md:py-1 rounded-sm">{product.brand || 'PharmaCare'}</span>
                <span className="text-slate-400">رقم التسجيل: YEM-22334</span>
             </div>
             
@@ -203,21 +212,31 @@ export function ProductDetail() {
             <h1 className="text-xl md:text-4xl font-extrabold text-slate-900 mb-1 leading-tight">
               {product.name}
             </h1>
-            <p className="text-xs md:text-lg text-slate-500 mb-3 md:mb-6 font-medium" dir="ltr">{product.englishName || product.name}</p>
+            <p className="text-xs md:text-lg text-slate-500 mb-2 font-medium" dir="ltr">{product.englishName || product.name}</p>
+
+            {product.isComingSoon ? (
+               <div className="mb-4 md:mb-6">
+                 <span className="inline-block bg-amber-100 text-amber-800 text-xs md:text-sm font-black px-3 py-1 rounded-full border border-amber-200">سيتوفر قريباً (قيد الاستيراد)</span>
+               </div>
+            ) : product.stock <= 0 ? (
+               <div className="mb-4 md:mb-6">
+                 <span className="inline-block bg-rose-100 text-rose-800 text-xs md:text-sm font-black px-3 py-1 rounded-full border border-rose-200">نفذت الكمية</span>
+               </div>
+            ) : null}
 
             {/* Ratings */}
             <div className="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-6 text-[10px] md:text-sm">
                 <span className="text-slate-500">({rating.count} تقييم)</span>
                 <div className="flex text-slate-200">
                   {[1, 2, 3, 4, 5].map(s => (
-                    <Star key={s} className={cn("w-3 h-3 md:w-4 md:h-4", Math.round(rating.average || 5) >= s ? "fill-amber-400 text-amber-400" : "")} />
+                    <Star key={s} className={cn("w-3 h-3 md:w-4 md:h-4", Math.round(rating.average || 5) >= s ? "fill-rose-400 text-rose-400" : "")} />
                   ))}
                 </div>
             </div>
 
             {/* Price section */}
             <div className="mb-4 md:mb-6 flex flex-col items-start gap-0.5 md:gap-1">
-               <div className="flex items-baseline gap-1 md:gap-2 text-teal-700">
+               <div className="flex items-baseline gap-1 md:gap-2 text-rose-700">
                  <span className="text-2xl md:text-4xl font-bold">{product.price.toLocaleString()}</span>
                  <span className="text-[10px] md:text-lg font-medium">ريال</span>
                  {typeof product.originalPrice === 'number' && product.originalPrice > product.price && (
@@ -236,13 +255,13 @@ export function ProductDetail() {
             {/* Action Bar */}
             <div className="sticky bottom-0 z-50 bg-white border-t border-slate-100 p-4 rounded-t-2xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:bg-transparent md:border-0 md:p-0 md:rounded-none md:shadow-none md:static flex flex-col gap-4 mb-8">
                <div className="flex items-center justify-between gap-4">
-                  {(product.inStock !== false) ? (
+                  {!product.isComingSoon && product.stock > 0 ? (
                       <div className="flex items-center bg-slate-100 rounded-lg p-1">
-                          <button onClick={decrement} className="p-2 text-slate-600 hover:text-teal-700">
+                          <button onClick={decrement} className="p-2 text-slate-600 hover:text-rose-700">
                              <Minus className="w-4 h-4" />
                           </button>
                           <span className="px-4 font-bold text-slate-900">{quantity}</span>
-                          <button onClick={increment} className="p-2 text-slate-600 hover:text-teal-700">
+                          <button onClick={increment} className="p-2 text-slate-600 hover:text-rose-700">
                              <Plus className="w-4 h-4" />
                           </button>
                       </div>
@@ -259,8 +278,8 @@ export function ProductDetail() {
                         }, { redirect: false, customMessage: 'ياحبوب يرجى تسجيل الدخول أو إنشاء حساب لكي تتمكن من الإضافة للمفضلة.' });
                      }}
                      className={cn(
-                         "p-3 rounded-full border transition-all",
-                         isInWishlist(product.id) ? "border-red-200 bg-red-50 text-red-500" : "border-slate-200 hover:bg-slate-50 text-slate-400"
+                         "p-3 rounded-full border transition-all active:scale-95",
+                         isInWishlist(product.id) ? "border-rose-200 bg-rose-50 text-rose-500" : "border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-400 hover:text-rose-500"
                      )}
                    >
                      <Heart className={cn("w-5 h-5", isInWishlist(product.id) && "fill-current")} />
@@ -268,16 +287,16 @@ export function ProductDetail() {
                </div>
 
                <div className="flex gap-3">
-                  {(product.inStock !== false) ? (
+                  {!product.isComingSoon && product.stock > 0 ? (
                       <button 
                         onClick={handleAddToCart}
                         disabled={adding}
                         className={cn(
-                          "flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-teal-700/20 transition-all",
-                          adding ? "bg-emerald-600" : "bg-teal-700 hover:bg-teal-800"
+                          "flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-rose-700/20 transition-all active:scale-95",
+                          adding ? "bg-rose-500" : "bg-rose-600 hover:bg-rose-700 active:bg-rose-800"
                         )}
                       >
-                         {adding ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+                         {adding ? <Check className="w-5 h-5 animate-in zoom-in" /> : <ShoppingCart className="w-5 h-5" />}
                          {adding ? "تمت الإضافة" : "إضافة للسلة"}
                       </button>
                   ) : (
@@ -285,11 +304,11 @@ export function ProductDetail() {
                         onClick={handleNotifyMe}
                         disabled={notified}
                         className={cn(
-                          "flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm border transition-all w-full",
-                          notified ? "bg-slate-100 text-slate-400 border-slate-200" : "bg-teal-700 text-white border-teal-700 hover:bg-teal-800"
+                          "flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm border transition-all w-full active:scale-95",
+                          notified ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-amber-500 text-white border-amber-500 hover:bg-amber-600 active:bg-amber-700"
                         )}
                       >
-                         {notified ? "تم الطلب" : "أخبرني عند التوفر"}
+                         {notified ? "تم التسجيل بنجاح" : product.isComingSoon ? "أعلمني عند التوفر (قريباً)" : "أعلمني عند التوفر"}
                       </button>
                   )}
                </div>
@@ -297,10 +316,10 @@ export function ProductDetail() {
 
             {/* Trust Badges */}
             <div className="flex flex-row items-center justify-between text-[11px] md:text-sm font-medium text-slate-600 gap-2 md:gap-3 border-b border-slate-100 pb-4 md:pb-6 mb-4 md:mb-6">
-               <div className="flex items-center gap-1.5 md:gap-2 text-emerald-600">
+               <div className="flex items-center gap-1.5 md:gap-2 text-rose-600">
                   <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" /> <span className="truncate">منتج أصلي ومضمون</span>
                </div>
-               <div className="flex items-center gap-1.5 md:gap-2 text-teal-700">
+               <div className="flex items-center gap-1.5 md:gap-2 text-rose-700">
                   <Truck className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" /> <span className="truncate">توصيل لجميع المحافظات</span>
                </div>
             </div>
@@ -369,7 +388,7 @@ export function ProductDetail() {
                      onClick={() => setSelectedImage(idx)}
                      className={cn(
                        "w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0",
-                       selectedImage === idx ? "border-teal-700 shadow-sm" : "border-transparent opacity-60 hover:opacity-100 bg-slate-50"
+                       selectedImage === idx ? "border-rose-700 shadow-sm" : "border-transparent opacity-60 hover:opacity-100 bg-slate-50"
                      )}
                    >
                      <img src={img} className="w-full h-full object-contain mix-blend-multiply" />
@@ -395,8 +414,8 @@ export function ProductDetail() {
         {relatedProducts.length > 0 && (
           <div className="border-t border-slate-100 pt-6 md:pt-10 mb-10 md:mb-16">
             <div className="flex items-center justify-between mb-6 md:mb-8">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-900 border-b-2 border-teal-700 inline-block pb-2 md:pb-3">منتجات مشابهة</h2>
-              <Link to={`/store?category=${product.category}`} className="text-xs md:text-sm font-medium text-teal-700 hover:text-teal-800 transition-colors">عرض المزيد</Link>
+              <h2 className="text-xl md:text-2xl font-bold text-slate-900 border-b-2 border-rose-700 inline-block pb-2 md:pb-3">منتجات مشابهة</h2>
+              <Link to={`/store?category=${product.category}`} className="text-xs md:text-sm font-medium text-rose-700 hover:text-rose-800 transition-colors">عرض المزيد</Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
               {relatedProducts.map((p, idx) => (

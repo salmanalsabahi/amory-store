@@ -57,13 +57,13 @@ export function InstallAppPrompt() {
       </button>
 
       <div className="flex items-center gap-4 mt-2">
-        <div className="bg-amber-100 p-3 rounded-2xl shrink-0">
-          <Download className="w-8 h-8 text-amber-600" />
+        <div className="bg-rose-100 p-3 rounded-2xl shrink-0">
+          <Download className="w-8 h-8 text-rose-600" />
         </div>
         <div>
-          <h3 className="font-bold text-slate-900 text-lg">تثبيت التطبيق</h3>
+          <h3 className="font-bold text-slate-900 text-lg">تثبيت عموري للتجميل</h3>
           <p className="text-sm text-slate-600 leading-relaxed">
-            استمتع بتجربة تسوق أسرع وأسهل من خلال إضافة التطبيق إلى شاشتك الرئيسية.
+            استمتع بتجربة تسوق أسرع وأسهل مع عموري للتجميل من خلال إضافة التطبيق إلى شاشتك الرئيسية.
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export function InstallAppPrompt() {
       ) : (
         <button 
           onClick={handleInstall}
-          className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-center shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          className="w-full bg-rose-600 text-white hover:bg-rose-700 py-4 rounded-2xl font-bold text-center shadow-lg shadow-slate-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
         >
           <Download className="w-5 h-5" />
           تثبيت التطبيق الآن

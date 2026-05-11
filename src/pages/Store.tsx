@@ -23,7 +23,7 @@ export function Store() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   
-  const brands = ["Rolex", "Patek Philippe", "Audemars Piguet", "Tissot", "Seiko", "Dior", "Chanel", "Tom Ford"];
+  const brands = ["CeraVe", "Bioderma", "La Roche-Posay", "Cetaphil", "Garnier", "Vichy", "Eucerin", "The Ordinary", "PanOxyl", "Avene"];
 
   useEffect(() => {
     const q = query(collection(db, 'products'));
@@ -73,11 +73,11 @@ export function Store() {
           {/* Top Filters Area */}
           <div className="bg-white rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-slate-100">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
-              <h3 className="font-display font-black text-slate-900 border-r-4 border-amber-500 pr-3">تصفية المنتجات</h3>
+              <h3 className="font-display font-black text-slate-900 border-r-4 border-rose-500 pr-3">تصفية المنتجات</h3>
               {(selectedCategories.length > 0 || selectedBrands.length > 0 || searchQuery) && (
                 <button 
                   onClick={() => { setSelectedCategories([]); setSelectedBrands([]); setSearchQuery(''); }}
-                  className="text-xs font-bold text-slate-400 hover:text-amber-600 transition-colors bg-slate-50 px-4 py-2 rounded-full self-start md:self-auto inline-flex"
+                  className="text-xs font-bold text-slate-400 hover:text-rose-600 transition-colors bg-slate-50 px-4 py-2 rounded-full self-start md:self-auto inline-flex"
                 >
                   إعادة ضبط الخيارات
                 </button>
@@ -94,7 +94,7 @@ export function Store() {
                         className={cn(
                           "px-4 py-2 rounded-full text-xs font-bold transition-all border",
                           selectedCategories.length === 0 
-                            ? "bg-amber-600 text-white border-amber-600" 
+                            ? "bg-rose-600 text-white border-rose-600" 
                             : "bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-100"
                         )}
                       >
@@ -107,7 +107,7 @@ export function Store() {
                         className={cn(
                           "px-4 py-2 rounded-full text-xs font-bold transition-all border",
                           selectedCategories.includes(cat) 
-                            ? "bg-amber-100 text-amber-800 border-amber-200" 
+                            ? "bg-rose-100 text-rose-800 border-rose-200" 
                             : "bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-100"
                         )}
                       >
@@ -128,7 +128,7 @@ export function Store() {
                         className={cn(
                           "px-4 py-2 rounded-full text-xs font-bold transition-all border",
                           selectedBrands.includes(brand) 
-                            ? "bg-amber-100 text-amber-800 border-amber-200" 
+                            ? "bg-rose-100 text-rose-800 border-rose-200" 
                             : "bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-100"
                         )}
                       >
@@ -144,13 +144,13 @@ export function Store() {
           <main className="flex-1 w-full">
             <div className="flex flex-col md:flex-row items-center gap-6 mb-10">
               <div className="relative flex-1 group">
-                <Search className="w-5 h-5 absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-amber-500 transition-colors" />
+                <Search className="w-5 h-5 absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                 <input
                   type="text"
                   placeholder="ابحث عن ساعتك المفضلة، براند، أو عطر فريد..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-6 pr-14 py-4 bg-white rounded-[2rem] border border-slate-100 shadow-sm focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all outline-none font-medium"
+                  className="w-full pl-6 pr-14 py-4 bg-white rounded-[2rem] border border-slate-100 shadow-sm focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all outline-none font-medium"
                 />
               </div>
               <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm whitespace-nowrap px-6">
@@ -177,7 +177,7 @@ export function Store() {
                 <p className="text-slate-500 max-w-sm mx-auto">لم نعثر على أي منتجات تطابق معايير البحث الحالية. جرب تغيير كلمات البحث أو الفلاتر.</p>
                 <button 
                   onClick={() => { setSelectedCategories([]); setSelectedBrands([]); setSearchQuery(''); }}
-                  className="mt-8 text-teal-600 font-bold hover:underline"
+                  className="mt-8 text-rose-600 font-bold hover:underline"
                 >
                   عرض جميع المنتجات
                 </button>

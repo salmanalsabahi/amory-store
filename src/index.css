@@ -10,19 +10,19 @@
   --font-sans: "Tajawal", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Cairo", ui-sans-serif, system-ui, sans-serif;
 
-  --color-primary-50: #f0fdfa;
-  --color-primary-100: #ccfbf1;
-  --color-primary-500: #14b8a6; /* Teal */
-  --color-primary-600: #0d9488;
-  --color-primary-700: #0f766e;
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe4e6;
+  --color-primary-500: #e11d48; /* Rose 600 */
+  --color-primary-600: #be123c;
+  --color-primary-700: #9f1239;
 
-  --color-secondary-50: #eff6ff;
-  --color-secondary-100: #dbeafe;
-  --color-secondary-500: #3b82f6; /* Soft Blue */
-  --color-secondary-600: #2563eb;
-  --color-secondary-900: #1e3a8a;
+  --color-secondary-50: #fdf2f8;
+  --color-secondary-100: #fce7f3;
+  --color-secondary-500: #db2777; /* Pink 600 */
+  --color-secondary-600: #be185d;
+  --color-secondary-900: #831843;
 
-  --color-accent: #d4af37; /* Luxury Gold accent */
+  --color-accent: #f43f5e; /* Rose 500 accent */
 }
 
 /* nprogress */
@@ -31,7 +31,7 @@
 }
 
 #nprogress .bar {
-  background: #14b8a6; /* Teal primary color */
+  background: #e11d48; /* Rose primary color */
   position: fixed;
   z-index: 1031;
   top: 0;
@@ -46,7 +46,7 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px #14b8a6, 0 0 5px #14b8a6;
+  box-shadow: 0 0 10px #e11d48, 0 0 5px #e11d48;
   opacity: 1.0;
   -webkit-transform: rotate(3deg) translate(0px, -4px);
       -ms-transform: rotate(3deg) translate(0px, -4px);
@@ -134,18 +134,18 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.61 0.23 25.1); /* Rose 600 */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.70 0.15 330); /* Pink 500 */
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.70 0.15 330); /* Pink */
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.61 0.23 25.1); /* Rose 600 */
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

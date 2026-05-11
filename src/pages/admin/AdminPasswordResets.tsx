@@ -130,7 +130,7 @@ export function AdminPasswordResets() {
                 </div>
                 
                 <div className={`px-4 py-1.5 rounded-full text-sm font-bold ${
-                  request.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                  request.status === 'pending' ? 'bg-rose-50 text-rose-600' :
                   request.status === 'completed' ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500'
                 }`}>
                   {request.status === 'pending' ? 'قيد الانتظار' :

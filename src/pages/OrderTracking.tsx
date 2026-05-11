@@ -83,7 +83,7 @@ export function OrderTracking() {
       <div className="relative">
         <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -translate-y-1/2 z-0 hidden sm:block" />
         <div 
-          className="absolute top-1/2 right-0 h-1 bg-amber-500 -translate-y-1/2 z-0 hidden sm:block transition-all duration-1000" 
+          className="absolute top-1/2 right-0 h-1 bg-rose-500 -translate-y-1/2 z-0 hidden sm:block transition-all duration-1000" 
           style={{ width: `${(Math.max(1, currentStep) - 1) * (100 / 3)}%` }}
         />
         
@@ -98,7 +98,7 @@ export function OrderTracking() {
                 <div 
                   className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center font-bold border-4 transition-colors duration-300 shadow-sm relative z-10",
-                    isCompleted ? "bg-amber-500 border-amber-100 text-white" : "bg-white border-slate-100 text-slate-400"
+                    isCompleted ? "bg-rose-500 border-rose-100 text-white" : "bg-white border-slate-100 text-slate-400"
                   )}
                 >
                   <Icon className="w-5 h-5" />
@@ -141,7 +141,7 @@ export function OrderTracking() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-slate-900 hover:bg-slate-800 text-white p-3 px-8 rounded-full font-medium transition-colors disabled:opacity-70 flex items-center gap-2"
+            className="bg-rose-600 hover:bg-rose-700 text-white p-3 px-8 rounded-full font-medium transition-colors disabled:opacity-70 flex items-center gap-2 active:scale-95"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
               <>
@@ -164,7 +164,7 @@ export function OrderTracking() {
           <div className="bg-slate-50 p-6 sm:p-8 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start gap-4">
             <div>
               <div className="text-sm text-slate-500 mb-1">رقم الطلب</div>
-              <div className="text-2xl font-bold font-mono tracking-wider text-amber-600">{order.orderNumber}</div>
+              <div className="text-2xl font-bold font-mono tracking-wider text-rose-600">{order.orderNumber}</div>
             </div>
             <div className="text-right sm:text-left">
               <div className="text-sm text-slate-500 mb-1">تاريخ الطلب</div>
@@ -188,7 +188,7 @@ export function OrderTracking() {
                 </div>
                 <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
                   <span className="text-slate-600 font-medium">المبلغ المطلوب</span>
-                  <span className="font-bold text-xl text-amber-600">{order.total} ريال</span>
+                  <span className="font-bold text-xl text-rose-600">{order.total} ريال</span>
                 </div>
               </div>
             </div>
@@ -208,7 +208,7 @@ export function OrderTracking() {
                 className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-right p-4 rounded-xl transition-colors flex justify-between items-center"
               >
                 <div>
-                  <div className="font-mono font-bold text-amber-600">{uo.orderNumber}</div>
+                  <div className="font-mono font-bold text-rose-600">{uo.orderNumber}</div>
                   <div className="text-sm text-slate-500">{new Date(uo.createdAt).toLocaleDateString('ar-YE')}</div>
                 </div>
                 <div className="text-sm font-medium bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">

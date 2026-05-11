@@ -109,7 +109,7 @@ export function Consultation() {
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-md w-full bg-white rounded-3xl p-10 shadow-xl border border-slate-100 text-center space-y-6"
         >
-          <div className="w-20 h-20 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-20 h-20 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-10 h-10" />
           </div>
           <h1 className="text-3xl font-black text-slate-900">تم استلام طلبك!</h1>
@@ -118,7 +118,7 @@ export function Consultation() {
           </p>
           <button 
             onClick={() => window.location.href = '/'}
-            className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+            className="w-full bg-rose-600 text-white hover:bg-rose-700 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-slate-200"
           >
             العودة للرئيسية
           </button>
@@ -167,13 +167,13 @@ export function Consultation() {
                 {/* Full Name */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <User className="w-4 h-4 text-teal-600" /> الاسم الكامل
+                    <User className="w-4 h-4 text-rose-600" /> الاسم الكامل
                   </label>
                   <input 
                     type="text" required
                     value={formData.fullName}
                     onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600 placeholder:text-slate-300"
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900 placeholder:text-slate-400"
                     placeholder="اسمك بالكامل"
                   />
                 </div>
@@ -181,13 +181,13 @@ export function Consultation() {
                 {/* Subject/Entity */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <Building2 className="w-4 h-4 text-teal-600" /> الغرض من الاستشارة
+                    <Building2 className="w-4 h-4 text-rose-600" /> الغرض من الاستشارة
                   </label>
                   <input 
                     type="text"
                     value={formData.subject}
                     onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600 placeholder:text-slate-300"
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900 placeholder:text-slate-400"
                     placeholder="مثال: اختيار هدية"
                   />
                 </div>
@@ -195,13 +195,13 @@ export function Consultation() {
                 {/* Service Type */}
                 <div className="space-y-2 lg:col-span-1">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <HelpCircle className="w-4 h-4 text-teal-600" /> نوع الخدمة المطلوبة
+                    <HelpCircle className="w-4 h-4 text-rose-600" /> نوع الخدمة المطلوبة
                   </label>
                   <div className="relative">
                     <select 
                       value={formData.serviceType}
                       onChange={e => setFormData({ ...formData, serviceType: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600 appearance-none cursor-pointer"
+                      className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900 appearance-none cursor-pointer"
                     >
                       <option>اختيار ساعة مناسبة</option>
                       <option>نصيحة حول العطور</option>
@@ -216,13 +216,13 @@ export function Consultation() {
                 {/* Phone */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <Phone className="w-4 h-4 text-teal-600" /> رقم الهاتف
+                    <Phone className="w-4 h-4 text-rose-600" /> رقم الهاتف
                   </label>
                   <input 
                     type="tel" dir="ltr" required
                     value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600 placeholder:text-slate-300 text-right"
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900 placeholder:text-slate-400 text-right"
                     placeholder="+967 7XX XXX XXX"
                   />
                 </div>
@@ -230,26 +230,26 @@ export function Consultation() {
                 {/* Date */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <Calendar className="w-4 h-4 text-teal-600" /> التاريخ المفضل
+                    <Calendar className="w-4 h-4 text-rose-600" /> التاريخ المفضل
                   </label>
                   <input 
                     type="date" required
                     value={formData.date}
                     onChange={e => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600"
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900"
                   />
                 </div>
 
                 {/* Time */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                    <Clock className="w-4 h-4 text-teal-600" /> الوقت المفضل
+                    <Clock className="w-4 h-4 text-rose-600" /> الوقت المفضل
                   </label>
                   <input 
                     type="time" required
                     value={formData.time}
                     onChange={e => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600"
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900"
                   />
                 </div>
               </div>
@@ -257,13 +257,13 @@ export function Consultation() {
               {/* Notes */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm font-black text-slate-700 mr-1">
-                  <MessageSquare className="w-4 h-4 text-teal-600" /> ملاحظات إضافية
+                  <MessageSquare className="w-4 h-4 text-rose-600" /> ملاحظات إضافية
                 </label>
                 <textarea 
                   rows={4}
                   value={formData.notes}
                   onChange={e => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-4 focus:bg-white focus:border-teal-500 outline-none transition-all font-bold text-slate-600 placeholder:text-slate-300 resize-none"
+                  className="w-full bg-slate-100 border-2 border-slate-200 rounded-2xl px-6 py-4 focus:bg-white focus:border-rose-500 outline-none transition-all font-bold text-slate-900 placeholder:text-slate-400 resize-none"
                   placeholder="أخبرنا المزيد عن احتياجاتك..."
                 />
               </div>
@@ -280,7 +280,7 @@ export function Consultation() {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="flex-[2] bg-teal-700 text-white py-5 rounded-2xl font-black text-xl hover:bg-teal-800 transition-all shadow-xl shadow-teal-100 flex items-center justify-center gap-3 disabled:opacity-70"
+                  className="flex-[2] bg-rose-700 text-white py-5 rounded-2xl font-black text-xl hover:bg-rose-800 transition-all shadow-xl shadow-rose-100 flex items-center justify-center gap-3 disabled:opacity-70"
                 >
                   {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'تأكيد الحجز'}
                 </button>
@@ -289,11 +289,11 @@ export function Consultation() {
           </div>
 
           {/* Sidebar Section */}
-          <div className="lg:w-80 bg-teal-700 p-8 md:p-10 text-white flex flex-col">
+          <div className="lg:w-80 bg-rose-700 p-8 md:p-10 text-white flex flex-col">
             <div className="space-y-8 flex-1">
               <div className="space-y-4">
                 <h3 className="text-2xl font-black">معلومات الحجز</h3>
-                <p className="text-teal-100 text-sm font-medium leading-relaxed">
+                <p className="text-rose-100 text-sm font-medium leading-relaxed">
                   نقدم استشارات متخصصة لعملائنا لمساعدتهم في اتخاذ القرار الأمثل والحصول على أفضل خدمة وتجهيز لطلباتهم الخاصة.
                 </p>
               </div>
@@ -305,8 +305,8 @@ export function Consultation() {
                   </div>
                   <div>
                     <h4 className="font-black text-sm uppercase tracking-wider mb-1">أوقات العمل</h4>
-                    <p className="text-teal-50 text-xs font-bold opacity-80">السبت - الخميس</p>
-                    <p className="text-teal-50 text-xs font-bold opacity-80">8:00 صباحاً - 5:00 مساءً</p>
+                    <p className="text-rose-50 text-xs font-bold opacity-80">السبت - الخميس</p>
+                    <p className="text-rose-50 text-xs font-bold opacity-80">8:00 صباحاً - 5:00 مساءً</p>
                   </div>
                 </div>
 
@@ -316,7 +316,7 @@ export function Consultation() {
                   </div>
                   <div>
                     <h4 className="font-black text-sm uppercase tracking-wider mb-1">للمساعدة العاجلة</h4>
-                    <p className="text-teal-50 text-base font-black">+967 774 974 712</p>
+                    <p className="text-rose-50 text-base font-black">+967 774 974 712</p>
                   </div>
                 </div>
               </div>
@@ -327,10 +327,10 @@ export function Consultation() {
                 onClick={() => setShowWhatsAppConfirm(true)}
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 mb-6 group"
               >
-                <MessageSquare className="w-5 h-5 text-teal-300 group-hover:scale-110 transition-transform" />
+                <MessageSquare className="w-5 h-5 text-rose-300 group-hover:scale-110 transition-transform" />
                 <span>طلب مساعدة فورية</span>
               </button>
-              <p className="text-[10px] text-teal-200 font-bold uppercase tracking-widest text-center">
+              <p className="text-[10px] text-rose-200 font-bold uppercase tracking-widest text-center">
                 عموري ستور - خدمتكم غايتنا
               </p>
             </div>

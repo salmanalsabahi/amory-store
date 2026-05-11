@@ -57,8 +57,8 @@ export function PWAInstallPrompt() {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-[400px] z-[100]"
         >
-          <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-2xl border border-white/10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/2" />
+          <div className="bg-rose-600 text-white hover:bg-rose-700 rounded-[2rem] p-6 shadow-2xl border border-white/10 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/2" />
             
             <button 
               onClick={handleDismiss}
@@ -68,7 +68,7 @@ export function PWAInstallPrompt() {
             </button>
 
             <div className="flex gap-5 items-start">
-              <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-700 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-teal-500/20">
+              <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/20">
                 <Smartphone className="w-7 h-7 text-white hidden md:block" />
                 <Download className="w-7 h-7 text-white md:hidden" />
               </div>
@@ -80,7 +80,7 @@ export function PWAInstallPrompt() {
                 <div className="mt-6 flex flex-row-reverse gap-3">
                   <button
                     onClick={handleInstallClick}
-                    className="flex-1 bg-white text-slate-900 font-black py-3 rounded-xl hover:bg-teal-50 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-1 bg-white text-slate-900 font-black py-3 rounded-xl hover:bg-rose-50 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     <span>تثبيت الآن</span>
                     <Download className="w-4 h-4" />

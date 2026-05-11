@@ -199,12 +199,12 @@ export function Chatbot() {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "fixed bottom-[80px] lg:bottom-12 right-4 lg:right-8 z-[90] w-11 h-11 lg:w-14 lg:h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110",
-          isOpen ? "bg-red-500 rotate-90" : "bg-teal-600 hover:bg-teal-700"
+          isOpen ? "bg-rose-800 rotate-90" : "bg-rose-600 hover:bg-rose-700"
         )}
       >
         {isOpen ? <X className="w-5 h-5 text-white" /> : <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-white" />}
         {!isOpen && (
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-slate-900 rounded-full border-2 border-white animate-pulse" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-rose-500 animate-pulse" />
         )}
       </button>
 
@@ -218,16 +218,16 @@ export function Chatbot() {
             className="fixed top-[100px] bottom-[155px] lg:top-28 lg:bottom-40 right-4 md:right-6 z-[90] w-[80vw] md:w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 p-4 text-white flex items-center justify-between shadow-lg">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-rose-900 p-4 text-white flex items-center justify-between shadow-lg">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-teal-600 flex items-center justify-center border border-white/20 shadow-inner">
+                <div className="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center border border-white/20 shadow-inner">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h3 className="text-[15px] font-black leading-none mb-1">مساعد عموري ستور</h3>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.8)]" />
-                    <span className="text-[10px] text-teal-100 font-medium">سند متصل الآن</span>
+                    <span className="w-2 h-2 bg-rose-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.8)]" />
+                    <span className="text-[10px] text-rose-100 font-medium">سند متصل الآن</span>
                   </div>
                 </div>
               </div>
@@ -257,7 +257,7 @@ export function Chatbot() {
                   <div className={cn(
                     "p-3.5 rounded-2xl text-sm leading-relaxed",
                     msg.role === 'user' 
-                      ? "bg-amber-600 text-white rounded-tl-none" 
+                      ? "bg-rose-600 text-white rounded-tl-none" 
                       : "bg-white text-slate-800 shadow-sm border border-slate-100 rounded-tr-none"
                   )}>
                     {msg.text}
@@ -290,7 +290,7 @@ export function Chatbot() {
                   <button 
                     key={idx}
                     onClick={() => handleSend(btn.text)}
-                    className="text-[11px] font-black bg-white border border-teal-100 text-teal-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
+                    className="text-[11px] font-black bg-white border border-rose-100 text-rose-700 hover:text-white hover:border-rose-600 px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95 flex items-center gap-1"
                   >
                     {btn.label}
                   </button>
@@ -308,7 +308,7 @@ export function Chatbot() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="اكتب سؤالك هنا..."
-                className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-4 focus:ring-teal-500/10 text-right font-bold"
+                className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-4 focus:ring-rose-500/10 text-right font-bold"
                 dir="rtl"
               />
               <button
@@ -317,7 +317,7 @@ export function Chatbot() {
                 className={cn(
                   "w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-lg active:scale-90",
                   inputText.trim() && !isTyping 
-                    ? "bg-teal-600 text-white shadow-teal-100" 
+                    ? "bg-rose-600 text-white shadow-rose-100" 
                     : "bg-slate-100 text-slate-400 shadow-none cursor-not-allowed"
                 )}
               >

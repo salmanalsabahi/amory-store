@@ -156,7 +156,7 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 z-50 transition-all duration-300',
+          'fixed inset-x-0 top-0 z-50 transition-all duration-300',
           !isTransparent ? 'bg-white' : 'bg-transparent'
         )}
       >
@@ -165,19 +165,13 @@ export function Navbar() {
           <div className="bg-gradient-to-r from-slate-900 to-indigo-900 text-white py-1.5 md:py-2 px-8 md:px-10 relative overflow-hidden shadow-md border-b border-indigo-800/30">
             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none" />
             <div className="max-w-7xl mx-auto flex flex-row items-center justify-center gap-2 md:gap-6 text-[10px] md:text-sm font-medium relative z-10 text-center flex-wrap">
-              <span className="hidden sm:flex animate-pulse items-center gap-1.5 bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
-                <Star className="w-3.5 h-3.5 fill-amber-300" />
+              <span className="hidden sm:flex animate-pulse items-center gap-1.5 bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-full border border-rose-500/30 font-bold uppercase tracking-wider text-[10px] whitespace-nowrap">
+                <Star className="w-3.5 h-3.5 fill-rose-300 text-rose-300" />
                 عرض خاص
               </span>
               <p className="flex items-center gap-1.5 md:gap-2 truncate max-w-[65%] md:max-w-none">
                 {activePromo ? activePromo.text : (settings?.storeDescription || "خصومات حصرية تصل إلى 40% على تشكيلة الساعات الجديدة")}
               </p>
-              <Link 
-                to={activePromo?.link || "/store"} 
-                className="bg-amber-500 hover:bg-amber-400 text-slate-900 px-3 py-1 md:px-4 md:py-1.5 rounded-full font-bold text-[10px] md:text-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:scale-105 active:scale-95 flex-shrink-0"
-              >
-                تسوق الآن
-              </Link>
             </div>
             
             <button 
@@ -212,28 +206,28 @@ export function Navbar() {
           </div>
           <div className="flex items-center gap-3">
               {settings?.socialMedia?.facebook && (
-                <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Facebook className="w-3 h-3" /> <span className="hidden xs:inline">فيسبوك</span>
                 </a>
               )}
               {settings?.socialMedia?.instagram && (
-                <a href={settings.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <a href={settings.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Instagram className="w-3 h-3" /> <span className="hidden xs:inline">انستقرام</span>
                 </a>
               )}
               {settings?.socialMedia?.twitter && (
-                <a href={settings.socialMedia.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <a href={settings.socialMedia.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Twitter className="w-3 h-3" /> <span className="hidden xs:inline">تويتر</span>
                 </a>
               )}
               {settings?.socialMedia?.tiktok && (
-                <a href={settings.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <a href={settings.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.33-.85.51-1.44 1.43-1.58 2.41-.14 1.02.26 2.13 1.01 2.81.76.71 1.84.99 2.85.78 1.02-.21 1.91-.98 2.33-1.92.23-.53.33-1.1.32-1.66V0h.02z"/></svg>
                   <span className="hidden xs:inline">تيك توك</span>
                 </a>
               )}
               {settings?.socialMedia?.linkedin && (
-                <a href={settings.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                <a href={settings.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Linkedin className="w-3 h-3" /> <span className="hidden xs:inline">لينكد إن</span>
                 </a>
               )}
@@ -251,8 +245,9 @@ export function Navbar() {
                   {settings?.logoUrl ? (
                     <img src={settings.logoUrl} alt="Logo" className="w-auto h-8 md:h-10 object-contain transition-all" />
                   ) : (
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-teal-500 to-amber-500 flex items-center justify-center text-white font-display font-bold text-xs shadow-lg group-hover:shadow-teal-500/25 transition-all">
-                      R
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-400 flex items-center justify-center text-white font-display font-bold text-xl shadow-lg shadow-red-500/20 group-hover:shadow-red-500/40 transition-all">
+                      <Sparkles className="w-5 h-5 absolute opacity-30 -top-1 -right-1" />
+                      A
                     </div>
                   )}
                   <span className={cn("font-display font-bold text-sm tracking-tight transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
@@ -271,8 +266,8 @@ export function Navbar() {
                           className={cn(
                           'text-sm font-bold transition-colors relative whitespace-nowrap flex items-center gap-1 py-4',
                           location.pathname === link.path
-                              ? (!isTransparent ? 'text-teal-700 underline decoration-2 underline-offset-8' : 'text-amber-400')
-                              : (!isTransparent ? 'text-slate-700 hover:text-teal-600' : 'text-white/90 hover:text-amber-400')
+                              ? (!isTransparent ? 'text-rose-700 underline decoration-2 underline-offset-8' : 'text-rose-400')
+                              : (!isTransparent ? 'text-slate-700 hover:text-rose-600' : 'text-white/90 hover:text-rose-400')
                           )}
                       >
                           {link.name}
@@ -286,7 +281,7 @@ export function Navbar() {
                                <Link
                                  key={cat.name}
                                  to={cat.path}
-                                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-amber-50 text-slate-700 hover:text-amber-700 transition-all font-bold text-sm"
+                                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-rose-50 text-slate-700 hover:text-rose-700 transition-all font-bold text-sm"
                                >
                                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-white transition-colors">
                                    {cat.name.includes('ساعات') ? <Watch className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
@@ -311,7 +306,7 @@ export function Navbar() {
                       <Link 
                         to="/admin" 
                         onMouseEnter={() => handlePrefetch('/admin')}
-                        className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg border border-teal-100 bg-teal-50/50 text-xs font-bold transition-colors", !isTransparent ? "text-teal-700 hover:bg-teal-100" : "text-white/90 hover:text-amber-400")}
+                        className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rose-100 bg-rose-50/50 text-xs font-bold transition-colors", !isTransparent ? "text-rose-700 hover:bg-rose-100" : "text-white/90 hover:text-rose-400")}
                       >
                         <UserIcon className="w-4 h-4" />
                         <span className="hidden sm:inline">لوحة التحكم</span>
@@ -320,9 +315,9 @@ export function Navbar() {
                       <Link 
                         to="/profile" 
                         onMouseEnter={() => handlePrefetch('/profile')}
-                        className={cn("flex items-center gap-2 text-sm font-medium transition-colors", !isTransparent ? "text-slate-700 hover:text-teal-600" : "text-white/90 hover:text-amber-400")}
+                        className={cn("flex items-center gap-2 text-sm font-medium transition-colors", !isTransparent ? "text-slate-700 hover:text-rose-600" : "text-white/90 hover:text-rose-400")}
                       >
-                        <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="User" className="w-8 h-8 rounded-full border-2 border-amber-400/50" />
+                        <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="User" className="w-8 h-8 rounded-full border-2 border-rose-400/50" />
                       </Link>
                     )}
                     <button onClick={logOut} className={cn("p-2 rounded-full transition-colors", !isTransparent ? "text-red-500 hover:bg-red-50" : "text-red-400 hover:bg-white/10")} title="تسجيل الخروج">
@@ -333,7 +328,7 @@ export function Navbar() {
                   <Link 
                     to="/auth" 
                     onMouseEnter={() => handlePrefetch('/auth')}
-                    className={cn("flex items-center gap-2 text-sm font-medium transition-colors", !isTransparent ? "text-slate-700 hover:text-teal-600" : "text-white/90 hover:text-amber-400")}
+                    className={cn("flex items-center gap-2 text-sm font-medium transition-colors", !isTransparent ? "text-slate-700 hover:text-rose-600" : "text-white/90 hover:text-rose-400")}
                   >
                     <UserIcon className="w-4 h-4" />
                     <span className="hidden sm:inline">دخول</span>
@@ -350,7 +345,7 @@ export function Navbar() {
                 >
                   <Heart className="w-5 h-5" />
                   {wishlist.length > 0 && (
-                    <span className="absolute top-0 right-0 w-4 h-4 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                       {wishlist.length}
                     </span>
                   )}
@@ -362,7 +357,7 @@ export function Navbar() {
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {cartItemsCount > 0 && (
-                    <span className="absolute top-0 right-0 w-4 h-4 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
                       {cartItemsCount}
                     </span>
                   )}
@@ -373,7 +368,7 @@ export function Navbar() {
               {/* Consultations Button */}
               <Link 
                 to="/consultations" 
-                className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-teal-600/20 transition-all active:scale-95 group"
+                className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-rose-600/20 transition-all active:scale-95 group"
               >
                 <Stethoscope className="w-4 h-4" />
                 <span>حجز استشارة</span>
@@ -384,11 +379,21 @@ export function Navbar() {
               {user && (
                 <Notifications isAdmin={isAdmin} isDark={!isTransparent} />
               )}
-              <Link to="/wishlist" className={cn("p-2 transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
+              <Link to="/wishlist" className={cn("p-2 relative transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
                 <Heart className="w-6 h-6" />
+                {wishlist.length > 0 && (
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                      {wishlist.length}
+                    </span>
+                )}
               </Link>
-              <Link to="/cart" className={cn("p-2 transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
+              <Link to="/cart" className={cn("p-2 relative transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
                 <ShoppingCart className="w-6 h-6" />
+                {cartItemsCount > 0 && (
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                      {cartItemsCount}
+                    </span>
+                )}
               </Link>
                 <button
                 className={cn("p-2 -me-2 transition-colors", !isTransparent ? "text-slate-900" : "text-white")}
@@ -438,8 +443,8 @@ export function Navbar() {
                   className={cn(
                     'block px-3 py-3 rounded-lg text-base font-medium transition-colors',
                     location.pathname === link.path
-                      ? 'bg-amber-50 text-amber-700'
-                      : 'text-slate-700 hover:bg-slate-50 hover:text-amber-600'
+                      ? 'bg-rose-50 text-rose-700'
+                      : 'text-slate-700 hover:bg-slate-50 hover:text-rose-600'
                   )}
                 >
                   {link.name}
@@ -460,7 +465,7 @@ export function Navbar() {
                       <Link
                         key={category.name}
                         to={category.path}
-                        className="block px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-white hover:text-amber-600 transition-colors"
+                        className="block px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-white hover:text-rose-600 transition-colors"
                       >
                         {category.name}
                       </Link>
@@ -480,11 +485,11 @@ export function Navbar() {
                         </div>
                     </div>
                     {isAdmin ? (
-                      <Link to="/admin" className="flex items-center gap-1 py-1.5 text-xs text-teal-700 font-bold w-full text-right bg-teal-50 px-3 rounded-md mt-1">
+                      <Link to="/admin" className="flex items-center gap-1 py-1.5 text-xs text-rose-700 font-bold w-full text-right bg-rose-50 px-3 rounded-md mt-1">
                         لوحة التحكم
                       </Link>
                     ) : (
-                      <Link to="/profile" className="flex items-center gap-1 py-1.5 text-xs text-teal-700 font-bold w-full text-right bg-teal-50 px-3 rounded-md mt-1">
+                      <Link to="/profile" className="flex items-center gap-1 py-1.5 text-xs text-rose-700 font-bold w-full text-right bg-rose-50 px-3 rounded-md mt-1">
                         حسابي
                       </Link>
                     )}
@@ -501,7 +506,7 @@ export function Navbar() {
                 )}
                 <a href={settings?.phone ? `tel:${settings.phone}` : "tel:+1234567890"} className="flex items-center gap-2 text-slate-600 text-xs mt-1">
                   <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <Phone className="w-3 h-3 text-teal-600" />
+                    <Phone className="w-3 h-3 text-rose-600" />
                   </div>
                   <div className="truncate">
                     <div className="font-bold text-slate-900" dir="ltr">{settings?.phone || "(555) 123-4567"}</div>
@@ -509,7 +514,7 @@ export function Navbar() {
                 </a>
                 <Link
                   to="/consultations"
-                  className="w-full bg-amber-600 text-white px-5 py-2 rounded-lg text-center text-xs font-bold shadow-md shadow-amber-600/20"
+                  className="w-full bg-rose-600 text-white px-5 py-2 rounded-lg text-center text-xs font-bold shadow-md shadow-rose-600/20"
                 >
                   حجز استشارة
                 </Link>

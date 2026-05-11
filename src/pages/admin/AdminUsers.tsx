@@ -134,7 +134,7 @@ export function AdminUsers() {
                       </button>
                       <button
                         onClick={() => setSelectedUser(user)}
-                        className="bg-amber-50 text-amber-600 hover:bg-amber-100 px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-xs font-bold"
+                        className="bg-rose-50 text-rose-600 hover:bg-rose-100 px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-xs font-bold"
                       >
                         <Key className="w-4 h-4" />
                         المرور
@@ -165,7 +165,7 @@ export function AdminUsers() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-6">
                 <Key className="w-8 h-8" />
               </div>
 

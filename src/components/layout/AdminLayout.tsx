@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { auth, signInWithGoogle, logOut, db } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard, Truck } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { AdminNotifications } from '../admin/AdminNotifications';
 import { OfflineAlert } from '../OfflineAlert';
@@ -48,7 +48,7 @@ export function AdminLayout() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-rose-600" />
       </div>
     );
   }
@@ -58,7 +58,7 @@ export function AdminLayout() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
         <OfflineAlert />
         <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center border border-slate-100">
-          <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-6">
             <LayoutDashboard className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 mb-2">لوحة تحكم المشرف</h1>
@@ -66,7 +66,7 @@ export function AdminLayout() {
           <Link
             to="/auth"
             state={{ from: location }}
-            className="block w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg shadow-amber-600/20"
+            className="block w-full bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg shadow-rose-600/20"
           >
             تسجيل الدخول
           </Link>
@@ -87,7 +87,7 @@ export function AdminLayout() {
           <p className="text-slate-600 mb-8">هذه الصفحة مخصصة لإدارة الموقع فقط. سيتم تحويلك للرئيسية.</p>
           <Link
             to="/"
-            className="block w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg"
+            className="block w-full bg-slate-900 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg"
           >
             العودة للرئيسية
           </Link>
@@ -110,6 +110,7 @@ export function AdminLayout() {
     { name: 'الاستشارات', path: '/admin/consultations', icon: Stethoscope },
     { name: 'الرسائل', path: '/admin/messages', icon: Mail },
     { name: 'إعدادات الدفع', path: '/admin/payment-settings', icon: CreditCard },
+    { name: 'الشحن والتوصيل', path: '/admin/shipping', icon: Truck },
     { name: 'إعدادات الموقع', path: '/admin/site-settings', icon: Settings },
   ];
 
@@ -120,7 +121,7 @@ export function AdminLayout() {
       <aside className="w-full md:w-64 bg-slate-900 text-slate-300 flex flex-col">
         <div className="p-6 border-b border-slate-800 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-white font-display font-bold text-lg">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center text-white font-display font-bold text-lg">
               A
             </div>
             <span className="font-display font-bold text-lg tracking-tight text-white">
@@ -153,7 +154,7 @@ export function AdminLayout() {
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors",
                   isActive
-                    ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20"
+                    ? "bg-rose-600 text-white shadow-lg shadow-rose-600/20"
                     : "hover:bg-slate-800 hover:text-white"
                 )}
               >
@@ -174,7 +175,7 @@ export function AdminLayout() {
           </div>
           <button
             onClick={logOut}
-            className="flex items-center gap-3 px-4 py-3 w-full text-right text-red-400 hover:bg-slate-800 hover:text-red-300 rounded-xl transition-colors"
+            className="flex items-center gap-3 px-4 py-3 w-full text-right text-red-400 hover:text-red-300 rounded-xl transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">تسجيل الخروج</span>
@@ -191,7 +192,7 @@ export function AdminLayout() {
                <input 
                  type="text"
                  placeholder="ابحث عن دواء، مادة فعالة، أو شركة مصنعة..."
-                 className="w-full pl-4 pr-10 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-amber-500 focus:border-amber-500 transition-all text-sm"
+                 className="w-full pl-4 pr-10 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-rose-500 focus:border-rose-500 transition-all text-sm"
                />
              </div>
           </div>

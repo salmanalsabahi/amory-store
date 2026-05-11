@@ -202,13 +202,13 @@ export function Auth() {
           <div className="flex border-b border-slate-100">
             <button
               onClick={() => { setIsLogin(false); setError(''); setResetRequested(false); }}
-              className={`flex-1 py-5 text-center font-bold transition-all ${!isLogin ? 'text-amber-600 border-b-2 border-amber-600 bg-amber-50/10' : 'text-slate-400 hover:bg-slate-50'}`}
+              className={`flex-1 py-5 text-center font-bold transition-all ${!isLogin ? 'text-rose-600 border-b-2 border-rose-600 bg-rose-50/10' : 'text-slate-400 hover:bg-slate-50'}`}
             >
               إنشاء حساب
             </button>
             <button
               onClick={() => { setIsLogin(true); setError(''); setResetRequested(false); }}
-              className={`flex-1 py-5 text-center font-bold transition-all ${isLogin ? 'text-amber-600 border-b-2 border-amber-600 bg-amber-50/10' : 'text-slate-400 hover:bg-slate-50'}`}
+              className={`flex-1 py-5 text-center font-bold transition-all ${isLogin ? 'text-rose-600 border-b-2 border-rose-600 bg-rose-50/10' : 'text-slate-400 hover:bg-slate-50'}`}
             >
               تسجيل الدخول
             </button>
@@ -242,7 +242,7 @@ export function Auth() {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all"
+                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
                       placeholder="أدخل اسمك الكامل"
                     />
                   </div>
@@ -264,7 +264,7 @@ export function Auth() {
                     required
                     value={isLogin ? loginIdentifier : email}
                     onChange={(e) => isLogin ? setLoginIdentifier(e.target.value) : setEmail(e.target.value)}
-                    className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all text-left"
+                    className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all text-left"
                     placeholder={isLogin ? "example@email.com أو 77xxxxxxx" : "example@email.com"}
                     dir="ltr"
                   />
@@ -281,7 +281,7 @@ export function Auth() {
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all text-left"
+                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all text-left"
                       placeholder="77xxxxxxx"
                       dir="ltr"
                     />
@@ -298,7 +298,7 @@ export function Auth() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all text-left"
+                    className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all text-left"
                     placeholder="••••••••"
                     dir="ltr"
                   />
@@ -315,7 +315,7 @@ export function Auth() {
                       required
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all text-left"
+                      className="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all text-left"
                       placeholder="••••••••"
                       dir="ltr"
                     />
@@ -326,13 +326,13 @@ export function Auth() {
               {isLogin && (
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="rounded border-slate-300 text-amber-600 focus:ring-amber-500" />
+                    <input type="checkbox" className="rounded border-slate-300 text-rose-600 focus:ring-rose-500" />
                     <span className="text-sm text-slate-600">تذكرني</span>
                   </label>
                   <button 
                     type="button" 
                     onClick={() => setShowResetModal(true)}
-                    className="text-sm text-amber-600 hover:text-amber-700 font-bold"
+                    className="text-sm text-rose-600 hover:text-rose-700 font-bold"
                   >
                     نسيت كلمة المرور؟
                   </button>
@@ -342,7 +342,7 @@ export function Auth() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-slate-900 hover:bg-amber-600 text-white py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 active:scale-95"
+                className="w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-rose-900/10 flex items-center justify-center gap-2 active:scale-95"
               >
                 {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (isLogin ? 'دخول للمتجر' : 'إنشاء حساب جديد')}
               </button>
@@ -404,7 +404,7 @@ export function Auth() {
                   required
                   value={loginIdentifier}
                   onChange={(e) => setLoginIdentifier(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all text-left"
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all text-left"
                   placeholder="أدخل بياناتك هنا"
                   dir="ltr"
                 />
@@ -413,7 +413,7 @@ export function Auth() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20"
+                className="w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20"
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'إرسال طلب استعادة الوصول'}
               </button>

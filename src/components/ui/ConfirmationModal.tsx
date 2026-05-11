@@ -33,9 +33,9 @@ export function ConfirmationModal({
       button: 'bg-rose-600 hover:bg-rose-700 shadow-rose-200'
     },
     warning: {
-      icon: <AlertTriangle className="w-8 h-8 text-amber-500" />,
-      bg: 'bg-amber-50',
-      button: 'bg-amber-600 hover:bg-amber-700 shadow-amber-200'
+      icon: <AlertTriangle className="w-8 h-8 text-rose-500" />,
+      bg: 'bg-rose-50',
+      button: 'bg-rose-600 hover:bg-rose-700 shadow-rose-200'
     },
     info: {
       icon: <AlertTriangle className="w-8 h-8 text-blue-500" />,

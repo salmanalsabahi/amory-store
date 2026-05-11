@@ -83,7 +83,7 @@ export function AdminPackages() {
             setFormData({ title: '', subtitle: '', price: '', description: '' });
             setIsModalOpen(true);
           }}
-          className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm"
+          className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm"
         >
           <Plus className="w-4 h-4" />
           إضافة باقة جديدة
@@ -93,7 +93,7 @@ export function AdminPackages() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl relative">
-            <h2 className="text-xl font-black text-slate-900 mb-6 border-r-4 border-amber-500 pr-3">
+            <h2 className="text-xl font-black text-slate-900 mb-6 border-r-4 border-rose-500 pr-3">
               {editingPackage ? 'تعديل باقة هدايا' : 'تصميم باقة جديدة'}
             </h2>
             <form onSubmit={handleSave} className="space-y-5">
@@ -104,7 +104,7 @@ export function AdminPackages() {
                   required
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-right font-bold transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-right font-bold transition-all"
                 />
               </div>
               <div>
@@ -114,7 +114,7 @@ export function AdminPackages() {
                   required
                   value={formData.subtitle}
                   onChange={e => setFormData({...formData, subtitle: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-right font-medium transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-right font-medium transition-all"
                 />
               </div>
               <div>
@@ -124,7 +124,7 @@ export function AdminPackages() {
                   required
                   value={formData.price}
                   onChange={e => setFormData({...formData, price: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-right font-bold transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-right font-bold transition-all"
                 />
               </div>
               <div>
@@ -132,7 +132,7 @@ export function AdminPackages() {
                 <textarea
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-right h-24 font-medium transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-right h-24 font-medium transition-all resize-none"
                   placeholder="ساعة فاخرة + عطر فرنسي + صندوق مخملي..."
                 />
               </div>
@@ -146,7 +146,7 @@ export function AdminPackages() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3 rounded-xl bg-slate-900 text-white hover:bg-amber-600 font-bold transition-all active:scale-95"
+                  className="flex-1 px-4 py-3 rounded-xl bg-rose-600 text-white hover:bg-rose-700 font-bold transition-all active:scale-95"
                 >
                   حفظ الباقة
                 </button>
@@ -165,7 +165,7 @@ export function AdminPackages() {
               placeholder="ابحث باسم الباقة..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 rounded-xl border-none bg-white shadow-sm focus:ring-2 focus:ring-amber-500/20 transition-all text-right font-medium"
+              className="w-full pl-4 pr-10 py-2.5 rounded-xl border-none bg-white shadow-sm focus:ring-2 focus:ring-rose-500/20 transition-all text-right font-medium"
             />
           </div>
         </div>
@@ -187,8 +187,8 @@ export function AdminPackages() {
                 <tr key={pkg.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shadow-sm">
-                        <PackageIcon className="w-6 h-6 text-amber-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm">
+                        <PackageIcon className="w-6 h-6 text-rose-600" />
                       </div>
                       <div>
                         <div className="font-black text-slate-900 mb-0.5">{pkg.title}</div>
@@ -197,7 +197,7 @@ export function AdminPackages() {
                     </div>
                   </td>
                   <td className="px-8 py-6">
-                    <div className="font-black text-amber-600">{pkg.price.toLocaleString()} ريال</div>
+                    <div className="font-black text-rose-600">{pkg.price.toLocaleString()} ريال</div>
                   </td>
                   <td className="px-8 py-6">
                     <div className="flex items-center justify-center gap-3">
@@ -212,7 +212,7 @@ export function AdminPackages() {
                           });
                           setIsModalOpen(true);
                         }}
-                        className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 bg-slate-50 hover:bg-amber-50 hover:text-amber-600 transition-all border border-slate-100"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-100"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>

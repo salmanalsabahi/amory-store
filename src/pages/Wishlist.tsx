@@ -24,7 +24,7 @@ export function Wishlist() {
           </p>
           <Link 
             to="/store"
-            className="inline-flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white px-10 py-4 rounded-2xl font-black shadow-lg shadow-amber-600/20 shadow-xl transition-all active:scale-95"
+            className="inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white px-10 py-4 rounded-2xl font-black shadow-lg shadow-rose-600/20 shadow-xl transition-all active:scale-95"
           >
             تصفح المنتجات
           </Link>
@@ -47,8 +47,8 @@ export function Wishlist() {
                 />
               </div>
               <div className="flex flex-col flex-1 py-1 text-right">
-                <div className="text-[10px] text-amber-600 font-black uppercase tracking-widest mb-1">{item.brand || 'ماركة حصرية'}</div>
-                <h3 className="font-black text-slate-900 line-clamp-2 mb-2 group-hover:text-amber-600 transition-colors">{item.name}</h3>
+                <div className="text-[10px] text-rose-600 font-black uppercase tracking-widest mb-1">{item.brand || 'ماركة حصرية'}</div>
+                <h3 className="font-black text-slate-900 line-clamp-2 mb-2 group-hover:text-rose-600 transition-colors">{item.name}</h3>
                 <div className="text-xl font-display font-black text-slate-900 mb-auto">
                   {typeof item.price === 'number' ? item.price.toLocaleString() : item.price} <span className="text-xs font-normal text-slate-400">ريال</span>
                 </div>
@@ -56,7 +56,7 @@ export function Wishlist() {
                 <div className="flex items-center gap-2 mt-4">
                   <Link 
                     to={`/product/${item.id}`}
-                    className="flex-1 bg-slate-900 hover:bg-amber-600 text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all text-sm font-bold shadow-sm"
+                    className="flex-1 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all text-sm font-bold shadow-sm"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     عرض المنتج

@@ -39,7 +39,7 @@ export function AdminArticles() {
         </div>
         <button 
           onClick={() => alert("في النسخة الكاملة سيتم فتح نافذة لاضافة مقال جديد")}
-          className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+          className="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
           إضافة مقال
@@ -87,7 +87,7 @@ export function AdminArticles() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <button onClick={() => alert("تعديل: " + article.title)} className="text-slate-400 hover:text-amber-500 p-1"><Edit2 className="w-4 h-4" /></button>
+                    <button onClick={() => alert("تعديل: " + article.title)} className="text-slate-400 hover:text-rose-500 p-1"><Edit2 className="w-4 h-4" /></button>
                     <button onClick={() => handleDelete(article.id)} className="text-slate-400 hover:text-red-500 p-1"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </td>

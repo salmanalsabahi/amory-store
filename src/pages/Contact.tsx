@@ -133,7 +133,7 @@ export function Contact() {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-teal-600 font-black tracking-widest uppercase bg-teal-50 px-4 md:px-6 py-1.5 md:py-2 rounded-full text-[10px] md:text-sm inline-block"
+            className="text-rose-600 font-black tracking-widest uppercase bg-rose-50 px-4 md:px-6 py-1.5 md:py-2 rounded-full text-[10px] md:text-sm inline-block"
           >
             تواصل معنا
           </motion.span>
@@ -166,11 +166,11 @@ export function Contact() {
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center gap-4 md:gap-5 group"
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-teal-50 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                <Phone className="w-5 h-5 md:w-6 md:h-6 text-teal-600" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-rose-50 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <Phone className="w-5 h-5 md:w-6 md:h-6 text-rose-600" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] md:text-[10px] font-black text-teal-600 uppercase tracking-widest mb-1">اتصل بنا</span>
+                <span className="text-[9px] md:text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">اتصل بنا</span>
                 <span className="text-sm md:text-xl font-black text-slate-900" dir="ltr">{settings?.phone || '967 774 974 712'}</span>
               </div>
             </motion.div>
@@ -196,11 +196,11 @@ export function Contact() {
               transition={{ delay: 0.2 }}
               className="bg-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center gap-4 md:gap-5 group"
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-amber-50 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                <Clock className="w-5 h-5 md:w-6 md:h-6 text-amber-600" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-rose-50 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <Clock className="w-5 h-5 md:w-6 md:h-6 text-rose-600" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] md:text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1">ساعات العمل</span>
+                <span className="text-[9px] md:text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">ساعات العمل</span>
                 <span className="text-sm md:text-lg font-bold text-slate-900">{settings?.workingHours || 'يومياً: 9 ص - 10 ب'}</span>
               </div>
             </motion.div>
@@ -216,7 +216,7 @@ export function Contact() {
                     rel="noopener noreferrer"
                     className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all flex items-center justify-center group"
                   >
-                    <Globe className="w-5 h-5 text-slate-400 group-hover:text-teal-600" />
+                    <Globe className="w-5 h-5 text-slate-400 group-hover:text-rose-600" />
                   </a>
                 ))}
               </div>
@@ -230,12 +230,12 @@ export function Contact() {
             className="lg:col-span-8 bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl shadow-slate-200/60 border border-slate-50 relative overflow-hidden mt-6 lg:mt-0"
           >
             {/* Decorative Background */}
-            <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-teal-50/50 rounded-full blur-2xl md:blur-3xl -z-10 -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-rose-50/50 rounded-full blur-2xl md:blur-3xl -z-10 -translate-y-1/2 translate-x-1/2" />
             
             <div className="mb-8 md:mb-10 text-right">
               <h3 className="text-xl md:text-3xl font-black text-slate-900 flex items-center gap-2 md:gap-3">
                 تواصل مع خبرائنا مباشرة
-                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-amber-500 shrink-0" />
+                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-rose-500 shrink-0" />
               </h3>
               <p className="text-xs md:text-base text-slate-500 font-medium mt-2">نحن هنا للإجابة على جميع تساؤلاتك حول خدماتنا ومنتجاتنا.</p>
             </div>
@@ -277,7 +277,7 @@ export function Contact() {
                     type="text" 
                     value={formData.firstName} 
                     onChange={e => setFormData({...formData, firstName: e.target.value})} 
-                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-50 border-2 border-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800" 
+                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-100 border-2 border-slate-200 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800" 
                     placeholder="أدخل اسمك الأول" 
                     required 
                   />
@@ -288,7 +288,7 @@ export function Contact() {
                     type="text" 
                     value={formData.lastName} 
                     onChange={e => setFormData({...formData, lastName: e.target.value})} 
-                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-50 border-2 border-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800" 
+                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-100 border-2 border-slate-200 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800" 
                     placeholder="أدخل اسم العائلة" 
                     required 
                   />
@@ -302,7 +302,7 @@ export function Contact() {
                     type="email" 
                     value={formData.email} 
                     onChange={e => setFormData({...formData, email: e.target.value})} 
-                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-50 border-2 border-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 text-left" 
+                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-100 border-2 border-slate-200 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 text-left" 
                     dir="ltr" 
                     placeholder="ahmed@example.com" 
                     required 
@@ -314,7 +314,7 @@ export function Contact() {
                     type="tel" 
                     value={formData.phone} 
                     onChange={e => setFormData({...formData, phone: e.target.value})} 
-                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-50 border-2 border-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 text-left" 
+                    className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-100 border-2 border-slate-200 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 text-left" 
                     dir="ltr" 
                     placeholder="+967 7xx xxx xxx" 
                     required 
@@ -328,7 +328,7 @@ export function Contact() {
                   rows={6} 
                   value={formData.message} 
                   onChange={e => setFormData({...formData, message: e.target.value})} 
-                  className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-50 border-2 border-slate-50 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 resize-none min-h-[120px] md:min-h-[150px]" 
+                  className="w-full px-5 py-4 md:px-7 md:py-5 rounded-2xl md:rounded-[2rem] bg-slate-100 border-2 border-slate-200 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all font-bold text-sm md:text-base text-slate-800 resize-none min-h-[120px] md:min-h-[150px]" 
                   placeholder="كيف يمكننا مساعدتك اليوم؟" 
                   required 
                 ></textarea>
@@ -337,7 +337,7 @@ export function Contact() {
               <button 
                 type="submit" 
                 disabled={loading} 
-                className="w-full bg-teal-700 hover:bg-teal-800 text-white px-6 py-4 md:px-10 md:py-6 rounded-2xl md:rounded-[2rem] font-black text-base md:text-xl transition-all flex items-center justify-center gap-2 md:gap-4 shadow-2xl shadow-teal-100 active:scale-[0.98] disabled:opacity-70 group"
+                className="w-full bg-rose-700 hover:bg-rose-800 text-white px-6 py-4 md:px-10 md:py-6 rounded-2xl md:rounded-[2rem] font-black text-base md:text-xl transition-all flex items-center justify-center gap-2 md:gap-4 shadow-2xl shadow-rose-100 active:scale-[0.98] disabled:opacity-70 group"
               >
                 {loading ? (
                   <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin" />
@@ -364,7 +364,7 @@ export function Contact() {
               <div className="relative min-h-[300px] md:min-h-[400px] lg:min-h-[550px] rounded-[1.5rem] md:rounded-[3.5rem] overflow-hidden bg-slate-100 group">
                 {settingsLoading ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                    <Loader2 className="w-8 h-8 md:w-12 md:h-12 animate-spin text-teal-600" />
+                    <Loader2 className="w-8 h-8 md:w-12 md:h-12 animate-spin text-rose-600" />
                     <span className="text-xs md:text-sm font-black text-slate-400">جاري الاتصال بالنظام...</span>
                   </div>
                 ) : settings?.mapEmbedUrl ? (
@@ -415,10 +415,10 @@ export function Contact() {
 
                   {/* Gemini AI Powered Content Section */}
                   <div className="relative p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-slate-50 border border-slate-100 overflow-hidden">
-                    <div className="absolute top-0 left-0 w-1 md:w-2 h-full bg-teal-500" />
+                    <div className="absolute top-0 left-0 w-1 md:w-2 h-full bg-rose-500" />
                     <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
-                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-teal-600" />
-                      <span className="text-[9px] md:text-xs font-black text-teal-600 uppercase tracking-widest">معلومات إضافية للموقع</span>
+                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-rose-600" />
+                      <span className="text-[9px] md:text-xs font-black text-rose-600 uppercase tracking-widest">معلومات إضافية للموقع</span>
                     </div>
 
                     {mapLoading ? (
@@ -438,7 +438,7 @@ export function Contact() {
                   {/* Quick Action */}
                   <button 
                     onClick={() => window.open(`https://wa.me/${settings?.phone?.replace(/[^0-9]/g, '') || '967774974712'}`, '_blank')}
-                    className="flex items-center gap-3 md:gap-4 text-teal-700 font-black hover:gap-4 md:hover:gap-6 transition-all group text-sm md:text-base"
+                    className="flex items-center gap-3 md:gap-4 text-rose-700 font-black hover:gap-4 md:hover:gap-6 transition-all group text-sm md:text-base"
                   >
                     <span>احصل على الموقع عبر الواتساب</span>
                     <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-emerald-500 group-hover:scale-110 transition-transform" />

@@ -98,14 +98,14 @@ export function AdminAnalytics() {
 
   const COLORS = ['#d97706', '#0f172a', '#64748b', '#94a3b8', '#cbd5e1'];
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-amber-600" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-rose-600" /></div>;
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-display font-black text-slate-900 tracking-tight uppercase">تحليلات الأداء الملكي</h1>
         <div className="flex items-center gap-2 text-sm text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-100 font-medium">
-          <Activity className="w-4 h-4 text-amber-500" />
+          <Activity className="w-4 h-4 text-rose-500" />
           <span>تحديث مباشر للبيانات</span>
         </div>
       </div>
@@ -123,7 +123,7 @@ export function AdminAnalytics() {
           title="الطلبات" 
           value={stats.totalOrders} 
           icon={Calendar} 
-          color="bg-amber-600" 
+          color="bg-rose-600" 
           trend="+5%"
         />
         <StatCard 
@@ -146,7 +146,7 @@ export function AdminAnalytics() {
         {/* Orders Status Chart */}
         <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
           <div className="flex items-center gap-2 mb-8">
-            <BarChart3 className="w-6 h-6 text-amber-600" />
+            <BarChart3 className="w-6 h-6 text-rose-600" />
             <h3 className="text-xl font-display font-bold text-slate-900 uppercase tracking-tight">حالات الطلبات</h3>
           </div>
           <div className="h-80">

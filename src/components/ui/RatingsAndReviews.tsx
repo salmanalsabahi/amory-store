@@ -140,7 +140,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                     key={s} 
                     className={cn(
                       "w-3.5 h-3.5 md:w-4 md:h-4", 
-                      Number(averageRating) >= s ? "text-amber-500 fill-amber-500" : "text-slate-200"
+                      Number(averageRating) >= s ? "text-rose-500 fill-rose-500" : "text-slate-200"
                     )} 
                   />
                 ))}
@@ -172,7 +172,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                         <Star 
                           className={cn(
                             "w-8 h-8 transition-all",
-                            rating >= s ? "text-amber-500 fill-amber-500" : "text-slate-200"
+                            rating >= s ? "text-rose-500 fill-rose-500" : "text-slate-200"
                           )} 
                         />
                       </button>
@@ -187,7 +187,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="اكتب تجربتك هنا..."
                     required
-                    className="w-full bg-white border border-slate-200 rounded-2xl p-4 min-h-[120px] focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all outline-none text-right"
+                    className="w-full bg-white border border-slate-200 rounded-2xl p-4 min-h-[120px] focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all outline-none text-right"
                   />
                 </div>
 
@@ -208,7 +208,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-teal-600 transition-all active:scale-95 disabled:opacity-50"
+                  className="w-full bg-rose-600 text-white hover:bg-rose-700 p-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95 disabled:opacity-50"
                 >
                   {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   نشر التقييم
@@ -220,7 +220,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                   <User className="w-8 h-8 text-slate-400" />
                 </div>
                 <p className="text-slate-600 mb-6">يرجى تسجيل الدخول لتتمكن من إضافة تقييمك ومشاركة تجربتك.</p>
-                <Link to="/profile" className="inline-block bg-teal-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-teal-700 transition-all">تسجيل الدخول</Link>
+                <Link to="/profile" className="inline-block bg-rose-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-rose-700 transition-all">تسجيل الدخول</Link>
               </div>
             )}
           </div>
@@ -230,7 +230,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
         <div className="lg:col-span-2">
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-10 h-10 animate-spin text-teal-600 opacity-20" />
+              <Loader2 className="w-10 h-10 animate-spin text-rose-600 opacity-20" />
             </div>
           ) : reviews.length === 0 ? null : (
             <div className="space-y-6">
@@ -260,7 +260,7 @@ export function RatingsAndReviews({ targetId, targetTitle, targetType, onRatingU
                                 key={s} 
                                 className={cn(
                                   "w-3.5 h-3.5", 
-                                  review.rating >= s ? "text-amber-500 fill-amber-500" : "text-slate-100"
+                                  review.rating >= s ? "text-rose-500 fill-rose-500" : "text-slate-100"
                                 )} 
                               />
                             ))}

@@ -86,7 +86,7 @@ export function AdminCoupons() {
         </div>
         <button 
           onClick={handleCreate}
-          className="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+          className="bg-rose-700 hover:bg-rose-800 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
           إضافة كوبون
@@ -116,13 +116,13 @@ export function AdminCoupons() {
               <tr key={coupon.id}>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                       <Ticket className="w-5 h-5" />
                     </div>
                     <div className="font-bold text-slate-900">{coupon.code}</div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-amber-600 font-bold">{coupon.discountPercentage}%</td>
+                <td className="px-6 py-4 text-rose-600 font-bold">{coupon.discountPercentage}%</td>
                 <td className="px-6 py-4">
                   <span className={`text-xs px-2 py-1 rounded-full ${coupon.active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
                     {coupon.active ? 'نشط' : 'غير نشط'}
@@ -130,7 +130,7 @@ export function AdminCoupons() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <button onClick={() => handleEdit(coupon)} className="text-slate-400 hover:text-amber-500 p-2 hover:bg-amber-50 rounded-lg transition-colors group"><Edit2 className="w-5 h-5 group-hover:scale-110 transition-transform" /></button>
+                    <button onClick={() => handleEdit(coupon)} className="text-slate-400 hover:text-rose-500 p-2 hover:bg-rose-50 rounded-lg transition-colors group"><Edit2 className="w-5 h-5 group-hover:scale-110 transition-transform" /></button>
                     <button onClick={() => setDeleteId(coupon.id)} className="text-slate-400 hover:text-red-500 p-2 hover:bg-red-50 rounded-lg transition-colors group"><Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" /></button>
                   </div>
                 </td>
@@ -170,7 +170,7 @@ export function AdminCoupons() {
                     required
                     value={formData.code}
                     onChange={e => setFormData({...formData, code: e.target.value})}
-                    className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-teal-500 focus:ring-4 focus:ring-teal-50 transition-all font-black uppercase text-center text-lg tracking-widest bg-slate-50/30"
+                    className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:ring-4 focus:ring-rose-50 transition-all font-black uppercase text-center text-lg tracking-widest bg-slate-50/30"
                     placeholder="ELEGANCE10"
                   />
                 </div>
@@ -183,7 +183,7 @@ export function AdminCoupons() {
                       required min="1" max="100"
                       value={formData.discountPercentage}
                       onChange={e => setFormData({...formData, discountPercentage: Number(e.target.value)})}
-                      className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-teal-500 focus:ring-4 focus:ring-teal-50 transition-all font-black text-center text-lg pr-12"
+                      className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:ring-4 focus:ring-rose-50 transition-all font-black text-center text-lg pr-12"
                     />
                     <div className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-slate-400 text-xl">%</div>
                   </div>
@@ -197,7 +197,7 @@ export function AdminCoupons() {
                       checked={formData.active}
                       onChange={e => setFormData({...formData, active: e.target.checked})}
                     />
-                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
                   </label>
                   <span className="text-sm font-black text-slate-700">تفعيل العرض في الموقع</span>
                 </div>
@@ -205,7 +205,7 @@ export function AdminCoupons() {
                 <button 
                   type="submit" 
                   disabled={saving}
-                  className="w-full bg-teal-700 hover:bg-teal-800 text-white rounded-2xl py-4 font-black text-lg transition-all flex items-center justify-center gap-3 shadow-xl shadow-teal-100 active:scale-95 disabled:opacity-70"
+                  className="w-full bg-rose-700 hover:bg-rose-800 text-white rounded-2xl py-4 font-black text-lg transition-all flex items-center justify-center gap-3 shadow-xl shadow-rose-100 active:scale-95 disabled:opacity-70"
                 >
                   {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Ticket className="w-5 h-5" /> حفظ البيانات</>}
                 </button>

@@ -8,6 +8,8 @@ import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 
 import { compressImage } from '../../utils/imageUtils';
 
+import { seedAmoryData } from '../../utils/seedAmoryData';
+
 export function AdminSiteSettings() {
   const [settings, setSettings] = useState({
     storeName: '',
@@ -27,8 +29,24 @@ export function AdminSiteSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const isOnline = useOnlineStatus();
+
+  const handleSeed = async () => {
+    if (!window.confirm('هل أنت متأكد من رغبتك في إضافة بيانات "عموري ستور"؟ سيتم إضافة أصناف ومنتجات جديدة وتحديث إعدادات المتجر.')) return;
+    setSeeding(true);
+    try {
+      await seedAmoryData();
+      alert('تم تحديث البيانات بنجاح! يرجى تحديث الصفحة لرؤية التغييرات.');
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+      alert('فشل تحديث البيانات');
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -113,14 +131,24 @@ export function AdminSiteSettings() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-slate-900">إعدادات الموقع</h1>
-        <button
-          onClick={sendTestNotification}
-          disabled={testLoading}
-          className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl font-medium transition-all"
-        >
-          {testLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />}
-          إرسال تنبيه تجريبي
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleSeed}
+            disabled={seeding}
+            className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl font-bold transition-all border border-red-100 shadow-sm"
+          >
+            {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
+            تهيئة بيانات "عموري ستور"
+          </button>
+          <button
+            onClick={sendTestNotification}
+            disabled={testLoading}
+            className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl font-medium transition-all"
+          >
+            {testLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />}
+            إرسال تنبيه تجريبي
+          </button>
+        </div>
       </div>
       
       <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-2xl space-y-6">
@@ -175,7 +203,7 @@ export function AdminSiteSettings() {
             للحصول على الرابط الصحيح: اذهب إلى خرائط جوجل {'>'} مشاركة {'>'} تضمين خريطة {'>'} انسخ الرابط الموجود داخل src.
           </p>
           {settings.mapEmbedUrl && !settings.mapEmbedUrl.includes('embed') && (
-            <p className="mt-1 text-xs text-amber-600 flex items-center gap-1">
+            <p className="mt-1 text-xs text-rose-600 flex items-center gap-1">
               <AlertCircle className="w-3 h-3" />
               يبدو أنك أدخلت رابطاً عادياً وليس رابط تضمين. الخريطة قد لا تظهر للعملاء.
             </p>
@@ -245,7 +273,7 @@ export function AdminSiteSettings() {
           {settings.aboutUsImage && <img src={settings.aboutUsImage} alt="About Us" className="mt-2 h-32 object-cover rounded-lg" />}
         </div>
 
-        <button type="submit" disabled={saving} className="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95">
+        <button type="submit" disabled={saving} className="w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95">
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           حفظ جميع الإعدادات
         </button>

@@ -80,7 +80,7 @@ export function ProfileSettings() {
           <label className="block text-sm font-medium text-slate-700 mb-2">رقم الهاتف</label>
           <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full p-3 rounded-xl border border-slate-200" />
         </div>
-        <button type="submit" disabled={loading} className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-amber-600/20">
+        <button type="submit" disabled={loading} className="bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-rose-600/20">
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           حفظ التغييرات
         </button>

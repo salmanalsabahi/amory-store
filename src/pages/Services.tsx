@@ -16,15 +16,15 @@ const fixedFeatures = [
     title: 'توصيل سريع وآمن',
     desc: 'نضمن وصول مشترياتك في أسرع وقت ممكن مع تغليف آمن وضمان كامل ومتابعة حية لشحنتك.',
     icon: Truck,
-    color: 'text-teal-600',
-    bg: 'bg-teal-50'
+    color: 'text-rose-600',
+    bg: 'bg-rose-50'
   },
   {
     title: 'تغليف هدايا ملكي',
     desc: 'خدمة تغليف استثنائية تناسب فخامة مشترياتكم، مع خيارات مخصصة للبطاقات والشرائط.',
     icon: Gift,
-    color: 'text-amber-600',
-    bg: 'bg-amber-50'
+    color: 'text-rose-600',
+    bg: 'bg-rose-50'
   },
   {
     title: 'ضمان الجودة المتناهي',
@@ -100,9 +100,9 @@ export function Services() {
   return (
     <div className="bg-white min-h-screen overflow-hidden">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 bg-slate-900 border-b border-white/5 overflow-hidden">
+      <section className="relative pt-32 pb-24 bg-rose-900 border-b border-white/5 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center opacity-20 scale-110 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-rose-900 via-rose-900/80 to-transparent" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
@@ -110,11 +110,11 @@ export function Services() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-500 text-xs font-bold uppercase tracking-widest mb-6 border border-amber-500/20">التميز هو معيارنا</span>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold uppercase tracking-widest mb-6 border border-rose-500/20">التميز هو معيارنا</span>
             <h1 className="text-4xl md:text-7xl font-display font-black text-white mb-8 leading-tight">
-              خدمات تليق <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">بأسلوب حياتكم</span>
+              خدمات تليق <br/> <span className="text-white">بأسلوب حياتكم</span>
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-rose-100 max-w-2xl mx-auto leading-relaxed">
               في متجرنا، نؤمن بأن التجربة لا تنتهي بمجرد الشراء، بل تبدأ من هناك. اكتشف عالم العناية والرفاهية الذي نقدمه لعملائنا المميزين.
             </p>
           </motion.div>
@@ -165,10 +165,10 @@ export function Services() {
                 transition={{ delay: idx * 0.2 }}
                 className="relative bg-white p-12 rounded-[3.5rem] shadow-sm border border-slate-100 text-center hover:shadow-xl transition-all"
               >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-xl border-4 border-white">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-rose-600 text-white rounded-full flex items-center justify-center font-bold text-xl border-4 border-white">
                   {idx + 1}
                 </div>
-                <div className="w-20 h-20 bg-slate-900 text-amber-400 rounded-3xl flex items-center justify-center mb-8 mx-auto rotate-3 group-hover:rotate-0 transition-transform">
+                <div className="w-20 h-20 bg-rose-50 text-rose-600 rounded-3xl flex items-center justify-center mb-8 mx-auto rotate-3 group-hover:rotate-0 transition-transform">
                   <step.icon className="w-10 h-10" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">{step.title}</h3>
@@ -188,7 +188,7 @@ export function Services() {
               <p className="text-slate-500 text-lg max-w-xl leading-relaxed">نقدم خدمات مخصصة ومدعومة بخبراء في عالم الساعات والعطور لضمان استدامة وجمال مقتنياتكم.</p>
             </div>
             {loading && (
-              <div className="flex items-center gap-3 text-teal-600 bg-teal-50 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-3 text-rose-600 bg-rose-50 px-4 py-2 rounded-full">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span className="text-sm font-medium">جاري التحديث...</span>
               </div>
@@ -214,10 +214,10 @@ export function Services() {
                     transition={{ delay: index * 0.1 }}
                     className="group"
                   >
-                    <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 h-full flex flex-col hover:border-teal-500/20 transition-all relative overflow-hidden">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-[100px] -translate-y-8 translate-x-8 -z-10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                    <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 h-full flex flex-col hover:border-rose-500/20 transition-all relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-bl-[100px] -translate-y-8 translate-x-8 -z-10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                       
-                      <div className="w-20 h-20 rounded-3xl bg-teal-50 text-teal-600 flex items-center justify-center mb-8 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                      <div className="w-20 h-20 rounded-3xl bg-rose-50 text-rose-600 flex items-center justify-center mb-8 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <Icon className="w-10 h-10" />
                       </div>
                       
@@ -227,7 +227,7 @@ export function Services() {
                       <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50">
                         <Link 
                           to={`/contact?subject=${encodeURIComponent(service.title)}`} 
-                          className="inline-flex items-center gap-2 font-bold text-teal-700 hover:text-teal-800 transition-colors text-sm"
+                          className="inline-flex items-center gap-2 font-bold text-rose-700 hover:text-rose-800 transition-colors text-sm"
                         >
                           طلب الخدمة
                           <motion.span 
@@ -238,7 +238,7 @@ export function Services() {
                         
                         <button
                           onClick={() => setSelectedService(service)}
-                          className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-500 transition-colors"
+                          className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-rose-500 transition-colors"
                         >
                           <Star className="w-3.5 h-3.5 fill-current" />
                           اراء العملاء
@@ -277,7 +277,7 @@ export function Services() {
               
               <div className="p-8 md:p-12">
                 <div className="flex items-center gap-6 mb-8">
-                  <div className="w-20 h-20 rounded-3xl bg-teal-50 text-teal-600 flex items-center justify-center shadow-sm">
+                  <div className="w-20 h-20 rounded-3xl bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm">
                     {(() => {
                       const Icon = iconMap[selectedService.icon] || Sparkles;
                       return <Icon className="w-10 h-10" />;
@@ -307,16 +307,16 @@ export function Services() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-slate-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden"
+            className="bg-rose-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden"
           >
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
             
             <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-8 relative z-10">هل لديك استفسار محدد؟</h2>
-            <p className="text-slate-400 text-lg mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">فريقنا يسعد دائماً بالإجابة على تساؤلاتك ومساعدتك في الحصول على تجربة تسوق استثنائية.</p>
+            <p className="text-rose-100 text-lg mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">فريقنا يسعد دائماً بالإجابة على تساؤلاتك ومساعدتك في الحصول على تجربة تسوق استثنائية.</p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 relative z-10">
-              <Link to="/contact" className="px-10 py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-bold transition-all shadow-xl shadow-teal-900/20">تحدث إلينا</Link>
+              <Link to="/contact" className="px-10 py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold transition-all shadow-xl shadow-rose-900/20">تحدث إلينا</Link>
               <a href={`tel:${process.env.VITE_PHONE || '+967...'}`} className="px-10 py-4 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-bold border border-white/10 transition-all backdrop-blur-sm">اتصال مباشر</a>
             </div>
           </motion.div>

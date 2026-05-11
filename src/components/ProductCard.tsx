@@ -8,7 +8,7 @@ import { useRequireAuth } from '../hooks/useRequireAuth';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import toast from 'react-hot-toast';
 
 interface ProductCardProps {
@@ -49,22 +49,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const handleNotifyMe = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isOnline) {
-      toast.error('المعذرة منك ياحبوب.. النت مقطوع، يرجى الاتصال بالنت لتلقي الإشعارات.');
-      return;
-    }
-    try {
-      await addDoc(collection(db, 'stock_notifications'), {
-        productId: product.id,
-        productName: product.name,
-        requestedAt: serverTimestamp(),
-        status: 'pending'
-      });
-      setNotified(true);
-      toast.success('ولا يهمك، بنبلغك أول ما يتوفر ياحبوب!', { icon: '🔔' });
-    } catch (error) {
-      console.error("Error signing up for notification:", error);
-    }
+    requireAuth(async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) return;
+        
+        await addDoc(collection(db, 'stock_notifications'), {
+          productId: product.id,
+          productName: product.name,
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          requestedAt: serverTimestamp(),
+          status: 'pending'
+        });
+        setNotified(true);
+        toast.success('ولا يهمك، بنبلغك أول ما يتوفر ياحبوب!', { icon: '🔔' });
+      } catch (error) {
+        console.error("Error signing up for notification:", error);
+      }
+    }, { customMessage: 'لازم تسجل دخول عشان نقدر نبلغك أول ما يتوفر المنتج!' });
   };
 
   const openModal = (e: React.MouseEvent) => {
@@ -116,7 +119,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
             onClick={handleWishlistToggle}
             className={cn(
               "absolute top-2 right-2 z-10 p-1.5 rounded-full shadow-sm transition-all duration-300 transform active:scale-90",
-              isInWishlist(product.id) ? 'bg-amber-500 text-white' : 'bg-white text-slate-400 hover:text-amber-500'
+              isInWishlist(product.id) ? 'bg-rose-500 text-white' : 'bg-white text-slate-400 hover:text-rose-500'
             )}
           >
             <Heart className={cn("w-4 h-4", isInWishlist(product.id) && "fill-current")} />
@@ -132,20 +135,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
             </button>
             <button
                 onClick={handleAddToCart}
-                disabled={adding || product.stock <= 0}
+                disabled={adding || product.stock <= 0 || product.isComingSoon}
                 className={cn(
                     "p-3 rounded-full bg-white text-slate-900 shadow-md transition-transform hover:scale-105 active:scale-95",
-                    adding && "bg-emerald-500 text-white",
-                    product.stock <= 0 && "opacity-50 cursor-not-allowed hover:scale-100"
+                    adding && "bg-rose-500 text-white shadow-rose-500/30 shadow-lg",
+                    (product.stock <= 0 || product.isComingSoon) && "opacity-50 cursor-not-allowed hover:scale-100"
                 )}
             >
                 {adding ? <Check className="w-6 h-6" /> : <ShoppingBag className="w-6 h-6" />}
             </button>
-            {product.stock <= 0 && (
+            { (product.stock <= 0 || product.isComingSoon) && (
                 <button
                     onClick={handleNotifyMe}
                     disabled={notified}
-                    className="p-3 rounded-full bg-white text-slate-900 shadow-md transition-transform hover:scale-105 active:scale-95 ml-2"
+                    className="p-3 rounded-full bg-white text-slate-900 shadow-md transition-transform hover:scale-105 active:scale-95 ml-2 cursor-pointer"
                 >
                     {notified ? <Check className="w-6 h-6" /> : <Bell className="w-6 h-6" />}
                 </button>
@@ -160,7 +163,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
             />
           </div>
 
-          {product.stock <= 0 && (
+          {product.isComingSoon ? (
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/80 to-transparent p-4 flex items-end justify-center pointer-events-none h-24">
+              <span className="bg-amber-400 text-amber-900 text-[11px] font-black px-3 py-1.5 rounded-full shadow-lg">سيتوفر قريباً</span>
+            </div>
+          ) : product.stock <= 0 && (
             <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] flex items-center justify-center pointer-events-none">
               <span className="bg-slate-900/80 text-white text-[10px] font-bold px-2 py-1 rounded-full">نفذت الكمية</span>
             </div>
@@ -168,16 +175,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
         </div>
 
         <div className="p-3 md:p-4 flex-1 flex flex-col">
-          <h3 className="text-sm md:text-[15px] font-bold text-slate-900 mb-1 leading-tight group-hover:text-amber-600 transition-colors line-clamp-1">{product.name}</h3>
+          <h3 className="text-sm md:text-[15px] font-bold text-slate-900 mb-1 leading-tight group-hover:text-rose-600 transition-colors line-clamp-1">{product.name}</h3>
           
           <div className="flex justify-between items-center mb-2">
             <span className="text-[10px] uppercase font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-md">{product.category}</span>
             <div className="flex items-center gap-2">
-              <span className={cn("text-[10px] font-bold", product.stock > 0 ? "text-emerald-600" : "text-rose-600")}>
-                {product.stock > 0 ? `المتوفر: ${product.stock}` : 'نفذت الكمية'}
+              <span className={cn("text-[10px] font-bold", product.isComingSoon ? "text-amber-600" : product.stock > 0 ? "text-emerald-600" : "text-rose-600")}>
+                {product.isComingSoon ? 'سيتوفر قريباً' : product.stock > 0 ? `المتوفر: ${product.stock}` : 'نفذت الكمية'}
               </span>
               <div className="flex items-center gap-0.5">
-                 <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                 <Star className="w-3 h-3 text-rose-400 fill-rose-400" />
                  <span className="text-[10px] font-bold text-slate-500">{product.rating || "4.9"}</span>
               </div>
             </div>
@@ -231,7 +238,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                     onClick={handleWishlistToggle}
                     className={cn(
                       "absolute bottom-3 right-3 md:bottom-4 md:right-4 z-10 p-2 md:p-3.5 rounded-full shadow-md transition-all duration-300 transform active:scale-90 hover:scale-110",
-                      isInWishlist(product.id) ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-white text-slate-400 hover:text-amber-500 hover:shadow-lg'
+                      isInWishlist(product.id) ? 'bg-rose-500 text-white shadow-rose-500/30' : 'bg-white text-slate-400 hover:text-rose-500 hover:shadow-lg'
                     )}
                  >
                     <Heart className={cn("w-4 h-4 md:w-6 md:h-6", isInWishlist(product.id) && "fill-current")} />
@@ -247,10 +254,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                  >
                     <div className="flex justify-between items-start mb-1 md:mb-2 group/text">
                        <div>
-                           <span className="inline-block text-[10px] md:text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 md:px-2.5 md:py-1 rounded-md uppercase tracking-wider mb-2 md:mb-3">
+                           <span className="inline-block text-[10px] md:text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 md:px-2.5 md:py-1 rounded-md uppercase tracking-wider mb-2 md:mb-3">
                              {product.brand}
                            </span>
-                           <Link to={`/product/${product.id}`} className="hover:text-amber-600 transition-colors block">
+                           <Link to={`/product/${product.id}`} className="hover:text-rose-600 transition-colors block">
                               <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 leading-tight mb-1 md:mb-2">{product.name}</h2>
                            </Link>
                        </div>
@@ -259,7 +266,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                     <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6 bg-slate-50 p-1.5 md:p-2.5 rounded-lg md:rounded-xl w-max">
                        <div className="flex items-center gap-0.5 md:gap-1">
                           {[1, 2, 3, 4, 5].map((s) => (
-                            <Star key={s} className={cn("w-3 h-3 md:w-4 md:h-4", (product.rating || 5) >= s ? "text-amber-400 fill-amber-400" : "text-slate-200")} />
+                            <Star key={s} className={cn("w-3 h-3 md:w-4 md:h-4", (product.rating || 5) >= s ? "text-rose-400 fill-rose-400" : "text-slate-200")} />
                           ))}
                        </div>
                        <div className="w-px h-3 md:h-4 bg-slate-200"></div>
@@ -311,7 +318,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                        animate={{ opacity: 1, y: 0 }}
                        transition={{ delay: 0.5 }}
                     >
-                       {product.stock > 0 ? (
+                       {!product.isComingSoon && product.stock > 0 ? (
                           <div className="flex flex-col gap-3 md:gap-4">
                              <div className="flex gap-2 mx-auto justify-center sm:w-full sm:mx-0 sm:gap-4 w-full">
                                 <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl overflow-hidden shadow-sm shrink-0">
@@ -330,8 +337,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                                   className={cn(
                                     "flex-1 flex items-center justify-center gap-1.5 md:gap-2 rounded-lg md:rounded-xl font-black text-sm md:text-lg transition-all active:scale-95 shadow-lg",
                                     adding 
-                                      ? "bg-emerald-500 text-white shadow-emerald-500/30" 
-                                      : "bg-slate-900 text-white hover:bg-amber-500 hover:shadow-amber-500/30"
+                                      ? "bg-rose-500 text-white shadow-rose-500/30" 
+                                      : "bg-rose-600 text-white hover:bg-rose-700 hover:shadow-rose-600/30"
                                   )}
                                 >
                                   {adding ? (
@@ -353,7 +360,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                              className={cn(
                                "w-full flex items-center justify-center gap-1.5 md:gap-2 py-3 md:py-4 rounded-lg md:rounded-xl font-black text-sm md:text-lg transition-all active:scale-95 border-2",
                                notified
-                                 ? "bg-amber-50 border-amber-300 text-amber-600"
+                                 ? "bg-rose-50 border-rose-300 text-rose-600"
                                  : "border-slate-900 text-slate-900 hover:bg-slate-50"
                              )}
                           >
@@ -369,10 +376,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                           <Link 
                              to={`/product/${product.id}`} 
                              onClick={() => setIsModalOpen(false)}
-                             className="inline-flex items-center gap-1.5 md:gap-2 text-[11px] md:text-sm font-bold text-slate-500 hover:text-amber-600 transition-colors group/link"
+                             className="inline-flex items-center gap-1.5 md:gap-2 text-[11px] md:text-sm font-bold text-slate-500 hover:text-rose-600 transition-colors group/link"
                           >
                              عرض كافة تفاصيل وتقييمات المنتج
-                             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover/link:bg-amber-100 transition-colors shrink-0">
+                             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover/link:bg-rose-100 transition-colors shrink-0">
                                 <Plus className="w-3 h-3 md:w-4 md:h-4 group-hover/link:rotate-90 transition-transform" />
                              </div>
                           </Link>

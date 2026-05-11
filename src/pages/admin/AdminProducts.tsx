@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, onSnapshot } from 'firebase/firestore';
-import { setDoc, deleteDoc, updateDoc } from '../../lib/safeFirestore';
+import { collection, query, getDocs, doc, onSnapshot, where } from 'firebase/firestore';
+import { setDoc, deleteDoc, updateDoc, addDoc } from '../../lib/safeFirestore';
 import { db, auth } from '../../firebase';
 import { PackageOpen, Search, Trash2, Edit2, Plus, Image as ImageIcon, Loader2, X, Check, AlertCircle, Save, Filter, ChevronDown } from 'lucide-react';
 import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
@@ -17,6 +17,7 @@ interface ProductFormState {
   originalPrice: number;
   stock: number;
   stockStatus: 'in_stock' | 'out_of_stock';
+  isComingSoon: boolean;
   description: string;
   images: string[];
 }
@@ -29,6 +30,7 @@ const INITIAL_FORM_STATE: ProductFormState = {
   originalPrice: 0,
   stock: 10,
   stockStatus: 'in_stock',
+  isComingSoon: false,
   description: '',
   images: ['']
 };
@@ -71,12 +73,55 @@ export function AdminProducts() {
         updatedAt: new Date().toISOString(),
       };
 
+      let becameAvailable = false;
+      const isNowAvailable = !formState.isComingSoon && formState.stock > 0;
+
       if (editingId) {
+        const existingProduct = products.find(p => p.id === editingId);
+        if (existingProduct) {
+          const wasNotAvailable = existingProduct.stock <= 0 || existingProduct.isComingSoon;
+          if (wasNotAvailable && isNowAvailable) {
+            becameAvailable = true;
+          }
+        }
         await updateDoc(doc(db, 'products', editingId), productData);
       } else {
         const newDocRef = doc(collection(db, 'products'));
         await setDoc(newDocRef, { ...productData, createdAt: new Date().toISOString() });
       }
+
+      if (becameAvailable && editingId) {
+        try {
+          const notifsQuery = query(
+            collection(db, 'stock_notifications'),
+            where('productId', '==', editingId),
+            where('status', '==', 'pending')
+          );
+          const notifsSnapshot = await getDocs(notifsQuery);
+          
+          for (const notifDoc of notifsSnapshot.docs) {
+            const data = notifDoc.data();
+            if (data.userId) {
+              await addDoc(collection(db, 'notifications'), {
+                userId: data.userId,
+                title: 'تنبيه توفر المنتج',
+                message: `أبشرك! المنتج ${formState.name} اللي كنت تنتظره صار متوفر الآن في متجرنا.`,
+                type: 'success',
+                link: `/product/${editingId}`,
+                read: false,
+                createdAt: new Date()
+              });
+            }
+            await updateDoc(doc(db, 'stock_notifications', notifDoc.id), {
+              status: 'notified',
+              notifiedAt: new Date().toISOString()
+            });
+          }
+        } catch (error) {
+          console.error("Error sending stock notifications:", error);
+        }
+      }
+
       setIsModalOpen(false);
       resetForm();
     } catch (error) {
@@ -107,6 +152,7 @@ export function AdminProducts() {
       originalPrice: product.originalPrice || 0,
       stock: product.stock || 0,
       stockStatus: product.stockStatus || 'in_stock',
+      isComingSoon: product.isComingSoon || false,
       description: product.description || '',
       images: product.images?.length > 0 ? product.images : ['']
     });
@@ -177,7 +223,7 @@ export function AdminProducts() {
         </div>
         <button 
           onClick={() => { resetForm(); setIsModalOpen(true); }}
-          className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center gap-3 shadow-lg shadow-amber-600/20 active:scale-95"
+          className="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center gap-3 shadow-lg shadow-rose-600/20 active:scale-95"
         >
           <Plus className="w-5 h-5" />
           إضافة منتج جديد
@@ -186,13 +232,13 @@ export function AdminProducts() {
 
       <div className="flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 group">
-          <Search className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors" />
+          <Search className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-600 transition-colors" />
           <input
             type="text"
             placeholder="ابحث باسم المنتج أو الماركة..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-6 pr-12 py-3.5 rounded-2xl border-2 border-slate-100 bg-white focus:border-amber-500 focus:outline-none transition-all font-medium"
+            className="w-full pl-6 pr-12 py-3.5 rounded-2xl border-2 border-slate-100 bg-white focus:border-rose-500 focus:outline-none transition-all font-medium"
           />
         </div>
         <div className="flex gap-2 bg-slate-100 p-1 rounded-2xl border-2 border-slate-100 overflow-x-auto no-scrollbar">
@@ -202,7 +248,7 @@ export function AdminProducts() {
               onClick={() => setActiveCategory(cat)}
               className={cn(
                 "px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap",
-                activeCategory === cat ? "bg-white text-teal-600 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                activeCategory === cat ? "bg-white text-rose-600 shadow-sm" : "text-slate-500 hover:text-slate-800"
               )}
             >
               {cat === 'All' ? 'الكل' : cat}
@@ -269,7 +315,7 @@ export function AdminProducts() {
                            <div 
                              className={cn(
                                "h-full rounded-full transition-all duration-1000",
-                               product.stock > 5 ? "bg-emerald-500" : product.stock > 0 ? "bg-amber-500" : "bg-rose-500"
+                               product.stock > 5 ? "bg-emerald-500" : product.stock > 0 ? "bg-rose-500" : "bg-rose-500"
                              )}
                              style={{ width: `${Math.min(100, (product.stock / 20) * 100)}%` }}
                            />
@@ -278,9 +324,9 @@ export function AdminProducts() {
                       </div>
                       <span className={cn(
                         "text-[10px] font-black w-fit px-2 py-0.5 rounded-md",
-                        product.stockStatus === 'in_stock' ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-rose-50 text-rose-600 border border-rose-100"
+                        product.isComingSoon ? "bg-amber-50 text-amber-600 border border-amber-100" : product.stockStatus === 'in_stock' ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-rose-50 text-rose-600 border border-rose-100"
                       )}>
-                        {product.stockStatus === 'in_stock' ? 'متوفر' : 'نفد'}
+                        {product.isComingSoon ? 'قريباً' : product.stockStatus === 'in_stock' ? 'متوفر' : 'نفد'}
                       </span>
                     </div>
                   </td>
@@ -288,7 +334,7 @@ export function AdminProducts() {
                     <div className="flex items-center justify-center gap-2">
                       <button 
                         onClick={() => openEdit(product)}
-                        className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 bg-slate-50 border border-slate-100 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 transition-all hover:scale-110"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 bg-slate-50 border border-slate-100 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all hover:scale-110"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
@@ -341,7 +387,7 @@ export function AdminProducts() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                   {/* Basic Info */}
                   <div className="space-y-6">
-                    <h3 className="flex items-center gap-2 text-sm font-black text-amber-600 uppercase tracking-widest border-r-4 border-amber-500 pr-3 mb-8">المعلومات الأساسية</h3>
+                    <h3 className="flex items-center gap-2 text-sm font-black text-rose-600 uppercase tracking-widest border-r-4 border-rose-500 pr-3 mb-8">المعلومات الأساسية</h3>
                     
                     <div className="space-y-2">
                        <label className="text-sm font-black text-slate-700 block">اسم المنتج</label>
@@ -349,7 +395,7 @@ export function AdminProducts() {
                          type="text" required
                          value={formState.name}
                          onChange={e => setFormState({...formState, name: e.target.value})}
-                         className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold"
+                         className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold"
                          placeholder="اسم الساعة أو العطر..."
                        />
                     </div>
@@ -361,7 +407,7 @@ export function AdminProducts() {
                            type="text" required
                            value={formState.brand}
                            onChange={e => setFormState({...formState, brand: e.target.value})}
-                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold"
+                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold"
                          />
                       </div>
                       <div className="space-y-2">
@@ -370,7 +416,7 @@ export function AdminProducts() {
                            value={formState.category}
                            onChange={e => setFormState({...formState, category: e.target.value})}
                            required
-                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold appearance-none bg-white"
+                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold appearance-none bg-white"
                          >
                             <option value="" disabled>اختر صنفاً</option>
                             {categories.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
@@ -384,7 +430,7 @@ export function AdminProducts() {
                          rows={4}
                          value={formState.description}
                          onChange={e => setFormState({...formState, description: e.target.value})}
-                         className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold resize-none"
+                         className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold resize-none"
                          placeholder="اكتب وصفاً جذاباً للمنتج..."
                        />
                     </div>
@@ -392,7 +438,7 @@ export function AdminProducts() {
 
                   {/* Pricing & Logic */}
                   <div className="space-y-6">
-                    <h3 className="flex items-center gap-2 text-sm font-black text-amber-600 uppercase tracking-widest border-r-4 border-amber-500 pr-3 mb-8">الأسعار والكميات</h3>
+                    <h3 className="flex items-center gap-2 text-sm font-black text-rose-600 uppercase tracking-widest border-r-4 border-rose-500 pr-3 mb-8">الأسعار والكميات</h3>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2 text-slate-500">
@@ -405,13 +451,13 @@ export function AdminProducts() {
                            placeholder="مثلاً: 1500"
                          />
                       </div>
-                      <div className="space-y-2 text-amber-600">
+                      <div className="space-y-2 text-rose-600">
                          <label className="text-sm font-black block">السعر الحالي (ريال)</label>
                          <input 
                            type="number" required
                            value={formState.price}
                            onChange={e => setFormState({...formState, price: Number(e.target.value)})}
-                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold"
+                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold"
                            placeholder="مثلاً: 1200"
                          />
                       </div>
@@ -427,19 +473,33 @@ export function AdminProducts() {
                                const val = Number(e.target.value);
                                setFormState({...formState, stock: val, stockStatus: val > 0 ? 'in_stock' : 'out_of_stock'});
                             }}
-                            className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold"
+                            disabled={formState.isComingSoon}
+                            className={cn("w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold", formState.isComingSoon && "opacity-50 bg-slate-50")}
                           />
                        </div>
-                       <div className="space-y-2">
-                          <label className="text-sm font-black text-slate-700 block">حالة المخزون</label>
-                          <select 
-                            value={formState.stockStatus}
-                            onChange={e => setFormState({...formState, stockStatus: e.target.value as any})}
-                            className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-amber-500 focus:outline-none transition-all font-bold appearance-none bg-white"
-                          >
-                             <option value="in_stock">متوفر (In Stock)</option>
-                             <option value="out_of_stock">نفد (Out of Stock)</option>
-                          </select>
+                       <div className="space-y-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 block">حالة المخزون</label>
+                            <select 
+                              value={formState.stockStatus}
+                              onChange={e => setFormState({...formState, stockStatus: e.target.value as any})}
+                              disabled={formState.isComingSoon}
+                              className={cn("w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold appearance-none bg-white", formState.isComingSoon && "opacity-50 bg-slate-50")}
+                            >
+                               <option value="in_stock">متوفر (In Stock)</option>
+                               <option value="out_of_stock">نفد (Out of Stock)</option>
+                            </select>
+                          </div>
+                          
+                          <label className="flex items-center gap-3 cursor-pointer mt-4 bg-amber-50 p-3 rounded-xl border border-amber-100 hover:bg-amber-100/50 transition-colors">
+                            <input 
+                              type="checkbox"
+                              checked={formState.isComingSoon}
+                              onChange={e => setFormState({...formState, isComingSoon: e.target.checked})}
+                              className="w-5 h-5 rounded hover:cursor-pointer accent-amber-500"
+                            />
+                            <span className="text-sm font-bold text-amber-900">المنتج سيتوفر قريباً (قيد الاستيراد)</span>
+                          </label>
                        </div>
                     </div>
 
@@ -458,7 +518,7 @@ export function AdminProducts() {
                              </button>
                            </div>
                          ))}
-                         <label className="aspect-square rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-amber-500 hover:bg-amber-50/50 transition-all">
+                         <label className="aspect-square rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-rose-500 hover:bg-rose-50/50 transition-all">
                            <input 
                              type="file" 
                              accept="image/*"
@@ -486,7 +546,7 @@ export function AdminProducts() {
                    <button 
                      type="submit"
                      disabled={submitting}
-                     className="flex-[2] bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white px-8 py-4 rounded-[1.5rem] font-black text-lg shadow-xl shadow-amber-600/20 flex items-center justify-center gap-3 transition-all active:scale-95"
+                     className="flex-[2] bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white px-8 py-4 rounded-[1.5rem] font-black text-lg shadow-xl shadow-rose-600/20 flex items-center justify-center gap-3 transition-all active:scale-95"
                    >
                      {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-6 h-6" />}
                      {editingId ? 'حفظ التعديلات' : 'نشر المنتج الآن'}

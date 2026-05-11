@@ -54,6 +54,7 @@ import { AdminReviews } from './pages/admin/AdminReviews';
 import { AdminMessages } from './pages/admin/AdminMessages';
 import { AdminAnalytics } from './pages/admin/AdminAnalytics';
 import { AdminPaymentSettings } from './pages/admin/AdminPaymentSettings';
+import { AdminShippingSettings } from './pages/admin/AdminShippingSettings';
 
 // Loading component
 function PageLoader() {
@@ -192,6 +193,7 @@ function AppRoutes() {
           <Route path="coupons" element={<PageWrapper key="admin-coupons"><AdminCoupons /></PageWrapper>} />
           <Route path="articles" element={<PageWrapper key="admin-articles"><AdminArticles /></PageWrapper>} />
           <Route path="reviews" element={<PageWrapper key="admin-reviews"><AdminReviews /></PageWrapper>} />
+          <Route path="shipping" element={<PageWrapper key="admin-shipping"><AdminShippingSettings /></PageWrapper>} />
           <Route path="site-settings" element={<PageWrapper key="admin-site"><AdminSiteSettings /></PageWrapper>} />
           <Route path="payment-settings" element={<PageWrapper key="admin-payments"><AdminPaymentSettings /></PageWrapper>} />
           <Route path="messages" element={<PageWrapper key="admin-messages"><AdminMessages /></PageWrapper>} />

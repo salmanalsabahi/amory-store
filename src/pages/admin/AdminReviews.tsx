@@ -118,7 +118,7 @@ export function AdminReviews() {
                       <div className="flex items-center gap-2 mt-1">
                         <span className={cn(
                           "text-[10px] uppercase font-bold px-2 py-0.5 rounded-full",
-                          review.targetType === 'service' ? "bg-teal-50 text-teal-600" : "bg-amber-50 text-amber-600"
+                          review.targetType === 'service' ? "bg-rose-50 text-rose-600" : "bg-rose-50 text-rose-600"
                         )}>
                           {review.targetType === 'service' ? 'خدمة' : 'منتج'}
                         </span>
@@ -130,7 +130,7 @@ export function AdminReviews() {
                   <div className="flex flex-col items-end gap-2">
                     <div className="flex items-center gap-0.5">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className={cn("w-4 h-4", review.rating >= s ? "text-amber-500 fill-amber-500" : "text-slate-100")} />
+                        <Star key={s} className={cn("w-4 h-4", review.rating >= s ? "text-rose-500 fill-rose-500" : "text-slate-100")} />
                       ))}
                     </div>
                     <span className="text-[10px] text-slate-400 font-bold">
@@ -171,7 +171,7 @@ export function AdminReviews() {
                     {review.status !== 'rejected' && (
                       <button
                         onClick={() => handleUpdateStatus(review.id, 'rejected')}
-                        className="p-3 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all"
+                        className="p-3 bg-rose-50 text-rose-600 hover:text-white rounded-xl transition-all"
                         title="رفض التقييم"
                       >
                         <XCircle className="w-5 h-5" />

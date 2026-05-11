@@ -60,7 +60,7 @@ export function Profile() {
       <div className="min-h-screen pt-32 pb-20 bg-slate-50 flex items-center justify-center font-body">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">يرجى تسجيل الدخول لعرض ملفك الشخصي</h2>
-          <Link to="/" className="text-amber-600 hover:underline">العودة للرئيسية</Link>
+          <Link to="/" className="text-rose-600 hover:underline">العودة للرئيسية</Link>
         </div>
       </div>
     );
@@ -75,7 +75,7 @@ export function Profile() {
           <img 
             src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} 
             alt="Profile" 
-            className="w-24 h-24 rounded-full border-4 border-amber-50"
+            className="w-24 h-24 rounded-full border-4 border-rose-50"
           />
           <div className="text-center md:text-right flex-1">
             <h1 className="text-3xl font-display font-black text-slate-900 mb-2">{user.displayName || 'عميل مميز'}</h1>
@@ -83,7 +83,7 @@ export function Profile() {
           </div>
           {(user.email === 'salmanalsabahi775@gmail.com' || user.email === 'openclaw@emtiazsky.com') && (
             <div className="mt-4 md:mt-0">
-              <Link to="/admin" className="inline-flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-all gap-2 shadow-lg shadow-slate-900/10">
+              <Link to="/admin" className="inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl font-bold transition-all gap-2 shadow-lg shadow-rose-900/10 active:scale-95">
                 الانتقال إلى لوحة التحكم
               </Link>
             </div>
@@ -94,13 +94,13 @@ export function Profile() {
         <div className="flex gap-4 mb-8">
           <button 
             onClick={() => setActiveTab('orders')} 
-            className={`px-8 py-3 rounded-2xl font-bold transition-all shadow-sm ${activeTab === 'orders' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 hover:bg-amber-50'}`}
+            className={`px-8 py-3 rounded-2xl font-bold transition-all shadow-sm ${activeTab === 'orders' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 hover:bg-rose-50'}`}
           >
             طلباتي
           </button>
           <button 
             onClick={() => setActiveTab('settings')} 
-            className={`px-8 py-3 rounded-2xl font-bold transition-all shadow-sm ${activeTab === 'settings' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 hover:bg-amber-50'}`}
+            className={`px-8 py-3 rounded-2xl font-bold transition-all shadow-sm ${activeTab === 'settings' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 hover:bg-rose-50'}`}
           >
             إعدادات الحساب
           </button>
@@ -115,7 +115,7 @@ export function Profile() {
                 <ShoppingBag className="w-20 h-20 text-slate-200 mx-auto mb-6" />
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">لا توجد طلبات بعد</h3>
                 <p className="text-slate-500 mb-8 max-w-xs mx-auto">ابدأ رحلة الأناقة وقم بأول طلب لك الآن من مجموعتنا الحصرية.</p>
-                <Link to="/store" className="inline-flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-amber-600/20 active:scale-95">
+                <Link to="/store" className="inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-rose-600/20 active:scale-95">
                   اذهب للمتجر
                 </Link>
               </div>
@@ -127,7 +127,7 @@ export function Profile() {
                       "absolute top-0 right-0 w-2 h-full transition-all",
                       order.status === 'delivered' ? 'bg-emerald-500' :
                       order.status === 'cancelled' ? 'bg-rose-500' : 
-                      order.status === 'shipped' ? 'bg-blue-500' : 'bg-amber-500'
+                      order.status === 'shipped' ? 'bg-blue-500' : 'bg-rose-500'
                     )} />
                     
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
@@ -146,7 +146,7 @@ export function Profile() {
                            "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tight",
                            order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
                            order.status === 'cancelled' ? 'bg-rose-50 text-rose-600' :
-                           order.status === 'shipped' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
+                           order.status === 'shipped' ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
                          )}>
                             {order.status === 'delivered' ? 'تم التوصيل' :
                              order.status === 'cancelled' ? 'ملغى' :
@@ -174,7 +174,7 @@ export function Profile() {
                        </div>
                        <div>
                           <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">الإجمالي</div>
-                          <div className="text-sm font-black text-amber-600">{order.total?.toLocaleString()} ريال</div>
+                          <div className="text-sm font-black text-rose-600">{order.total?.toLocaleString()} ريال</div>
                        </div>
                     </div>
 

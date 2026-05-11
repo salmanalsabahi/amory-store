@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ShoppingBag, Truck, User, Settings, Percent } from 'lucide-react';
+import { Store, Percent, Package, User, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -9,8 +9,7 @@ const prefetchMap: Record<string, () => Promise<any>> = {
   '/': () => import('../../pages/Home'),
   '/store': () => import('../../pages/Store'),
   '/offers': () => import('../../pages/Offers'),
-  '/cart': () => import('../../pages/Cart'),
-  '/tracking': () => import('../../pages/OrderTracking'),
+  '/packages': () => import('../../pages/Packages'),
   '/profile': () => import('../../pages/Profile'),
   '/auth': () => import('../../pages/Auth'),
   '/admin': () => import('../../pages/admin/AdminOrders'),
@@ -42,10 +41,9 @@ export function MobileBottomNav() {
       : { name: 'دخول', path: '/auth', icon: User };
 
   const navItems = [
-    { name: 'الرئيسية', path: '/', icon: Home },
-    { name: 'المتجر', path: '/store', icon: ShoppingBag },
+    { name: 'المتجر', path: '/store', icon: Store },
     { name: 'العروض', path: '/offers', icon: Percent },
-    { name: 'الطلبات', path: '/tracking', icon: Truck },
+    { name: 'الباقات', path: '/packages', icon: Package },
     accountItem,
   ];
 
@@ -55,6 +53,7 @@ export function MobileBottomNav() {
         {navItems.map((item) => {
           const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
           const Icon = item.icon;
+          const badgeCount = (item as any).badge || 0;
           
           return (
             <Link
@@ -62,11 +61,16 @@ export function MobileBottomNav() {
               to={item.path}
               onTouchStart={() => handlePrefetch(item.path)}
               className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors duration-200 ${
-                isActive ? 'text-amber-600' : 'text-slate-400 hover:text-amber-600'
+                isActive ? 'text-rose-600' : 'text-slate-400 hover:text-rose-600'
               }`}
             >
-              <div className={`relative p-1 rounded-xl transition-all duration-200 ${isActive ? 'bg-amber-50 scale-110' : ''}`}>
+              <div className={`relative p-1 rounded-xl transition-all duration-200 ${isActive ? 'bg-rose-50 scale-110' : ''}`}>
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
+                {badgeCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                    {badgeCount}
+                  </span>
+                )}
               </div>
               <span className={`text-[10px] ${isActive ? 'font-bold' : 'font-medium'}`}>{item.name}</span>
             </Link>
