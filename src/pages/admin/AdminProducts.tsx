@@ -257,8 +257,44 @@ export function AdminProducts() {
         </div>
       </div>
 
-      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto overflow-y-hidden">
+      <div className="bg-transparent md:bg-white md:rounded-[2rem] md:shadow-sm md:border md:border-slate-100 md:overflow-hidden">
+        {/* Mobile Card List */}
+        <div className="md:hidden space-y-3">
+          {filteredProducts.length === 0 ? (
+             <div className="text-center py-10 text-slate-500 font-medium">لا توجد منتجات مطابقة</div>
+          ) : filteredProducts.map(product => (
+            <div key={product.id} className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3 active:scale-95 transition-transform">
+              <div className="w-16 h-16 rounded-xl bg-slate-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                {product.images?.[0] ? 
+                  <img src={product.images[0]} className="max-h-full object-contain mix-blend-multiply" alt={product.name} /> : 
+                  <ImageIcon className="w-6 h-6 text-slate-300" />
+                }
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 text-sm truncate">{product.name}</div>
+                <div className="text-[11px] text-slate-500">{product.category} • {product.brand}</div>
+                <div className="font-black text-rose-600 text-sm mt-0.5">{product.price.toLocaleString()} ريال</div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <button 
+                  onClick={() => openEdit(product)}
+                  className="p-2 rounded-lg bg-slate-50 text-slate-500 hover:bg-slate-100"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
+                <button 
+                  onClick={() => setDeleteId(product.id)}
+                  className="p-2 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto overflow-y-hidden">
           <table className="w-full text-right border-collapse">
             <thead>
               <tr className="bg-slate-50/50">

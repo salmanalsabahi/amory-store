@@ -69,7 +69,7 @@ export function ArticleDetail() {
         <div className="flex items-center gap-6 text-sm text-slate-500 mb-6">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            {new Date(article.createdAt).toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {article.createdAt ? new Date(article.createdAt?.seconds ? article.createdAt.toDate() : article.createdAt).toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric' }) : '-'}
           </div>
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />

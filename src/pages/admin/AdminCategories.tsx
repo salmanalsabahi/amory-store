@@ -79,47 +79,67 @@ export function AdminCategories() {
   if (loading) return <div className="flex justify-center p-8"><Loader2 className="animate-spin w-8 h-8" /></div>;
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-black text-slate-900">إدارة الأصناف</h1>
-        <div className="flex gap-4">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900">إدارة الأصناف</h1>
+        <div className="flex gap-2 w-full md:w-auto">
           <button 
             onClick={handleSeed}
             disabled={seeding}
-            className="bg-slate-800 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-900 disabled:opacity-50 transition-all"
+            className="flex-1 md:flex-none bg-slate-800 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-900 disabled:opacity-50 transition-all text-sm md:text-base"
           >
-            {seeding ? <Loader2 className="w-5 h-5 animate-spin" /> : <Database className="w-5 h-5" />}
-            إضافة بيانات تجريبية
+            {seeding ? <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Database className="w-4 h-4 md:w-5 md:h-5" />}
+            <span className="hidden md:inline">إضافة بيانات تجريبية</span>
+            <span className="md:hidden">تجريبية</span>
           </button>
           <button 
             onClick={() => { setName(''); setEditingId(null); setIsModalOpen(true); }}
-            className="bg-rose-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-rose-700"
+            className="flex-1 md:flex-none bg-rose-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-rose-700 text-sm md:text-base"
           >
-            <Plus className="w-5 h-5" /> إضافة صنف جديد
+            <Plus className="w-4 h-4 md:w-5 md:h-5" /> إضافة صنف
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-        <table className="w-full">
-          <thead>
-            <tr className="text-slate-500 text-sm">
-              <th className="text-right py-4">اسم الصنف</th>
-              <th className="text-center py-4">إجراءات</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {categories.map(cat => (
-              <tr key={cat.id}>
-                <td className="py-4 font-bold">{cat.name}</td>
-                <td className="py-4 flex justify-center gap-2">
-                  <button onClick={() => openEdit(cat)} className="text-rose-600 p-2 hover:bg-rose-50 rounded-lg transition-colors"><Edit2 className="w-5 h-5"/></button>
-                  <button onClick={() => setDeleteId(cat.id)} className="text-rose-600 p-2 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="w-5 h-5"/></button>
-                </td>
+      <div className="bg-transparent md:bg-white md:rounded-3xl md:shadow-sm md:border md:border-slate-100 md:p-6">
+        {/* Mobile View */}
+        <div className="md:hidden space-y-3">
+          {categories.map(cat => (
+            <div key={cat.id} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+              <div className="font-bold text-slate-900">{cat.name}</div>
+              <div className="flex items-center gap-1.5">
+                <button onClick={() => openEdit(cat)} className="text-slate-500 p-2 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"><Edit2 className="w-4 h-4"/></button>
+                <button onClick={() => setDeleteId(cat.id)} className="text-rose-500 p-2 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors"><Trash2 className="w-4 h-4"/></button>
+              </div>
+            </div>
+          ))}
+          {categories.length === 0 && !loading && (
+            <div className="text-center py-8 text-slate-500">لا توجد أصناف</div>
+          )}
+        </div>
+
+        {/* Desktop View */}
+        <div className="hidden md:block">
+          <table className="w-full">
+            <thead>
+              <tr className="text-slate-500 text-sm">
+                <th className="text-right py-4">اسم الصنف</th>
+                <th className="text-center py-4">إجراءات</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {categories.map(cat => (
+                <tr key={cat.id}>
+                  <td className="py-4 font-bold text-slate-900">{cat.name}</td>
+                  <td className="py-4 flex justify-center gap-2">
+                    <button onClick={() => openEdit(cat)} className="text-slate-500 p-2 hover:bg-slate-50 rounded-lg transition-colors"><Edit2 className="w-5 h-5"/></button>
+                    <button onClick={() => setDeleteId(cat.id)} className="text-rose-500 p-2 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="w-5 h-5"/></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <AnimatePresence>

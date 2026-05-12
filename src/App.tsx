@@ -17,6 +17,8 @@ import { seedInitialData } from './lib/seedData';
 import { useCachePreloader } from './hooks/useCachePreloader';
 import { InstallAppPrompt } from './components/InstallAppPrompt';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { db } from './firebase';
+import { doc, getDocFromServer } from 'firebase/firestore';
 
 // Public Pages
 import { Home } from './pages/Home';
@@ -101,6 +103,20 @@ function PageWrapper({ children, ...props }: { children: React.ReactNode, key?: 
 export default function App() {
   useEffect(() => {
     seedInitialData().catch(console.error);
+
+    // Connection test
+    async function testConnection() {
+      try {
+        await getDocFromServer(doc(db, 'siteSettings', 'general'));
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('the client is offline')) {
+          console.error("Please check your Firebase configuration.");
+        } else {
+          console.error("Connection test failed", error);
+        }
+      }
+    }
+    testConnection();
   }, []);
 
   useCachePreloader();

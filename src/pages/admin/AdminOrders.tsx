@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
 import { updateDoc, deleteDoc, addDoc } from '../../lib/safeFirestore';
 import { db } from '../../firebase';
-import { Package, Search, Filter, Loader2, ArrowLeftRight, CheckCircle2, Clock, Trash2, X, Plus, ExternalLink, MessageCircle, Eye } from 'lucide-react';
+import { Package, Search, Filter, Loader2, ArrowLeftRight, CheckCircle2, Clock, Trash2, X, Plus, ExternalLink, MessageCircle, Eye, ChevronDown } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export function AdminOrders() {
@@ -123,12 +123,12 @@ export function AdminOrders() {
               className="w-full pl-4 pr-10 py-2 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors"
             />
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-5 h-5 text-slate-400" />
+          <div className="flex items-center gap-2 w-full sm:w-auto relative">
+            <Filter className="w-5 h-5 text-slate-400 shrink-0" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="flex-1 sm:w-48 px-4 py-2 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors bg-white"
+              className="flex-1 sm:w-48 appearance-none px-4 pl-10 py-2 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors bg-white cursor-pointer"
             >
               <option value="all">جميع الحالات</option>
               <option value="pending">طلبات جديدة</option>
@@ -137,10 +137,104 @@ export function AdminOrders() {
               <option value="delivered">مكتملة</option>
               <option value="cancelled">ملغية</option>
             </select>
+            <ChevronDown className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile View */}
+        <div className="md:hidden space-y-4 pt-4">
+          {loading ? (
+            <div className="py-12 text-center">
+              <Loader2 className="w-8 h-8 animate-spin mx-auto text-rose-500" />
+            </div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="py-12 text-center text-slate-500">لا توجد طلبات مطابقة</div>
+          ) : filteredOrders.map((order, index) => {
+            const StatusIcon = statusMap[order.status]?.icon || Package;
+            const whatsappUrl = `https://wa.me/${order.customerInfo?.phone?.replace(/\D/g, '')}?text=${encodeURIComponent(`مرحباً ${order.customerInfo?.name}، بخصوص طلبك رقم ${order.orderNumber}...`)}`;
+            
+            return (
+              <div key={order.id} className={cn(
+                "p-4 rounded-2xl border space-y-4",
+                index % 2 === 0 ? "bg-white border-slate-100 shadow-sm" : "bg-slate-50 border-slate-200 shadow-sm"
+              )}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-mono font-bold text-slate-900 mb-1">{order.orderNumber}</div>
+                    <div className="text-sm text-slate-600">{new Date(order.createdAt).toLocaleDateString('en-CA')}</div>
+                  </div>
+                  <div className="text-left flex flex-col items-end">
+                    <div className="font-bold text-slate-900">{order.total?.toLocaleString()} ريال</div>
+                    <div className="text-xs text-slate-500">{order.paymentMethod}</div>
+                    {order.couponCode && (
+                       <div className="text-[10px] text-green-600 bg-green-50 px-1 py-0.5 rounded mt-0.5" dir="ltr">
+                         كود: {order.couponCode}
+                       </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl border",
+                  index % 2 === 0 ? "bg-slate-50 border-slate-100" : "bg-white border-slate-200"
+                )}>
+                  <div className="flex-1">
+                    <div className="font-semibold text-slate-900 text-sm mb-0.5">{order.customerInfo?.name}</div>
+                    <div className="text-xs text-slate-500">{order.customerInfo?.phone} • {order.customerInfo?.governorate}</div>
+                  </div>
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors">
+                    <MessageCircle className="w-4 h-4" />
+                  </a>
+                </div>
+
+                {order.paymentProofUrl && (
+                  <button 
+                    onClick={() => setPreviewImage(order.paymentProofUrl)}
+                    className="w-full py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2"
+                  >
+                    <Eye className="w-4 h-4" />
+                    عرض سند التحويل
+                  </button>
+                )}
+
+                <div className="flex items-center justify-between gap-3 pt-2">
+                  <div className="flex-1">
+                    {updating === order.id ? (
+                      <div className="w-full py-2 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-rose-500" /></div>
+                    ) : (
+                      <div className="relative">
+                        <select
+                          value={order.status}
+                          onChange={(e) => updateOrder(order.id, { status: e.target.value }, order)}
+                          className={cn(
+                            "w-full appearance-none px-4 py-2 pl-10 rounded-xl text-sm font-bold text-center cursor-pointer transition-all border-none focus:ring-2 focus:ring-rose-500",
+                            statusMap[order.status]?.color || "bg-slate-100 text-slate-700"
+                          )}
+                        >
+                          <option value="pending">جديد</option>
+                          <option value="processing">قيد التجهيز</option>
+                          <option value="shipped">تم الشحن</option>
+                          <option value="delivered">تم التسليم</option>
+                          <option value="cancelled">مرفوض</option>
+                        </select>
+                        <ChevronDown className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => deleteOrder(order.id)}
+                    className="p-2 text-rose-500 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50">
               <tr>
@@ -214,7 +308,7 @@ export function AdminOrders() {
                             value={order.status}
                             onChange={(e) => updateOrder(order.id, { status: e.target.value }, order)}
                             className={cn(
-                              "appearance-none w-full px-4 py-2 rounded-full text-xs font-bold text-center cursor-pointer transition-all border-none focus:ring-2 focus:ring-offset-1 focus:ring-rose-500",
+                              "appearance-none w-full px-4 py-2 pl-8 rounded-full text-xs font-bold text-center cursor-pointer transition-all border-none focus:ring-2 focus:ring-offset-1 focus:ring-rose-500",
                               statusMap[order.status]?.color || "bg-slate-100 text-slate-700"
                             )}
                           >
@@ -224,6 +318,7 @@ export function AdminOrders() {
                             <option value="delivered" className="bg-white text-slate-900">تم التسليم</option>
                             <option value="cancelled" className="bg-white text-slate-900">مرفوض</option>
                           </select>
+                          <ChevronDown className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
                         </div>
                       )}
                     </td>

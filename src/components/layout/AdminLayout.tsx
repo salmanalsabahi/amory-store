@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { auth, signInWithGoogle, logOut, db } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard, Truck } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard, Truck, Menu } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { AdminNotifications } from '../admin/AdminNotifications';
 import { OfflineAlert } from '../OfflineAlert';
@@ -12,7 +12,13 @@ export function AdminLayout() {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+
+  // Close sidebar on location change for mobile
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -118,7 +124,10 @@ export function AdminLayout() {
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
       <OfflineAlert />
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-slate-900 text-slate-300 flex flex-col">
+      <aside className={cn(
+        "fixed inset-y-0 right-0 z-30 w-64 bg-slate-900 text-slate-300 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:transform-none",
+        isSidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
+      )}>
         <div className="p-6 border-b border-slate-800 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center text-white font-display font-bold text-lg">
@@ -128,100 +137,84 @@ export function AdminLayout() {
               لوحة التحكم
             </span>
           </Link>
-          <AdminNotifications />
-        </div>
-
-        <div className="px-4 py-4">
-          <Link 
-            to="/" 
-            className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-slate-700 text-white px-4 py-3 rounded-xl transition-all border border-slate-700 font-medium"
-          >
-            <ExternalLink className="w-4 h-4" />
-            <span>عرض الموقع</span>
-          </Link>
-        </div>
-        
-        <nav className="flex-1 p-4 space-y-2">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path || 
-                           (item.path !== '/admin' && location.pathname.startsWith(item.path)) ||
-                           (item.path === '/admin' && location.pathname === '/admin/orders');
-            
-            return (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors",
-                  isActive
-                    ? "bg-rose-600 text-white shadow-lg shadow-rose-600/20"
-                    : "hover:bg-slate-800 hover:text-white"
-                )}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-slate-800">
-          <div className="flex items-center gap-3 px-4 py-3 mb-2">
-            <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="User" className="w-8 h-8 rounded-full" />
-            <div className="text-sm overflow-hidden">
-              <div className="text-white truncate">{user.displayName || 'المشرف'}</div>
-              <div className="text-slate-500 text-xs truncate">{user.email}</div>
-            </div>
+          <div className="flex items-center gap-4">
+            <AdminNotifications />
+            <button className="md:hidden text-slate-400" onClick={() => setIsSidebarOpen(false)}>
+              ❌
+            </button>
           </div>
-          <button
-            onClick={logOut}
-            className="flex items-center gap-3 px-4 py-3 w-full text-right text-red-400 hover:text-red-300 rounded-xl transition-colors"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">تسجيل الخروج</span>
-          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-4 py-4">
+            <Link 
+              to="/" 
+              className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-slate-700 text-white px-4 py-3 rounded-xl transition-all border border-slate-700 font-medium"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>عرض الموقع</span>
+            </Link>
+          </div>
+          
+          <nav className="p-4 space-y-1">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path || 
+                             (item.path !== '/admin' && location.pathname.startsWith(item.path)) ||
+                             (item.path === '/admin' && location.pathname === '/admin/orders');
+              
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                    isActive
+                      ? "bg-rose-600 text-white shadow-lg shadow-rose-600/20"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  )}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="p-4 border-t border-slate-800 mt-4">
+            <div className="flex items-center gap-3 px-4 py-3 mb-2">
+              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="User" className="w-10 h-10 rounded-full border-2 border-slate-700" />
+              <div className="text-sm overflow-hidden hidden md:block">
+                <div className="text-white font-medium truncate">{user.displayName || 'المشرف'}</div>
+                <div className="text-slate-500 text-xs truncate">{user.email}</div>
+              </div>
+            </div>
+            <button
+              onClick={logOut}
+              className="flex items-center gap-3 px-4 py-3 w-full text-right text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-xl transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">تسجيل الخروج</span>
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-0">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
-          <div className="flex-1 max-w-xl">
-             <div className="relative">
-               <Search className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
-               <input 
-                 type="text"
-                 placeholder="ابحث عن دواء، مادة فعالة، أو شركة مصنعة..."
-                 className="w-full pl-4 pr-10 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-rose-500 focus:border-rose-500 transition-all text-sm"
-               />
-             </div>
-          </div>
-
-          <div className="flex items-center gap-6 mr-6">
-            <div className="flex items-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer transition-colors text-sm font-medium">
-              <span>English</span>
+        <header className="h-20 bg-white border-b border-slate-200 shadow-sm flex items-center justify-between px-4 md:px-8 sticky top-0 z-20">
+          <button className="md:hidden p-2 text-slate-900" onClick={() => setIsSidebarOpen(true)}>
+             <Menu className="w-8 h-8" strokeWidth={3} />
+          </button>
+          
+          <div className="flex-1 flex justify-end items-center gap-4">
+            <AdminNotifications />
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl transition-all font-medium text-sm"
+            >
               <ExternalLink className="w-4 h-4" />
-            </div>
-
-            <div className="flex items-center gap-4 text-slate-500">
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                <ShoppingCart className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="h-8 w-px bg-slate-200 mx-2"></div>
-
-            <div className="flex items-center gap-3">
-              <div className="text-left hidden lg:block">
-                <div className="text-sm font-bold text-slate-900">عموري ستور</div>
-                <div className="text-[10px] text-slate-500">مشرف النظام</div>
-              </div>
-              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="User" className="w-10 h-10 rounded-xl border border-slate-200 object-cover" />
-            </div>
+              <span>عرض الموقع</span>
+            </Link>
           </div>
         </header>
 

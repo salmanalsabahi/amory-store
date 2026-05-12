@@ -76,13 +76,13 @@ export function AdminMessages() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">رسائل العملاء</h1>
-          <p className="text-slate-500 mt-1">إدارة الاستفسارات والرسائل الواردة من الموقع</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">رسائل العملاء</h1>
+          <p className="text-sm md:text-base text-slate-500 mt-1">إدارة الاستفسارات والرسائل الواردة من الموقع</p>
         </div>
-        <div className="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+        <div className="bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm w-full md:w-auto flex justify-between md:justify-start items-center gap-4">
           <span className="text-sm font-medium text-slate-600">إجمالي الرسائل: </span>
           <span className="text-lg font-bold text-rose-600">{messages.length}</span>
         </div>

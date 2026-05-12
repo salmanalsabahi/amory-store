@@ -128,14 +128,14 @@ export function AdminSiteSettings() {
   );
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">إعدادات الموقع</h1>
-        <div className="flex items-center gap-4">
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900">إعدادات الموقع</h1>
+        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 w-full md:w-auto">
           <button
             onClick={handleSeed}
             disabled={seeding}
-            className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl font-bold transition-all border border-red-100 shadow-sm"
+            className="w-full md:w-auto flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-3 md:py-2 rounded-xl font-bold transition-all border border-red-100 shadow-sm text-sm"
           >
             {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
             تهيئة بيانات "عموري ستور"
@@ -143,7 +143,7 @@ export function AdminSiteSettings() {
           <button
             onClick={sendTestNotification}
             disabled={testLoading}
-            className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl font-medium transition-all"
+            className="w-full md:w-auto flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 md:py-2 rounded-xl font-medium transition-all text-sm"
           >
             {testLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />}
             إرسال تنبيه تجريبي

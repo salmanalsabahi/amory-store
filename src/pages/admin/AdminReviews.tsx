@@ -52,11 +52,11 @@ export function AdminReviews() {
   );
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">إدارة التقييمات</h1>
-          <p className="text-slate-500">مراجعة والتحكم في آراء العملاء المنشورة في الموقع.</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">إدارة التقييمات</h1>
+          <p className="text-sm md:text-base text-slate-500 mt-1">مراجعة والتحكم في آراء العملاء المنشورة في الموقع.</p>
         </div>
 
         <div className="flex flex-wrap gap-4">

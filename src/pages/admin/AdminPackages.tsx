@@ -71,11 +71,11 @@ export function AdminPackages() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">إدارة الباقات</h1>
-          <p className="text-slate-500">إضافة وتعديل وحذف باقات الهدايا</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">إدارة الباقات</h1>
+          <p className="text-sm md:text-base text-slate-500">إضافة وتعديل وحذف باقات الهدايا</p>
         </div>
         <button 
           onClick={() => {
@@ -83,9 +83,9 @@ export function AdminPackages() {
             setFormData({ title: '', subtitle: '', price: '', description: '' });
             setIsModalOpen(true);
           }}
-          className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm"
+          className="w-full md:w-auto bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 md:py-2 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
           إضافة باقة جديدة
         </button>
       </div>
@@ -156,20 +156,63 @@ export function AdminPackages() {
         </div>
       )}
 
-      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-        <div className="p-5 border-b border-slate-50 bg-slate-50/30">
-          <div className="relative w-full sm:w-96">
-            <Search className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+      <div className="bg-transparent md:bg-white md:rounded-[2rem] md:shadow-sm md:border md:border-slate-100 md:overflow-hidden">
+        <div className="p-0 md:p-5 mb-4 md:mb-0 md:border-b md:border-slate-50 md:bg-slate-50/30">
+          <div className="relative w-full sm:w-96 bg-white rounded-2xl shadow-sm md:shadow-none border border-slate-100 md:border-none">
+            <Search className="w-5 h-5 absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="ابحث باسم الباقة..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 rounded-xl border-none bg-white shadow-sm focus:ring-2 focus:ring-rose-500/20 transition-all text-right font-medium"
+              className="w-full pl-4 pr-10 md:pr-12 py-3 md:py-2.5 rounded-2xl md:rounded-xl border-none focus:ring-2 focus:ring-rose-500/20 transition-all font-medium"
             />
           </div>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile View */}
+        <div className="md:hidden space-y-3">
+          {filteredPackages.length === 0 ? (
+            <div className="py-12 text-center text-slate-400 font-bold">لا توجد باقات هدايا مسجلة</div>
+          ) : filteredPackages.map(pkg => (
+            <div key={pkg.id} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm flex-shrink-0">
+                <PackageIcon className="w-6 h-6 text-rose-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-black text-slate-900 truncate">{pkg.title}</div>
+                <div className="text-xs text-slate-500 font-medium truncate">{pkg.subtitle}</div>
+                <div className="font-black text-rose-600 mt-1">{pkg.price.toLocaleString()} ريال</div>
+              </div>
+              <div className="flex flex-col gap-1.5 flex-shrink-0">
+                <button 
+                  onClick={() => {
+                    setEditingPackage(pkg);
+                    setFormData({
+                      title: pkg.title || '',
+                      subtitle: pkg.subtitle || '',
+                      price: pkg.price?.toString() || '',
+                      description: pkg.description || ''
+                    });
+                    setIsModalOpen(true);
+                  }}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 bg-slate-50 hover:bg-slate-100 transition-colors"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => handleDelete(pkg.id)}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-rose-500 bg-rose-50 hover:bg-rose-100 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-right border-collapse">
             <thead>
               <tr className="bg-slate-50/50">

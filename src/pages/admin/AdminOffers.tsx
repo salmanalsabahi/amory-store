@@ -88,32 +88,32 @@ export function AdminOffers() {
   );
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">إدارة العروض والتخفيضات</h1>
-        <button onClick={() => handleOpenModal()} className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-colors">
+    <div className="p-4 md:p-6 md:space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900">إدارة العروض</h1>
+        <button onClick={() => handleOpenModal()} className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 text-white px-4 py-3 md:py-2 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors">
           <Plus className="w-5 h-5" /> إضافة عرض
         </button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {offers.map(offer => (
           <div key={offer.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
-            {offer.imageUrl && <img src={offer.imageUrl || undefined} alt={offer.title} className="w-full h-40 object-cover" />}
-            <div className="p-6 flex-1 flex flex-col gap-3">
-              <h3 className="font-bold text-lg">{offer.title}</h3>
-              <p className="text-slate-600 text-sm flex-1">{offer.description}</p>
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-                <span className="font-bold text-primary-600">{offer.discount}% خصم</span>
-                <div className="flex items-center gap-2">
+            {offer.imageUrl && <img src={offer.imageUrl || undefined} alt={offer.title} className="w-full h-24 md:h-40 object-cover" />}
+            <div className="p-3 md:p-6 flex-1 flex flex-col gap-2 md:gap-3">
+              <h3 className="font-bold text-sm md:text-lg truncate">{offer.title}</h3>
+              <p className="text-slate-600 text-xs md:text-sm flex-1 line-clamp-2">{offer.description}</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between mt-2 pt-2 md:mt-4 md:pt-4 border-t border-slate-100 gap-2">
+                <span className="font-bold text-primary-600 text-xs md:text-base">{offer.discount}% خصم</span>
+                <div className="flex items-center justify-between md:justify-end gap-1 md:gap-2">
                   <button onClick={() => toggleActive(offer.id, offer.active)} className="text-slate-500 p-1">
-                    {offer.active ? <ToggleRight className="w-6 h-6 text-green-500" /> : <ToggleLeft className="w-6 h-6" />}
+                    {offer.active ? <ToggleRight className="w-5 h-5 md:w-6 md:h-6 text-green-500" /> : <ToggleLeft className="w-5 h-5 md:w-6 md:h-6" />}
                   </button>
-                  <button onClick={() => handleOpenModal(offer)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                    <Edit2 className="w-5 h-5" />
+                  <button onClick={() => handleOpenModal(offer)} className="p-1 md:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <Edit2 className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
-                  <button onClick={() => deleteOffer(offer.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                    <Trash2 className="w-5 h-5" />
+                  <button onClick={() => deleteOffer(offer.id)} className="p-1 md:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
               </div>

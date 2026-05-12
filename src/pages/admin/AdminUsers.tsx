@@ -68,14 +68,52 @@ export function AdminUsers() {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">إدارة المستخدمين</h1>
-        <p className="text-slate-600 mt-1">عرض جميع العملاء والمشرفين المسجلين في النظام.</p>
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900">إدارة المستخدمين</h1>
+        <p className="text-sm md:text-base text-slate-600 mt-1">عرض جميع العملاء والمشرفين المسجلين في النظام.</p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-transparent md:bg-white md:rounded-3xl md:shadow-sm md:border md:border-slate-100 md:overflow-hidden">
+        {/* Mobile View */}
+        <div className="md:hidden space-y-3">
+          {users.map((user) => (
+            <div key={user.id} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || user.email}`} alt="" className="w-12 h-12 rounded-full border-2 border-slate-50 shadow-sm" />
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-slate-900 truncate">{user.displayName || 'بدون اسم'}</div>
+                  <div className="text-xs text-slate-500 truncate" dir="ltr">{user.email}</div>
+                  {user.phone && <div className="text-xs text-slate-500 truncate" dir="ltr">{user.phone}</div>}
+                </div>
+                <span className={`inline-flex flex-shrink-0 items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${
+                  user.role === 'admin' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'
+                }`}>
+                  {user.role === 'admin' ? 'مشرف' : 'عميل'}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleToggleRole(user)}
+                  className={`flex-1 ${user.role === 'admin' ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'} py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 text-[11px] font-bold`}
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  {user.role === 'admin' ? 'إزالة الإشراف' : 'ترقية لمشرف'}
+                </button>
+                <button
+                  onClick={() => setSelectedUser(user)}
+                  className="flex-1 bg-rose-50 text-rose-600 py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 text-[11px] font-bold"
+                >
+                  <Key className="w-3.5 h-3.5" />
+                  كلمة المرور
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-right">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>

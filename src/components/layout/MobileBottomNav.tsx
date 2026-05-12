@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Store, Percent, Package, User, Settings } from 'lucide-react';
+import { Store, Percent, Package, User, Settings, Home } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -41,6 +41,7 @@ export function MobileBottomNav() {
       : { name: 'دخول', path: '/auth', icon: User };
 
   const navItems = [
+    { name: 'الرئيسية', path: '/', icon: Home },
     { name: 'المتجر', path: '/store', icon: Store },
     { name: 'العروض', path: '/offers', icon: Percent },
     { name: 'الباقات', path: '/packages', icon: Package },

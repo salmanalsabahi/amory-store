@@ -157,7 +157,7 @@ export function Navbar() {
       <header
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-          !isTransparent ? 'bg-white' : 'bg-transparent'
+          !isTransparent ? 'bg-slate-50' : 'bg-transparent'
         )}
       >
         {/* Promo Banner / Announcement Bar */}
@@ -169,7 +169,7 @@ export function Navbar() {
                 <Star className="w-3.5 h-3.5 fill-rose-300 text-rose-300" />
                 عرض خاص
               </span>
-              <p className="flex items-center gap-1.5 md:gap-2 truncate max-w-[65%] md:max-w-none">
+              <p className="flex items-center justify-center gap-1.5 md:gap-2 flex-wrap text-center max-w-[85%] md:max-w-none">
                 {activePromo ? activePromo.text : (settings?.storeDescription || "خصومات حصرية تصل إلى 40% على تشكيلة الساعات الجديدة")}
               </p>
             </div>
@@ -188,7 +188,7 @@ export function Navbar() {
         )}
         
         {/* Info Bar */}
-        <div className="bg-slate-900 text-slate-300 py-2 px-4 sm:px-6 lg:px-8 text-xs flex justify-between items-center">
+        <div className="hidden sm:flex bg-slate-900 text-slate-300 py-2 px-4 sm:px-6 lg:px-8 text-xs justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-4">
               <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {settings?.workingHours || "يومين شغال 24 ساعه"}</span>
@@ -204,7 +204,7 @@ export function Navbar() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
               {settings?.socialMedia?.facebook && (
                 <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Facebook className="w-3 h-3" /> <span className="hidden xs:inline">فيسبوك</span>

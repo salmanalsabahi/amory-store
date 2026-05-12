@@ -40,10 +40,10 @@ export function AdminSettings() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">تسليم الموقع للعميل الجديد</h1>
-        <p className="text-slate-600 mt-1">أدخل بريد العميل الجديد ليصبح هو المشرف الأساسي.</p>
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900">تسليم الموقع للعميل الجديد</h1>
+        <p className="text-sm md:text-base text-slate-600 mt-1">أدخل بريد العميل الجديد ليصبح هو المشرف الأساسي.</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-2xl">

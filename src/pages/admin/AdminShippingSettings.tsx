@@ -106,15 +106,15 @@ export function AdminShippingSettings() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">إعدادات الشحن والتوصيل</h1>
-          <p className="text-slate-500">حدد أسعار التوصيل لكل محافظة. المحافظات غير المفعلة لن تظهر للعميل.</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">إعدادات الشحن والتوصيل</h1>
+          <p className="text-sm md:text-base text-slate-500">حدد أسعار التوصيل لكل محافظة. المحافظات غير المفعلة لن تظهر للعميل.</p>
         </div>
         <button
           onClick={addNewGovernorate}
-          className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 transition-colors"
+          className="w-full md:w-auto flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-3 md:py-2 rounded-xl text-sm font-medium hover:bg-slate-800 transition-colors"
         >
           <Plus className="w-4 h-4" />
           إضافة منطقة جديدة

@@ -95,7 +95,7 @@ export function Articles() {
               </Link>
               <div className="p-6 flex-1 flex flex-col">
                 <div className="text-sm text-rose-600 font-medium mb-3">
-                  {new Date(article.createdAt).toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  {article.createdAt ? new Date(article.createdAt?.seconds ? article.createdAt.toDate() : article.createdAt).toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric' }) : '-'}
                 </div>
                 <Link to={`/article/${article.id}`}>
                   <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-rose-600 transition-colors line-clamp-2">
