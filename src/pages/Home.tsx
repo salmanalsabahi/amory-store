@@ -82,10 +82,10 @@ export function Home() {
       <section className="relative z-10 -mt-16 max-w-7xl mx-auto px-4 w-full">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Truck, title: 'توصيل مجاني', desc: 'للطلبات فوق 500 ريال', color: 'bg-rose-600' },
-            { icon: ShieldCheck, title: 'أصلية 100%', desc: 'ضمان الوكيل الرسمي', color: 'bg-indigo-600' },
-            { icon: Clock, title: 'شحن سريع', desc: 'خلال 24-48 ساعة', color: 'bg-rose-600' },
-            { icon: HeadphonesIcon, title: 'دعم فني', desc: 'متاح طوال الأسبوع', color: 'bg-rose-600' },
+            { icon: Truck, title: 'توصيل مجاني', desc: 'للطلبات فوق 10,000 ريال', color: 'bg-rose-600' },
+            { icon: ShieldCheck, title: 'أصلية 100%', desc: 'ضمان الوكيل الرسمي', color: 'bg-pink-500' },
+            { icon: Clock, title: 'شحن سريع', desc: 'خلال 24-48 ساعة', color: 'bg-blue-600' },
+            { icon: HeadphonesIcon, title: 'دعم فني', desc: 'متاح طوال الأسبوع', color: 'bg-blue-600' },
           ].map((feature, i) => (
             <motion.div
               key={i}

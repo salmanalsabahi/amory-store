@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { auth, signInWithGoogle, logOut, db } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard, Truck, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Loader2, Calendar, Settings, Shield, Star, Image as ImageIcon, ExternalLink, Key, Bell, MessageSquare, BarChart3, Ticket, Package, ShoppingCart, Grid, Tags, Factory, Stethoscope, Mail, Search, CreditCard, Truck, Menu, Megaphone } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { AdminNotifications } from '../admin/AdminNotifications';
 import { OfflineAlert } from '../OfflineAlert';
@@ -118,6 +118,7 @@ export function AdminLayout() {
     { name: 'إعدادات الدفع', path: '/admin/payment-settings', icon: CreditCard },
     { name: 'الشحن والتوصيل', path: '/admin/shipping', icon: Truck },
     { name: 'إعدادات الموقع', path: '/admin/site-settings', icon: Settings },
+    { name: 'التسويق والإشعارات', path: '/admin/marketing', icon: Megaphone },
   ];
 
   return (

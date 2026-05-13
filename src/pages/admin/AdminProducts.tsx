@@ -113,7 +113,7 @@ export function AdminProducts() {
               });
             }
             await updateDoc(doc(db, 'stock_notifications', notifDoc.id), {
-              status: 'notified',
+              status: 'ready', // This triggers the useBackgroundNotifications hook on the client
               notifiedAt: new Date().toISOString()
             });
           }
@@ -478,17 +478,17 @@ export function AdminProducts() {
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2 text-slate-500">
-                         <label className="text-sm font-black block">السعر القديم (ريال) - اختياري</label>
+                         <label className="text-sm font-black block">السعر القديم (بالدولار) - اختياري</label>
                          <input 
                            type="number"
                            value={formState.originalPrice}
                            onChange={e => setFormState({...formState, originalPrice: Number(e.target.value)})}
                            className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-slate-500 focus:outline-none transition-all font-bold text-slate-400"
-                           placeholder="مثلاً: 1500"
+                           placeholder="مثلاً: 15"
                          />
                       </div>
                       <div className="space-y-2 text-rose-600">
-                         <label className="text-sm font-black block">السعر الحالي (ريال)</label>
+                         <label className="text-sm font-black block">السعر الحالي (بالدولار)</label>
                          <input 
                            type="number" required
                            value={formState.price}
@@ -539,9 +539,45 @@ export function AdminProducts() {
                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                       <label className="text-sm font-black text-slate-700 block">صور المنتج (اختر من جهازك)</label>
-                       <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="space-y-4">
+                       <div>
+                         <label className="text-sm font-black text-slate-700 block mb-2">صور المنتج</label>
+                         <p className="text-xs text-slate-500 mb-4">للحفاظ على مساحة التخزين، يفضل استخدام روابط لصور خارجية (مثال: Imgur) أو الرفع من الجهاز بحجم صغير.</p>
+                       </div>
+                       
+                       <div className="flex gap-2">
+                         <input
+                           type="url"
+                           placeholder="أضف رابط صورة خارجية (مثال: https://imgur.com/...)"
+                           className="flex-1 px-5 py-3 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all text-left"
+                           dir="ltr"
+                           onKeyDown={(e) => {
+                             if (e.key === 'Enter') {
+                               e.preventDefault();
+                               const input = e.target as HTMLInputElement;
+                               if (input.value) {
+                                 setFormState(prev => ({ ...prev, images: [...prev.images.filter(img => img !== ''), input.value] }));
+                                 input.value = '';
+                               }
+                             }
+                           }}
+                         />
+                         <button
+                           type="button"
+                           className="bg-slate-900 text-white px-6 rounded-2xl font-bold hover:bg-slate-800 transition-colors whitespace-nowrap"
+                           onClick={(e) => {
+                             const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                             if (input.value) {
+                               setFormState(prev => ({ ...prev, images: [...prev.images.filter(img => img !== ''), input.value] }));
+                               input.value = '';
+                             }
+                           }}
+                         >
+                           إضافة الرابط
+                         </button>
+                       </div>
+
+                       <div className="grid grid-cols-3 gap-4">
                          {formState.images.map((img, idx) => img && (
                            <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border-2 border-slate-100 group">
                              <img src={img} className="w-full h-full object-cover" alt={`Preview ${idx}`} />
@@ -563,10 +599,10 @@ export function AdminProducts() {
                              onChange={handleImageUpload}
                            />
                            <Plus className="w-6 h-6 text-slate-400" />
-                           <span className="text-[10px] font-black text-slate-500">إضافة صورة</span>
+                           <span className="text-[10px] font-black text-slate-500">رفع صورة من الجهاز</span>
                          </label>
                        </div>
-                       <p className="text-[10px] text-slate-400 font-medium italic">* سيتم ضغط الصور تلقائياً لتناسب العرض</p>
+                       <p className="text-[10px] text-slate-400 font-medium italic">* الصور المرفوعة من الجهاز سيتم ضغطها تلقائياً</p>
                     </div>
                   </div>
                 </div>

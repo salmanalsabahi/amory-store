@@ -11,14 +11,7 @@ export interface SiteSettings {
   mapEmbedUrl: string;
   workingHours: string;
   phone: string;
-  socialMedia: {
-    facebook: string;
-    instagram: string;
-    twitter: string;
-    whatsapp: string;
-    tiktok: string;
-    linkedin: string;
-  };
+  socialMedia: any; // Dynamic structure: supports legacy object or new array
   privacyPolicy: string;
   termsOfService: string;
   aboutUs: string;

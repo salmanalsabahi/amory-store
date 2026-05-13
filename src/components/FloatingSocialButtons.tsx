@@ -1,8 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, CalendarDays, Facebook, Instagram, Twitter, X } from 'lucide-react';
+import { Plus, Facebook, Instagram, Twitter, MessageCircle, Youtube, Mail, Globe, Share2, Music } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useLocation } from 'react-router-dom';
+
+const PLATFORM_CONFIG: Record<string, { icon: any, color: string, label: string }> = {
+  whatsapp: { icon: MessageCircle, color: 'bg-[#25D366]', label: 'واتساب' },
+  facebook: { icon: Facebook, color: 'bg-[#1877F2]', label: 'فيسبوك' },
+  instagram: { icon: Instagram, color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]', label: 'إنستغرام' },
+  twitter: { icon: Twitter, color: 'bg-[#1DA1F2]', label: 'تويتر' },
+  tiktok: { icon: Music, color: 'bg-black', label: 'تيك توك' },
+  youtube: { icon: Youtube, color: 'bg-[#FF0000]', label: 'يوتيوب' },
+  snapchat: { icon: Globe, color: 'bg-[#FFFC00] text-black', label: 'سناب شات' },
+  email: { icon: Mail, color: 'bg-slate-600', label: 'البريد' },
+  default: { icon: Share2, color: 'bg-slate-500', label: 'تواصل' }
+};
 
 export function FloatingSocialButtons() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,36 +39,42 @@ export function FloatingSocialButtons() {
   const allowedPaths = ['/', '/doctors', '/services', '/offers'];
   if (!allowedPaths.includes(location.pathname)) return null;
 
-  const socialLinks = [
-    {
-      id: 'whatsapp',
-      icon: CalendarDays,
-      href: settings.socialMedia.whatsapp ? `https://wa.me/${settings.socialMedia.whatsapp}` : null,
-      color: 'bg-rose-500',
-      label: 'حجز استشارة'
-    },
-    {
-      id: 'facebook',
-      icon: Facebook,
-      href: settings.socialMedia.facebook || null,
-      color: 'bg-rose-600',
-      label: 'فيسبوك'
-    },
-    {
-      id: 'instagram',
-      icon: Instagram,
-      href: settings.socialMedia.instagram || null,
-      color: 'bg-gradient-to-tr from-rose-400 via-rose-500 to-rose-700',
-      label: 'إنستغرام'
-    },
-    {
-      id: 'twitter',
-      icon: Twitter,
-      href: settings.socialMedia.twitter || null,
-      color: 'bg-rose-400',
-      label: 'تويتر'
+  // Map settings.socialMedia (now an array) to the UI list
+  const socialLinks = (Array.isArray(settings.socialMedia) ? settings.socialMedia : []).map(link => {
+    // If it's a new array structure
+    if (typeof link === 'object' && link.platform) {
+      const config = PLATFORM_CONFIG[link.platform.toLowerCase()] || PLATFORM_CONFIG.default;
+      let href = link.url;
+      if (link.platform.toLowerCase() === 'whatsapp' && !href.startsWith('http')) {
+        href = `https://wa.me/${href}`;
+      }
+      return {
+        id: link.platform,
+        icon: config.icon,
+        href,
+        color: config.color,
+        label: link.label || config.label
+      };
     }
-  ].filter(link => link.href !== null);
+    return null;
+  }).filter(Boolean) as any[];
+
+  // Fallback for legacy data if needed
+  if (socialLinks.length === 0 && settings.socialMedia && typeof settings.socialMedia === 'object' && !Array.isArray(settings.socialMedia)) {
+    Object.entries(settings.socialMedia).forEach(([platform, value]) => {
+      if (!value) return;
+      const config = PLATFORM_CONFIG[platform.toLowerCase()] || PLATFORM_CONFIG.default;
+      let href = value as string;
+      if (platform === 'whatsapp' && !href.startsWith('http')) href = `https://wa.me/${href}`;
+      socialLinks.push({
+        id: platform,
+        icon: config.icon,
+        href,
+        color: config.color,
+        label: config.label
+      });
+    });
+  }
 
   if (socialLinks.length === 0) return null;
 
@@ -79,7 +97,7 @@ export function FloatingSocialButtons() {
                 aria-label={link.label}
               >
                 <link.icon className="w-4 h-4 lg:w-6 lg:h-6" />
-                <span className="absolute start-12 lg:start-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                <span className="absolute start-12 lg:start-14 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-white/10">
                   {link.label}
                 </span>
               </motion.a>

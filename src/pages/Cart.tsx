@@ -2,10 +2,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck, CreditCard, ShoppingCart, ShoppingCartIcon, CheckCircle2, ChevronLeft, ArrowLeft } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { useCurrency } from '../contexts/CurrencyContext';
 import { cn } from '../lib/utils';
 
 export function Cart() {
   const { items, removeFromCart, updateQuantity, subtotal, clearCart } = useCart();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   return (
@@ -79,7 +81,7 @@ export function Cart() {
                           <h3 className="text-sm md:text-xl font-bold md:font-black text-slate-900 mb-0.5 md:mb-1 group-hover:text-rose-600 transition-colors truncate">{item.name}</h3>
                           <div className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wider">{item.brand}</div>
                         </div>
-                        <div className="text-base md:text-2xl font-display font-black text-slate-900 mt-1 sm:mt-0 whitespace-nowrap">{item.price.toLocaleString()} <span className="text-[10px] md:text-xs font-bold text-slate-400 italic">ريال</span></div>
+                        <div className="text-base md:text-2xl font-display font-black text-slate-900 mt-1 sm:mt-0 whitespace-nowrap">{formatPrice(item.price)}</div>
                       </div>
                       
                       <div className="flex flex-row items-center justify-between gap-2 md:gap-6">
@@ -100,7 +102,7 @@ export function Cart() {
                         </div>
                         
                         <div className="flex items-center gap-2 md:gap-4">
-                            <div className="hidden sm:block text-[10px] md:text-xs font-bold text-slate-400">الإجمالي: <span className="text-slate-900">{(item.price * item.quantity).toLocaleString()} ريال</span></div>
+                            <div className="hidden sm:block text-[10px] md:text-xs font-bold text-slate-400">الإجمالي: <span className="text-slate-900">{formatPrice(item.price * item.quantity)}</span></div>
                             <button 
                                 onClick={() => removeFromCart(item.id)} 
                                 className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg md:rounded-2xl transition-all"
@@ -141,16 +143,15 @@ export function Cart() {
                     <span className="text-[10px] md:text-sm text-slate-400 font-bold flex items-center gap-2">
                        المجموع الفرعي
                     </span>
-                    <span className="font-black text-sm md:text-base text-slate-900">{subtotal.toLocaleString()} ريال</span>
+                    <span className="font-black text-sm md:text-base text-slate-900">{formatPrice(subtotal)}</span>
                   </div>
                   
                   <div className="pt-4 md:pt-6 border-t border-slate-100">
                     <div className="flex justify-between items-end">
                       <div>
                          <div className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">المبلغ الإجمالي (غير شامل التوصيل)</div>
-                         <div className="text-2xl md:text-4xl font-display font-black text-rose-600">{subtotal.toLocaleString()}</div>
+                         <div className="text-xl md:text-3xl font-display font-black text-rose-600">{formatPrice(subtotal)}</div>
                       </div>
-                      <div className="text-xs md:text-sm font-black text-slate-900 mb-1">ريال يمني</div>
                     </div>
                   </div>
                 </div>

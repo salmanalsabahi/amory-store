@@ -11,19 +11,20 @@ import {
   updateEmail,
   updateProfile
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocs, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getMessaging, getToken, onMessage, isSupported } from 'firebase/messaging';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firestore
 let firestoreDb;
 try {
   firestoreDb = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
   }, firebaseConfig.firestoreDatabaseId);
 } catch (error) {
-  // If already initialized (e.g., during Vite HMR), use getFirestore
   firestoreDb = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 }
 export const db = firestoreDb;
@@ -31,6 +32,12 @@ export const db = firestoreDb;
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+
+// Initialize Messaging safely (it might not be supported in all environments)
+export const messaging = async () => {
+  const supported = await isSupported();
+  return supported ? getMessaging(app) : null;
+};
 
 export { sendPasswordResetEmail } from 'firebase/auth';
 export const saveUserToFirestore = async (user: any, additionalData: any = {}, role: string = 'user') => {

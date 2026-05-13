@@ -17,6 +17,8 @@ import { handleFirestoreError, OperationType } from '../../lib/firebaseErrorHand
 
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
+import { useCurrency } from '../../contexts/CurrencyContext';
+
 const navLinks: { name: string; path: string; hasDropdown?: boolean }[] = [
   { name: 'الرئيسية', path: '/' },
   { name: 'المنتجات', path: '/store' },
@@ -54,6 +56,7 @@ export function Navbar() {
   const { settings } = useSiteSettings();
   const { wishlist } = useWishlist();
   const { items } = useCart();
+  const { region, setRegion } = useCurrency();
 
   const cartItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -204,9 +207,24 @@ export function Navbar() {
               )}
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-3">
-              {settings?.socialMedia?.facebook && (
-                <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
+          <div className="hidden sm:flex items-center gap-4">
+              {/* Currency Selector */}
+              <div className="flex items-center gap-2 border-l border-slate-700 pl-4">
+                <span className="text-slate-400">العملة:</span>
+                <select 
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value as any)}
+                  className="bg-transparent border-none text-white text-xs outline-none cursor-pointer hover:text-rose-400 disabled:opacity-50"
+                >
+                  <option className="text-slate-900" value="sanaa">ريال يمني (قديم)</option>
+                  <option className="text-slate-900" value="aden">ريال يمني (جديد)</option>
+                  <option className="text-slate-900" value="sar">ريال سعودي (ر.س)</option>
+                  <option className="text-slate-900" value="usd">دولار أمريكي ($)</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-3">
+                {settings?.socialMedia?.facebook && (
+                  <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-rose-400 transition-colors flex items-center gap-1">
                   <Facebook className="w-3 h-3" /> <span className="hidden xs:inline">فيسبوك</span>
                 </a>
               )}
@@ -231,6 +249,7 @@ export function Navbar() {
                   <Linkedin className="w-3 h-3" /> <span className="hidden xs:inline">لينكد إن</span>
                 </a>
               )}
+              </div>
           </div>
         </div>
 
@@ -376,6 +395,22 @@ export function Navbar() {
             </div>
             {/* Mobile Actions (Menu Toggle) & Icons */}
             <div className="flex md:hidden items-center gap-1">
+              <div className="relative flex items-center mr-1">
+                <select 
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value as any)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-base"
+                >
+                  <option value="sanaa">قديم (ريال)</option>
+                  <option value="aden">جديد (ريال)</option>
+                  <option value="sar">سعودي (ر.س)</option>
+                  <option value="usd">الدولار ($)</option>
+                </select>
+                <div className={cn("flex flex-col items-center justify-center p-2 rounded-lg transition-colors pointer-events-none", !isTransparent ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10")}>
+                  <div className="font-bold text-[10px] leading-none mb-0.5">{region === 'usd' ? '$' : region === 'sar' ? 'ر.س' : '﷼'}</div>
+                  <ChevronDown className="w-2 h-2" />
+                </div>
+              </div>
               {user && (
                 <Notifications isAdmin={isAdmin} isDark={!isTransparent} />
               )}

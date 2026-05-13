@@ -7,6 +7,7 @@ import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase
 import { useNavigate } from 'react-router-dom';
 import { Truck, CheckCircle2, Loader2, CreditCard, Wallet, Banknote, Tag, ShoppingBag, Upload } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { useCurrency } from '../contexts/CurrencyContext';
 import imageCompression from 'browser-image-compression';
 import toast from 'react-hot-toast';
 
@@ -16,6 +17,7 @@ export function Checkout() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { items: cartItems, subtotal, clearCart } = useCart();
+  const { formatPrice } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('جاري إرسال الطلب...');
   const [success, setSuccess] = useState(false);
@@ -114,7 +116,8 @@ export function Checkout() {
   };
 
   const discountAmount = appliedCoupon ? (subtotal * appliedCoupon.discount / 100) : 0;
-  const total = subtotal - discountAmount + shippingFee;
+  const finalShippingFee = subtotal > 10000 ? 0 : shippingFee;
+  const total = subtotal - discountAmount + finalShippingFee;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,7 +202,7 @@ export function Checkout() {
           imageUrl: item.imageUrl
         })),
         subtotal: subtotal,
-        shippingFee: shippingFee,
+        shippingFee: finalShippingFee,
         discount: discountAmount,
         couponCode: appliedCoupon?.code || null,
         total: total,
@@ -484,21 +487,21 @@ export function Checkout() {
           <div className="flex-1 w-full max-w-sm space-y-2">
             <div className="flex items-center justify-between text-sm text-white/80">
               <span>المجموع الفرعي:</span>
-              <span>{subtotal.toLocaleString()} ريال</span>
+              <span>{formatPrice(subtotal)}</span>
             </div>
             {discountAmount > 0 && (
                <div className="flex items-center justify-between text-sm text-green-300">
                 <span>الخصم ({appliedCoupon?.discount}%):</span>
-                <span>-{discountAmount.toLocaleString()} ريال</span>
+                <span>-{formatPrice(discountAmount)}</span>
               </div>
             )}
             <div className="flex items-center justify-between text-sm text-white/80 border-b border-white/20 pb-2">
               <span>التوصيل:</span>
-              <span>{shippingFee.toLocaleString()} ريال</span>
+              <span>{finalShippingFee === 0 && subtotal > 10000 ? 'مجاني' : formatPrice(finalShippingFee)}</span>
             </div>
             <div className="flex items-center justify-between font-bold text-white text-xl pt-1">
               <span>الإجمالي:</span>
-              <span>{total.toLocaleString()} <span className="text-sm font-normal text-white/80">ريال</span></span>
+              <span>{formatPrice(total)}</span>
             </div>
           </div>
           

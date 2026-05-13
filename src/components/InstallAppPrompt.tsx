@@ -63,7 +63,7 @@ export function InstallAppPrompt() {
         <div>
           <h3 className="font-bold text-slate-900 text-lg">تثبيت عموري للتجميل</h3>
           <p className="text-sm text-slate-600 leading-relaxed">
-            استمتع بتجربة تسوق أسرع وأسهل مع عموري للتجميل من خلال إضافة التطبيق إلى شاشتك الرئيسية.
+            استمتع بتجربة تسوق أسرع وأسهل واحصل على تنبيهات فورية وتنبيهات المنتجات "قريباً" مباشرة على هاتفك.
           </p>
         </div>
       </div>

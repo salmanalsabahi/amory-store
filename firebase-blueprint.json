@@ -188,14 +188,14 @@
         "phone": { "type": "string" },
         "email": { "type": "string" },
         "socialMedia": {
-          "type": "object",
-          "properties": {
-            "facebook": { "type": "string" },
-            "instagram": { "type": "string" },
-            "twitter": { "type": "string" },
-            "whatsapp": { "type": "string" },
-            "tiktok": { "type": "string" },
-            "linkedin": { "type": "string" }
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "platform": { "type": "string" },
+              "url": { "type": "string" },
+              "active": { "type": "boolean" }
+            }
           }
         },
         "privacyPolicy": { "type": "string" },
@@ -203,6 +203,43 @@
         "aboutUs": { "type": "string" },
         "aboutUsImage": { "type": "string" }
       }
+    },
+    "Broadcast": {
+      "title": "Broadcast",
+      "description": "A global marketing notification or greeting.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "link": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "sentBy": { "type": "string" }
+      },
+      "required": ["title", "body", "createdAt"]
+    },
+    "AvailabilitySubscription": {
+      "title": "AvailabilitySubscription",
+      "description": "User subscription for back-in-stock notifications.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "token": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "createdAt"]
+    },
+    "FCMToken": {
+      "title": "FCMToken",
+      "description": "A device token for push notifications.",
+      "type": "object",
+      "properties": {
+        "token": { "type": "string" },
+        "userId": { "type": "string" },
+        "deviceType": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["token", "userId", "updatedAt"]
     }
   },
   "firestore": {
@@ -253,6 +290,18 @@
     "siteSettings/general": {
       "schema": { "$ref": "#/entities/SiteSettings" },
       "description": "General site settings document."
+    },
+    "broadcasts": {
+      "schema": { "$ref": "#/entities/Broadcast" },
+      "description": "Collection of marketing broadcasts."
+    },
+    "availability_subscriptions": {
+      "schema": { "$ref": "#/entities/AvailabilitySubscription" },
+      "description": "Collection of product availability subscriptions."
+    },
+    "fcm_tokens": {
+      "schema": { "$ref": "#/entities/FCMToken" },
+      "description": "Collection of device registration tokens."
     }
   }
 }

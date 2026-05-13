@@ -4,6 +4,7 @@ import { ShoppingBag, Star, Heart, Check, Bell, X, Plus, Minus, Eye } from 'luci
 import { Link, useNavigate } from 'react-router-dom';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
+import { useCurrency } from '../contexts/CurrencyContext';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
@@ -16,11 +17,14 @@ interface ProductCardProps {
   idx: number;
 }
 
+import { subscribeToNotifications } from '../lib/notifications';
+
 export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const [quantity, setQuantity] = useState(product.minOrder || 1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { formatPrice } = useCurrency();
   const { requireAuth } = useRequireAuth();
   const isOnline = useOnlineStatus();
   const [adding, setAdding] = useState(false);
@@ -49,6 +53,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const handleNotifyMe = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // First request browser notifications
+    const hasPermission = await subscribeToNotifications();
+    if (!hasPermission) return;
+
     requireAuth(async () => {
       try {
         const currentUser = auth.currentUser;
@@ -63,11 +72,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
           status: 'pending'
         });
         setNotified(true);
-        toast.success('ولا يهمك، بنبلغك أول ما يتوفر ياحبوب!', { icon: '🔔' });
+        toast.success('ولا يهمك، بنبلغك أول ما يتوفر ياحبوب بنرسل لك إشعار لجهازك!', { icon: '🔔' });
       } catch (error) {
         console.error("Error signing up for notification:", error);
       }
-    }, { customMessage: 'لازم تسجل دخول عشان نقدر نبلغك أول ما يتوفر المنتج!' });
+    }, { customMessage: 'لازم تسجل دخول عشان نقدر نبلغك أول ما يتوفر المنتج ونرسل لك إشعار!' });
   };
 
   const openModal = (e: React.MouseEvent) => {
@@ -192,11 +201,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
 
           <div className="mt-auto">
             <div className="flex items-baseline gap-1 mb-2 flex-wrap">
-              <span className="text-base md:text-lg font-black text-slate-900">{product.price.toLocaleString()}</span>
-              <span className="text-[9px] font-bold text-slate-500 uppercase">ريال</span>
+              <span className="text-base md:text-lg font-black text-slate-900">{formatPrice(product.price)}</span>
               {typeof product.originalPrice === 'number' && product.originalPrice > product.price && (
-                <span className="text-[10px] md:text-xs text-slate-500 line-through decoration-red-600 decoration-2 mr-2 font-bold">
-                  {product.originalPrice.toLocaleString()} ريال
+                <span className="text-[10px] md:text-xs text-slate-500 line-through decoration-red-600 decoration-2 font-bold">
+                  {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
@@ -297,17 +305,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
                        initial={{ opacity: 0, y: 20 }}
                        animate={{ opacity: 1, y: 0 }}
                        transition={{ delay: 0.4 }}
-                       className="flex items-baseline gap-1.5 md:gap-2 mb-4 md:mb-6 bg-slate-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-100"
+                       className="flex items-baseline gap-1.5 md:gap-2 mb-4 md:mb-6 bg-slate-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-100 flex-wrap"
                     >
-                       <span className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900">{product.price.toLocaleString()}</span>
-                       <span className="text-xs md:text-sm font-bold text-slate-500 uppercase">ريال</span>
+                       <span className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900">{formatPrice(product.price)}</span>
                        {typeof product.originalPrice === 'number' && product.originalPrice > product.price && (
                           <div className="mr-2 md:mr-3 flex items-center flex-wrap">
                             <span className="text-base md:text-xl text-slate-500 line-through decoration-red-600 decoration-2 mr-1 md:mr-2 font-bold">
-                              {product.originalPrice.toLocaleString()}
+                              {formatPrice(product.originalPrice)}
                             </span>
                             <span className="bg-red-100 text-red-600 text-[9px] md:text-xs font-bold px-1.5 py-0.5 md:px-2 md:py-0.5 rounded-full mt-1 sm:mt-0">
-                              وفّر {(product.originalPrice - product.price).toLocaleString()}
+                              وفّر {formatPrice(product.originalPrice - product.price)}
                             </span>
                           </div>
                        )}

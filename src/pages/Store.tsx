@@ -26,25 +26,26 @@ export function Store() {
   const brands = ["CeraVe", "Bioderma", "La Roche-Posay", "Cetaphil", "Garnier", "Vichy", "Eucerin", "The Ordinary", "PanOxyl", "Avene"];
 
   useEffect(() => {
-    const q = query(collection(db, 'products'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setLoading(false);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, 'products', auth);
-      setLoading(false);
-    });
+    const fetchInitialData = async () => {
+      try {
+        const productsSnapshot = await getDocs(query(collection(db, 'products')));
+        setProducts(productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        
+        const categoriesSnapshot = await getDocs(collection(db, 'categories'));
+        const uniqueNames = Array.from(new Set(categoriesSnapshot.docs.map(doc => doc.data().name)));
+        setCategories(uniqueNames as string[]);
+      } catch (error) {
+        handleFirestoreError(error, OperationType.LIST, 'products', auth);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const unsubCats = onSnapshot(collection(db, 'categories'), (snapshot) => {
-      // Deduplicate category names to avoid duplicate keys and redundant filter buttons
-      const uniqueNames = Array.from(new Set(snapshot.docs.map(doc => doc.data().name)));
-      setCategories(uniqueNames);
-    }, (error) => handleFirestoreError(error, OperationType.LIST, 'categories', auth));
+    fetchInitialData();
 
     const catParam = searchParams.get('category');
     if (catParam) setSelectedCategories([catParam]);
 
-    return () => { unsubscribe(); unsubCats(); };
   }, []);
 
   const toggleCategory = (cat: string) => {
@@ -57,6 +58,8 @@ export function Store() {
     );
   };
 
+  const [visibleCount, setVisibleCount] = useState(12);
+
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           product.scientificName?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -64,6 +67,13 @@ export function Store() {
     const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
     return matchesSearch && matchesCategory && matchesBrand;
   });
+
+  const displayedProducts = filteredProducts.slice(0, visibleCount);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [searchQuery, selectedCategories, selectedBrands]);
 
   return (
     <div className="pt-20 md:pt-24 pb-20 md:pb-32 bg-slate-50/50 min-h-screen">
@@ -183,11 +193,24 @@ export function Store() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
-                {filteredProducts.map((product, idx) => (
-                  <ProductCard key={product.id} product={product} idx={idx} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+                  {displayedProducts.map((product, idx) => (
+                    <ProductCard key={product.id} product={product} idx={idx} />
+                  ))}
+                </div>
+                
+                {visibleCount < filteredProducts.length && (
+                  <div className="mt-12 flex justify-center">
+                    <button
+                      onClick={() => setVisibleCount(v => v + 12)}
+                      className="bg-white text-rose-600 hover:bg-rose-50 border-2 border-rose-100 px-8 py-4 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 active:scale-95 shadow-xl shadow-slate-900/5 group"
+                    >
+                      عرض المزيد <Plus className="w-5 h-5 transition-transform group-hover:scale-125" />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </main>
         </div>

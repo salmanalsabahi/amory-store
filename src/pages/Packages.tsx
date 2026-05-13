@@ -1,42 +1,81 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Gift, GraduationCap, Heart, Package as PackageIcon, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Gift, GraduationCap, Heart, Package as PackageIcon, Loader2, AlertCircle, CheckCircle2, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, query, getDocs, limit, startAfter } from 'firebase/firestore';
 import { db } from '../firebase';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { useCart } from '../contexts/CartContext';
+import { useCurrency } from '../contexts/CurrencyContext';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { cn } from '../lib/utils';
 
 export function Packages() {
   const [packages, setPackages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [hasMore, setHasMore] = useState(true);
+
   const [addingId, setAddingId] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const isOnline = useOnlineStatus();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const q = collection(db, 'packages');
-    const unsubscribe = onSnapshot(q, {
-      next: (snapshot) => {
-        setPackages(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
-        setLoading(false);
-      },
-      error: (error: any) => {
-        if (error?.message?.includes('offline') || error?.code === 'unavailable') {
-          console.warn("أنت غير متصل بالإنترنت. تُعرض الباقات من الذاكرة المؤقتة.");
-        } else {
-          console.error("Error fetching packages:", error);
-        }
-        setLoading(false);
-      }
-    });
+  const PACKAGES_PER_PAGE = 6;
 
-    return () => unsubscribe();
-  }, []);
+  const fetchPackages = async (isLoadMore = false) => {
+    if (!isOnline) {
+      setLoading(false);
+      setLoadingMore(false);
+      return;
+    }
+
+    try {
+      if (isLoadMore) setLoadingMore(true);
+      else setLoading(true);
+
+      let q = query(
+        collection(db, 'packages'),
+        limit(PACKAGES_PER_PAGE)
+      );
+
+      if (isLoadMore && lastDoc) {
+        q = query(
+          collection(db, 'packages'),
+          startAfter(lastDoc),
+          limit(PACKAGES_PER_PAGE)
+        );
+      }
+
+      const snapshot = await getDocs(q);
+      const newPackages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      if (isLoadMore) {
+        setPackages(prev => [...prev, ...newPackages]);
+      } else {
+        setPackages(newPackages);
+      }
+
+      setLastDoc(snapshot.docs[snapshot.docs.length - 1] || null);
+      setHasMore(snapshot.docs.length === PACKAGES_PER_PAGE);
+    } catch (error: any) {
+      if (error?.message?.includes('offline') || error?.code === 'unavailable') {
+         console.warn("أنت غير متصل بالإنترنت.");
+      } else {
+         console.error("Error fetching packages:", error);
+      }
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPackages();
+  }, [isOnline]);
 
   const handleAddToCart = async (pkg: any) => {
     if (!isOnline) {
@@ -71,7 +110,7 @@ export function Packages() {
   };
 
   return (
-    <div className="pt-32 pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="pt-36 md:pt-48 pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -146,7 +185,7 @@ export function Packages() {
               
               <h3 className="text-[13px] sm:text-base md:text-2xl font-display font-black text-slate-900 mb-1 md:mb-3 group-hover:text-rose-600 transition-colors uppercase tracking-tight line-clamp-2 md:line-clamp-none">{pkg.title}</h3>
               <p className="text-slate-500 mb-2 md:mb-4 text-[10px] md:text-sm font-medium line-clamp-2 md:line-clamp-none">{pkg.subtitle}</p>
-              <div className="text-sm sm:text-lg md:text-2xl font-display font-black text-rose-600 mb-4 md:mb-8">{pkg.price.toLocaleString()} <span className="text-[9px] md:text-xs font-normal text-slate-400">ريال</span></div>
+              <div className="text-sm sm:text-lg md:text-2xl font-display font-black text-rose-600 mb-4 md:mb-8">{formatPrice(pkg.price)}</div>
               
               <button 
                 onClick={() => handleAddToCart(pkg)}
@@ -166,6 +205,23 @@ export function Packages() {
           ))}
         </div>
       )}
+
+      {hasMore && packages.length > 0 && !loading && (
+        <div className="mt-12 flex justify-center">
+          <button
+            onClick={() => fetchPackages(true)}
+            disabled={loadingMore}
+            className="bg-white text-rose-600 hover:bg-rose-50 border-2 border-rose-100 px-8 py-4 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-xl shadow-slate-900/5 group"
+          >
+            {loadingMore ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>عرض المزيد <Plus className="w-5 h-5 transition-transform group-hover:scale-125" /></>
+            )}
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }

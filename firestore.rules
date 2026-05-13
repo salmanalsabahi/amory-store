@@ -141,6 +141,16 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    match /broadcasts/{broadcastId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /fcm_tokens/{token} {
+      allow read: if isAdmin();
+      allow write: if true; // Allow anyone to register/update their token
+    }
   }
 }
 

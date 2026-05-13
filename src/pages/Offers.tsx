@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, onSnapshot, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit, startAfter, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { Loader2, CheckCircle2, AlertCircle, WifiOff, Tag, Sparkles, ArrowLeft, Clock, ShoppingBag } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, WifiOff, Tag, Sparkles, ArrowLeft, Clock, ShoppingBag, Plus } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -13,6 +13,10 @@ import { useCart } from '../contexts/CartContext';
 export function Offers() {
   const [offers, setOffers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [hasMore, setHasMore] = useState(true);
+  
   const [user, setUser] = useState<any>(null);
   const [bookingLoading, setBookingLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -20,34 +24,68 @@ export function Offers() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  
+  const OFFERS_PER_PAGE = 4;
+
+  const fetchOffers = async (isLoadMore = false) => {
+    if (!isOnline) {
+      setLoading(false);
+      setLoadingMore(false);
+      return;
+    }
+
+    try {
+      if (isLoadMore) setLoadingMore(true);
+      else setLoading(true);
+
+      let q = query(
+        collection(db, 'offers'), 
+        where('active', '==', true),
+        limit(OFFERS_PER_PAGE)
+      );
+
+      if (isLoadMore && lastDoc) {
+        q = query(
+          collection(db, 'offers'), 
+          where('active', '==', true),
+          startAfter(lastDoc),
+          limit(OFFERS_PER_PAGE)
+        );
+      }
+
+      const snapshot = await getDocs(q);
+      const newOffers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      if (isLoadMore) {
+        setOffers(prev => [...prev, ...newOffers]);
+      } else {
+        setOffers(newOffers);
+      }
+
+      setLastDoc(snapshot.docs[snapshot.docs.length - 1] || null);
+      setHasMore(snapshot.docs.length === OFFERS_PER_PAGE);
+    } catch (err: any) {
+      if (err?.message?.includes('offline') || err?.code === 'unavailable') {
+         console.warn("أنت غير متصل بالإنترنت. لتطبيق التصفح يتطلب اتصال.");
+      } else {
+         console.error("Error fetching offers:", err);
+         setMessage({ type: 'error', text: 'نعتذر، تعذر جلب العروض.' });
+      }
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
 
-    const q = query(collection(db, 'offers'), where('active', '==', true));
-    const unsubscribeOffers = onSnapshot(q, {
-      next: (snapshot) => {
-        setOffers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        setLoading(false);
-      },
-      error: (err: any) => {
-        if (err?.message?.includes('offline') || err?.code === 'unavailable') {
-          console.warn("أنت غير متصل بالإنترنت. تُعرض العروض من الذاكرة المؤقتة.");
-        } else {
-          console.error("Error fetching offers:", err);
-          setMessage({ type: 'error', text: 'نعتذر، تعذر جلب العروض.' });
-        }
-        setLoading(false);
-      }
-    });
+    fetchOffers();
 
-    return () => {
-      unsubscribeAuth();
-      unsubscribeOffers();
-    };
-  }, []);
+    return () => unsubscribeAuth();
+  }, [isOnline]);
 
   const handleAddToCart = async (offer: any) => {
     if (!isOnline) {
@@ -91,7 +129,7 @@ export function Offers() {
 
   if (!isOnline && offers.length === 0) {
     return (
-      <div className="pt-32 pb-20 bg-slate-50 min-h-screen flex items-center justify-center px-4 text-center">
+      <div className="pt-36 md:pt-48 pb-20 bg-slate-50 min-h-screen flex items-center justify-center px-4 text-center">
         <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100 max-w-lg mx-auto">
           <div className="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mb-8 text-rose-600 mx-auto">
             <WifiOff className="w-12 h-12" />
@@ -112,7 +150,7 @@ export function Offers() {
   }
 
   return (
-    <div className="pt-32 pb-32 bg-white min-h-screen">
+    <div className="pt-36 md:pt-48 pb-32 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-20">
@@ -245,6 +283,22 @@ export function Offers() {
             </motion.div>
           ))}
         </div>
+
+        {hasMore && offers.length > 0 && !loading && (
+           <div className="mt-12 flex justify-center">
+              <button
+                onClick={() => fetchOffers(true)}
+                disabled={loadingMore}
+                className="bg-white text-rose-600 hover:bg-rose-50 border-2 border-rose-100 px-8 py-4 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-xl shadow-slate-900/5 group"
+              >
+                {loadingMore ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>عرض المزيد <Plus className="w-5 h-5 transition-transform group-hover:scale-125" /></>
+                )}
+              </button>
+           </div>
+        )}
 
         <OfferModal 
           offer={selectedOffer} 

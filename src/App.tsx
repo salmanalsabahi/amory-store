@@ -13,6 +13,8 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { CartProvider } from './contexts/CartContext';
+import { CurrencyProvider } from './contexts/CurrencyContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { seedInitialData } from './lib/seedData';
 import { useCachePreloader } from './hooks/useCachePreloader';
 import { InstallAppPrompt } from './components/InstallAppPrompt';
@@ -57,6 +59,7 @@ import { AdminMessages } from './pages/admin/AdminMessages';
 import { AdminAnalytics } from './pages/admin/AdminAnalytics';
 import { AdminPaymentSettings } from './pages/admin/AdminPaymentSettings';
 import { AdminShippingSettings } from './pages/admin/AdminShippingSettings';
+import { AdminMarketing } from './pages/admin/AdminMarketing';
 
 // Loading component
 function PageLoader() {
@@ -100,7 +103,11 @@ function PageWrapper({ children, ...props }: { children: React.ReactNode, key?: 
   );
 }
 
+import { useBackgroundNotifications } from './hooks/useBackgroundNotifications';
+
 export default function App() {
+  useBackgroundNotifications();
+  
   useEffect(() => {
     seedInitialData().catch(console.error);
 
@@ -123,9 +130,11 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <WishlistProvider>
-        <CartProvider>
-          <TooltipProvider>
+      <CurrencyProvider>
+        <NotificationProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <TooltipProvider>
             <Toaster 
               position="top-center"
               toastOptions={{
@@ -167,7 +176,9 @@ export default function App() {
           </TooltipProvider>
         </CartProvider>
       </WishlistProvider>
-    </BrowserRouter>
+     </NotificationProvider>
+    </CurrencyProvider>
+  </BrowserRouter>
   );
 }
 
@@ -212,6 +223,7 @@ function AppRoutes() {
           <Route path="shipping" element={<PageWrapper key="admin-shipping"><AdminShippingSettings /></PageWrapper>} />
           <Route path="site-settings" element={<PageWrapper key="admin-site"><AdminSiteSettings /></PageWrapper>} />
           <Route path="payment-settings" element={<PageWrapper key="admin-payments"><AdminPaymentSettings /></PageWrapper>} />
+          <Route path="marketing" element={<PageWrapper key="admin-marketing"><AdminMarketing /></PageWrapper>} />
           <Route path="messages" element={<PageWrapper key="admin-messages"><AdminMessages /></PageWrapper>} />
           <Route path="analytics" element={<PageWrapper key="admin-analytics"><AdminAnalytics /></PageWrapper>} />
         </Route>

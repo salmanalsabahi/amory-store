@@ -10,6 +10,7 @@ import {
 import { cn } from '../lib/utils';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
+import { useCurrency } from '../contexts/CurrencyContext';
 import { useRequireAuth } from '../hooks/useRequireAuth';
 import toast from 'react-hot-toast';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -31,6 +32,7 @@ export function ProductDetail() {
   
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const { requireAuth } = useRequireAuth();
 
   useEffect(() => {
@@ -237,11 +239,10 @@ export function ProductDetail() {
             {/* Price section */}
             <div className="mb-4 md:mb-6 flex flex-col items-start gap-0.5 md:gap-1">
                <div className="flex items-baseline gap-1 md:gap-2 text-rose-700">
-                 <span className="text-2xl md:text-4xl font-bold">{product.price.toLocaleString()}</span>
-                 <span className="text-[10px] md:text-lg font-medium">ريال</span>
+                 <span className="text-2xl md:text-4xl font-bold">{formatPrice(product.price)}</span>
                  {typeof product.originalPrice === 'number' && product.originalPrice > product.price && (
                    <span className="text-slate-500 font-bold text-base md:text-2xl line-through decoration-red-600 decoration-2 mr-3">
-                     {product.originalPrice.toLocaleString()} ريال
+                     {formatPrice(product.originalPrice)}
                    </span>
                  )}
                </div>

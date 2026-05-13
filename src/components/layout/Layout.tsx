@@ -6,6 +6,7 @@ import { FloatingSocialButtons } from '../FloatingSocialButtons';
 import { MobileBottomNav } from './MobileBottomNav';
 import { OfflineAlert } from '../OfflineAlert';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
+import { NotificationBanner } from '../NotificationBanner';
 
 export function Layout() {
   const location = useLocation();
@@ -14,6 +15,7 @@ export function Layout() {
   return (
     <div className="min-h-screen flex flex-col relative pb-[68px] lg:pb-0">
       <OfflineAlert />
+      <NotificationBanner />
       <Navbar />
       <main className="flex-grow">
         <Outlet />

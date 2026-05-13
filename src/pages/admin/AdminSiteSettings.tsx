@@ -11,7 +11,7 @@ import { compressImage } from '../../utils/imageUtils';
 import { seedAmoryData } from '../../utils/seedAmoryData';
 
 export function AdminSiteSettings() {
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<any>({
     storeName: '',
     storeDescription: '',
     logoUrl: '',
@@ -20,12 +20,45 @@ export function AdminSiteSettings() {
     workingHours: '',
     phone: '',
     email: '',
-    socialMedia: { facebook: '', instagram: '', twitter: '', whatsapp: '', tiktok: '', linkedin: '' },
+    socialMedia: [],
     privacyPolicy: '',
     termsOfService: '',
     aboutUs: '',
-    aboutUsImage: ''
+    aboutUsImage: '',
+    exchangeRateSanaa: 530,
+    exchangeRateAden: 1700
   });
+
+  const PLATFORMS = [
+    { value: 'whatsapp', label: 'واتساب' },
+    { value: 'facebook', label: 'فيسبوك' },
+    { value: 'instagram', label: 'إنستغرام' },
+    { value: 'twitter', label: 'تويتر' },
+    { value: 'tiktok', label: 'تيك توك' },
+    { value: 'snapchat', label: 'سناب شات' },
+    { value: 'youtube', label: 'يوتيوب' },
+    { value: 'linkedin', label: 'لينكد إن' },
+  ];
+
+  const addSocialLink = () => {
+    const currentLinks = Array.isArray(settings.socialMedia) ? settings.socialMedia : [];
+    setSettings({
+      ...settings,
+      socialMedia: [...currentLinks, { platform: 'whatsapp', url: '', active: true }]
+    });
+  };
+
+  const removeSocialLink = (index: number) => {
+    const currentLinks = Array.isArray(settings.socialMedia) ? [...settings.socialMedia] : [];
+    currentLinks.splice(index, 1);
+    setSettings({ ...settings, socialMedia: currentLinks });
+  };
+
+  const updateSocialLink = (index: number, field: string, value: any) => {
+    const currentLinks = Array.isArray(settings.socialMedia) ? [...settings.socialMedia] : [];
+    currentLinks[index] = { ...currentLinks[index], [field]: value };
+    setSettings({ ...settings, socialMedia: currentLinks });
+  };
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
@@ -151,18 +184,18 @@ export function AdminSiteSettings() {
         </div>
       </div>
       
-      <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-2xl space-y-6">
-        {message.text && (
-          <div className={`p-4 rounded-xl flex items-start gap-3 text-sm ${
-            message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-          }`}>
-            {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" /> : <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />}
-            <p>{message.text}</p>
-          </div>
-        )}
+        <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 max-w-2xl space-y-6">
+          {message.text && (
+            <div className={`p-4 rounded-xl flex items-start gap-3 text-sm ${
+              message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+            }`}>
+              {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" /> : <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />}
+              <p>{message.text}</p>
+            </div>
+          )}
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">اسم المتجر</label>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">اسم المتجر</label>
           <input type="text" value={settings.storeName} onChange={e => setSettings({...settings, storeName: e.target.value})} className="w-full p-3 rounded-xl border border-slate-200" required />
         </div>
 
@@ -225,31 +258,54 @@ export function AdminSiteSettings() {
           <input type="email" value={settings.email} onChange={e => setSettings({...settings, email: e.target.value})} className="w-full p-3 rounded-xl border border-slate-200" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">فيسبوك</label>
-            <input type="url" value={settings.socialMedia.facebook} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, facebook: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-black text-slate-700">روابط التواصل الاجتماعي</label>
+            <button 
+              type="button" 
+              onClick={addSocialLink}
+              className="text-xs bg-slate-900 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-black transition-colors"
+            >
+              + إضافة منصة
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">إنستغرام</label>
-            <input type="url" value={settings.socialMedia.instagram} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, instagram: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" />
+          
+          <div className="space-y-3">
+            {(Array.isArray(settings.socialMedia) ? settings.socialMedia : []).map((link: any, index: number) => (
+              <div key={index} className="flex flex-col sm:flex-row gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 relative group">
+                <div className="flex-1">
+                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">المنصة</label>
+                  <select 
+                    value={link.platform} 
+                    onChange={e => updateSocialLink(index, 'platform', e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm"
+                  >
+                    {PLATFORMS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                  </select>
+                </div>
+                <div className="flex-[2]">
+                  <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">الرابط أو الرقم (للواتس)</label>
+                  <input 
+                    type="text" 
+                    value={link.url} 
+                    onChange={e => updateSocialLink(index, 'url', e.target.value)}
+                    placeholder="https://..."
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-sm"
+                  />
+                </div>
+                <button 
+                  type="button"
+                  onClick={() => removeSocialLink(index)}
+                  className="sm:self-end p-2.5 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                >
+                  حذف
+                </button>
+              </div>
+            ))}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">تويتر / X</label>
-            <input type="url" value={settings.socialMedia.twitter} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, twitter: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">واتساب (رقم)</label>
-            <input type="text" value={settings.socialMedia.whatsapp} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, whatsapp: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" placeholder="967..." />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">تيك توك</label>
-            <input type="url" value={settings.socialMedia.tiktok} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, tiktok: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">لينكد إن</label>
-            <input type="url" value={settings.socialMedia.linkedin} onChange={e => setSettings({...settings, socialMedia: {...settings.socialMedia, linkedin: e.target.value}})} className="w-full p-3 rounded-xl border border-slate-200" />
-          </div>
+          {(!settings.socialMedia || settings.socialMedia.length === 0) && (
+            <p className="text-center py-8 text-slate-400 text-sm italic">لا توجد روابط تواصل اجتماعي مضافة حالياً</p>
+          )}
         </div>
 
         <div>

@@ -1,9 +1,54 @@
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, Clock, Mail, Facebook, Instagram, Twitter, ArrowLeft, MessageCircle, Linkedin } from 'lucide-react';
+import { Phone, MapPin, Mail, Facebook, Instagram, Twitter, MessageCircle, Youtube, Music, Share2, Globe } from 'lucide-react';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
+
+const PLATFORM_CONFIG: Record<string, { icon: any, color: string, label: string }> = {
+  whatsapp: { icon: MessageCircle, color: 'bg-[#25D366]', label: 'واتساب' },
+  facebook: { icon: Facebook, color: 'bg-[#1877F2]', label: 'فيسبوك' },
+  instagram: { icon: Instagram, color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]', label: 'إنستغرام' },
+  twitter: { icon: Twitter, color: 'bg-[#1DA1F2]', label: 'تويتر' },
+  tiktok: { icon: Music, color: 'bg-black', label: 'تيك توك' },
+  youtube: { icon: Youtube, color: 'bg-[#FF0000]', label: 'يوتيوب' },
+  snapchat: { icon: Globe, color: 'bg-[#FFFC00] text-black', label: 'سناب شات' },
+  default: { icon: Share2, color: 'bg-slate-500', label: 'تواصل' }
+};
 
 export function Footer() {
   const { settings } = useSiteSettings();
+
+  // Normalize social media data
+  const socialLinks = (Array.isArray(settings?.socialMedia) ? settings.socialMedia : []).map(link => {
+    if (typeof link === 'object' && link.platform) {
+      const config = PLATFORM_CONFIG[link.platform.toLowerCase()] || PLATFORM_CONFIG.default;
+      let href = link.url;
+      if (link.platform.toLowerCase() === 'whatsapp' && !href.startsWith('http')) {
+        href = `https://wa.me/${href}`;
+      }
+      return {
+        id: link.platform,
+        icon: config.icon,
+        href,
+        label: link.label || config.label
+      };
+    }
+    return null;
+  }).filter(Boolean) as any[];
+
+  // Fallback for legacy data
+  if (socialLinks.length === 0 && settings?.socialMedia && typeof settings.socialMedia === 'object' && !Array.isArray(settings.socialMedia)) {
+    Object.entries(settings.socialMedia).forEach(([platform, value]) => {
+      if (!value) return;
+      const config = PLATFORM_CONFIG[platform.toLowerCase()] || PLATFORM_CONFIG.default;
+      let href = value as string;
+      if (platform === 'whatsapp' && !href.startsWith('http')) href = `https://wa.me/${href}`;
+      socialLinks.push({
+        id: platform,
+        icon: config.icon,
+        href,
+        label: config.label
+      });
+    });
+  }
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-20 pb-10 border-t border-slate-800">
@@ -33,33 +78,19 @@ export function Footer() {
               {settings?.aboutUs?.substring(0, 150) || "وجهتكم الأولى لمنتجات العناية بالبشرة والتجميل الأصلية. نوفر لكم تشكيلة مميزة من أشهر الماركات العالمية لتنعموا ببشرة صحية وجماد طبيعي."}
               {settings?.aboutUs && settings.aboutUs.length > 150 && "..."}
             </p>
-            <div className="flex flex-wrap gap-3">
-              {settings?.socialMedia?.facebook && (
-                <a href={settings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-700/50 text-sm">
-                  <Facebook className="w-4 h-4" /> فیسبوك
+            <div className="flex flex-wrap gap-2">
+              {socialLinks.map((link, idx) => (
+                <a 
+                  key={idx} 
+                  href={link.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-white hover:bg-rose-600 hover:border-rose-500 hover:shadow-lg hover:shadow-rose-500/20 active:scale-90 transition-all group"
+                  title={link.label}
+                >
+                  <link.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </a>
-              )}
-              {settings?.socialMedia?.instagram && (
-                <a href={settings.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-700/50 text-sm">
-                  <Instagram className="w-4 h-4" /> انستقرام
-                </a>
-              )}
-              {settings?.socialMedia?.twitter && (
-                <a href={settings.socialMedia.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-700/50 text-sm">
-                  <Twitter className="w-4 h-4" /> تويتر
-                </a>
-              )}
-              {settings?.socialMedia?.tiktok && (
-                <a href={settings.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-700/50 text-sm">
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.33-.85.51-1.44 1.43-1.58 2.41-.14 1.02.26 2.13 1.01 2.81.76.71 1.84.99 2.85.78 1.02-.21 1.91-.98 2.33-1.92.23-.53.33-1.1.32-1.66V0h.02z"/></svg> 
-                  تيك توك
-                </a>
-              )}
-              {settings?.socialMedia?.linkedin && (
-                <a href={settings.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-700/50 text-sm">
-                  <Linkedin className="w-4 h-4" /> لينكد إن
-                </a>
-              )}
+              ))}
             </div>
           </div>
 
@@ -150,6 +181,17 @@ export function Footer() {
                   <h4 className="text-xs font-bold text-rose-600 uppercase mb-1">البريد الإلكتروني</h4>
                   <p className="text-sm text-slate-300 break-all">
                     {settings?.email || "salmanalsabahi775@gmail.com"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
+                  <Globe className="w-5 h-5 text-rose-500" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-rose-600 uppercase mb-1">ساعات العمل</h4>
+                  <p className="text-sm text-slate-300">
+                    {settings?.workingHours || "يومياً: 9 صباحاً - 10 مساءً"}
                   </p>
                 </div>
               </div>

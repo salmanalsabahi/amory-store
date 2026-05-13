@@ -36,7 +36,7 @@ export function Articles() {
   }, []);
 
   return (
-    <div className="pt-32 pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="pt-36 md:pt-48 pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
