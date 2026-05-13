@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { motion, AnimatePresence } from 'motion/react';
 import { Toaster } from 'react-hot-toast';
 import NProgress from 'nprogress';
+import { HelmetProvider } from 'react-helmet-async';
+import { SEO } from './components/SEO';
 import { Layout } from './components/layout/Layout';
 import { ScrollToTop } from './components/ScrollToTop';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -129,8 +131,10 @@ export default function App() {
   useCachePreloader();
 
   return (
-    <BrowserRouter>
-      <CurrencyProvider>
+    <HelmetProvider>
+      <SEO />
+      <BrowserRouter>
+        <CurrencyProvider>
         <NotificationProvider>
           <WishlistProvider>
             <CartProvider>
@@ -179,6 +183,7 @@ export default function App() {
      </NotificationProvider>
     </CurrencyProvider>
   </BrowserRouter>
+  </HelmetProvider>
   );
 }
 

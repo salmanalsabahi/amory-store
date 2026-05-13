@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { RatingsAndReviews } from '../components/ui/RatingsAndReviews';
 import { ProductCard } from '../components/ProductCard';
+import { SEO } from '../components/SEO';
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -189,6 +190,13 @@ export function ProductDetail() {
 
   return (
     <div className="pt-16 md:pt-24 pb-16 bg-white min-h-screen">
+      <SEO 
+        title={product.name}
+        description={product.description?.substring(0, 160) || `تسوق ${product.name} من عموري ستور. أفضل الأسعار والجودة المضمونة.`}
+        image={images[0]}
+        keywords={`${product.name}, ${product.brand}, ${product.category}, عموري ستور`}
+        type="product"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumbs */}

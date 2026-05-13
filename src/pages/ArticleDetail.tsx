@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { motion } from 'motion/react';
 import { Loader2, ArrowRight, User, Calendar } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 export function ArticleDetail() {
   const { id } = useParams();
@@ -57,6 +58,13 @@ export function ArticleDetail() {
 
   return (
     <div className="pt-32 pb-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title={article.title}
+        description={article.content?.substring(0, 160)}
+        image={article.imageUrl}
+        keywords={`${article.title}, مقالات, عموري ستور`}
+        type="article"
+      />
       <Link to="/articles" className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 mb-8 transition-colors">
         <ArrowRight className="w-4 h-4" />
         العودة للمقالات

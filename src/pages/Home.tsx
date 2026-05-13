@@ -13,6 +13,7 @@ import { cn } from '../lib/utils';
 import { handleFirestoreError, OperationType } from '../lib/firebaseErrorHandler';
 import { ProductCard } from '../components/ProductCard';
 import { BeautySlider } from '../components/BeautySlider';
+import { SEO } from '../components/SEO';
 
 export function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -76,6 +77,10 @@ export function Home() {
 
   return (
     <div className="flex flex-col bg-white">
+      <SEO 
+        title="الرئيسية"
+        description={settings?.storeDescription || 'وجهتكم الأولى لمنتجات العناية بالبشرة والتجميل والساعات الفاخرة في اليمن.'}
+      />
       <BeautySlider />
 
       {/* Trust Badges */}
