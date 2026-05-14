@@ -21,9 +21,9 @@ export const SEO: React.FC<SEOProps> = ({
 }) => {
   const { settings } = useSiteSettings();
   
-  const siteName = settings?.storeName || 'عموري ستور';
+  const siteName = settings?.storeName || 'عموري للتجميل';
   const defaultDescription = settings?.storeDescription || 'وجهتكم الأولى لمنتجات العناية بالبشرة والتجميل والساعات الفاخرة في اليمن.';
-  const defaultKeywords = 'عموري ستور, عموري للتجميل, عطور, ساعات, عناية بالبشرة, صنعاء, اليمن, تسوق اونلاين';
+  const defaultKeywords = 'عموري للتجميل, عطور, ساعات, عناية بالبشرة, صنعاء, اليمن, تسوق اونلاين';
   
   const seoTitle = title ? `${title} | ${siteName}` : `${siteName} | المجر الإلكتروني المتكامل`;
   const seoDescription = description || defaultDescription;

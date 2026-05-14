@@ -62,7 +62,7 @@ export function ArticleDetail() {
         title={article.title}
         description={article.content?.substring(0, 160)}
         image={article.imageUrl}
-        keywords={`${article.title}, مقالات, عموري ستور`}
+        keywords={`${article.title}, مقالات, عموري للتجميل`}
         type="article"
       />
       <Link to="/articles" className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 mb-8 transition-colors">

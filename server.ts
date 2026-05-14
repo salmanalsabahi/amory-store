@@ -279,6 +279,135 @@ async function startServer() {
     }
   });
 
+  // API route for admin to send Firebase push notifications
+  app.post("/api/admin/send-notification", async (req, res) => {
+    const { title, body, link, recipientUid, type } = req.body;
+
+    try {
+      if (!admin.apps.length) throw new Error("Firebase Admin not configured");
+      const db = admin.firestore();
+      
+      // Determine which tokens to fetch
+      let tokensSnapshot;
+      if (recipientUid) {
+        // Send to specific user
+        tokensSnapshot = await db.collection("fcm_tokens").where("userId", "==", recipientUid).get();
+      } else {
+        // Broadcast to all users
+        tokensSnapshot = await db.collection("fcm_tokens").get();
+      }
+
+      if (tokensSnapshot.empty) {
+        return res.status(200).json({ message: "No registered devices found for Notification", sentCount: 0 });
+      }
+
+      const tokens = tokensSnapshot.docs.map(doc => doc.data().token);
+      
+      const payload = {
+        notification: {
+          title,
+          body
+        },
+        data: {
+          url: link || '/',
+          type: type || 'broadcast'
+        },
+        tokens
+      };
+
+      const response = await admin.messaging().sendEachForMulticast(payload);
+      
+      // Optional: Cleanup invalid tokens
+      const failedTokens: string[] = [];
+      response.responses.forEach((resp, idx) => {
+        if (!resp.success) {
+          if (resp.error?.code === 'messaging/invalid-registration-token' ||
+              resp.error?.code === 'messaging/registration-token-not-registered') {
+             // We can delete this token from firestore to maintain clean DB
+             db.collection("fcm_tokens").doc(tokens[idx]).delete();
+          }
+        }
+      });
+
+      res.status(200).json({ 
+        message: "Notifications dispatched", 
+        successCount: response.successCount, 
+        failureCount: response.failureCount 
+      });
+    } catch (error: any) {
+      console.error("Error sending push notification:", error);
+      res.status(500).json({ 
+        error: "فشل إرسال الإشعار", 
+        details: error.message 
+      });
+    }
+  });
+
+  // API route to notify users when a product is restocked
+  app.post("/api/admin/notify-restock", async (req, res) => {
+    const { productId, productName } = req.body;
+
+    try {
+      if (!admin.apps.length) throw new Error("Firebase Admin not configured");
+      const db = admin.firestore();
+      
+      // Get all restock requests for this product
+      const snapshot = await db.collection("stock_notifications").where("productId", "==", productId).get();
+      if (snapshot.empty) {
+        return res.status(200).json({ message: "No users waiting for this product" });
+      }
+
+      // Collect user UIDs
+      const uids = new Set<string>();
+      snapshot.docs.forEach(doc => {
+        uids.add(doc.data().userId);
+      });
+
+      if (uids.size === 0) {
+        return res.status(200).json({ message: "No valid users waiting for this product" });
+      }
+
+      // Fetch tokens for these users
+      const tokens: string[] = [];
+      for (const uid of uids) {
+        const tokensSnapshot = await db.collection("fcm_tokens").where("userId", "==", uid).get();
+        tokensSnapshot.docs.forEach(doc => {
+          tokens.push(doc.data().token);
+        });
+      }
+
+      if (tokens.length === 0) {
+        return res.status(200).json({ message: "No valid tokens found for these users" });
+      }
+
+      const payload = {
+        notification: {
+          title: "منتجك المفضل متوفر الآن!",
+          body: `لقد تم توفير "${productName}" في عموري للتجميل. تسوق الآن قبل نفاد الكمية.`
+        },
+        data: {
+          url: `/product/${productId}`,
+          type: 'restock'
+        },
+        tokens
+      };
+
+      const response = await admin.messaging().sendEachForMulticast(payload);
+
+      // Cleanup fulfilled restock requests
+      const batch = db.batch();
+      snapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      res.status(200).json({ message: "Restock notifications sent", successCount: response.successCount });
+    } catch (error: any) {
+      console.error("Error sending restock notification:", error);
+      res.status(500).json({ error: "فشل إرسال الإشعارات", details: error.message });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

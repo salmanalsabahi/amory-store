@@ -21,14 +21,18 @@ export function Home() {
   const [categories, setCategories] = useState<any[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
   const { settings } = useSiteSettings();
-  
-  const brands = ["CeraVe", "Bioderma", "La Roche-Posay", "Cetaphil", "Garnier", "Vichy", "Eucerin", "The Ordinary", "PanOxyl", "Avene"];
 
   useEffect(() => {
     const qProducts = query(collection(db, 'products'), limit(12));
     const unsubscribeProducts = onSnapshot(qProducts, (snapshot) => {
-      setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const prods = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+      setProducts(prods);
+      
+      // Get unique brands from the limited products instead of all products
+      const uniqueBrands = Array.from(new Set(prods.map(p => p.brand).filter(Boolean)));
+      setBrands(uniqueBrands as string[]);
     }, (error) => handleFirestoreError(error, OperationType.LIST, 'products', auth));
 
     const qArticles = query(collection(db, 'articles'), where('active', '==', true), orderBy('createdAt', 'desc'), limit(3));
@@ -41,11 +45,6 @@ export function Home() {
       setOffers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }, (error) => handleFirestoreError(error, OperationType.LIST, 'offers', auth));
 
-    const qOrders = query(collection(db, 'orders'));
-    const unsubscribeOrders = onSnapshot(qOrders, (snapshot) => {
-      setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => handleFirestoreError(error, OperationType.LIST, 'orders', auth));
-
     const unsubscribeCats = onSnapshot(collection(db, 'categories'), (snapshot) => {
       setCategories(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }, (error) => handleFirestoreError(error, OperationType.LIST, 'categories', auth));
@@ -54,24 +53,12 @@ export function Home() {
       unsubscribeProducts();
       unsubscribeArticles();
       unsubscribeOffers();
-      unsubscribeOrders();
       unsubscribeCats();
     };
   }, []);
 
-  // Aggregation
-  const bestSellers = useMemo(() => {
-    if (products.length === 0 || orders.length === 0) return [];
-    
-    const counts: Record<string, number> = {};
-    orders.forEach(order => {
-      order.items?.forEach((item: any) => {
-        counts[item.id] = (counts[item.id] || 0) + (item.quantity || 1);
-      });
-    });
-    
-    return products.filter(p => counts[p.id]).sort((a,b) => (counts[b.id] || 0) - (counts[a.id] || 0)).slice(0, 5);
-  }, [products, orders]);
+  // Simplified Best Sellers (just use first few products since we don't have a count in DB yet)
+  const bestSellers = useMemo(() => products.slice(0, 5), [products]);
 
   const saleProducts = products.filter(p => p.originalPrice > p.price);
 
@@ -87,7 +74,7 @@ export function Home() {
       <section className="relative z-10 -mt-16 max-w-7xl mx-auto px-4 w-full">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Truck, title: 'توصيل مجاني', desc: 'للطلبات فوق 10,000 ريال', color: 'bg-rose-600' },
+            { icon: Truck, title: 'توصيل مجاني', desc: 'للطلبات فوق 50,000 ريال', color: 'bg-rose-600' },
             { icon: ShieldCheck, title: 'أصلية 100%', desc: 'ضمان الوكيل الرسمي', color: 'bg-pink-500' },
             { icon: Clock, title: 'شحن سريع', desc: 'خلال 24-48 ساعة', color: 'bg-blue-600' },
             { icon: HeadphonesIcon, title: 'دعم فني', desc: 'متاح طوال الأسبوع', color: 'bg-blue-600' },
@@ -275,24 +262,26 @@ export function Home() {
       )}
 
       {/* Brands Slider */}
-      <section className="py-12 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 mb-8">
-           <h2 className="text-xl md:text-2xl font-display font-black text-slate-900 tracking-tighter text-center">أشهر الماركات العالمية</h2>
-        </div>
-        <div className="flex justify-center">
-          <motion.div 
-            className="flex gap-8 items-center"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 20, ease: "linear", repeat: Infinity }}
-          >
-            {[...brands, ...brands].map((brand, i) => (
-              <div key={i} className="text-2xl font-display font-black text-slate-300 whitespace-nowrap px-4 hover:text-rose-600 transition-colors cursor-pointer">
-                {brand}
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      {brands.length > 0 && (
+        <section className="py-12 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 mb-8">
+             <h2 className="text-xl md:text-2xl font-display font-black text-slate-900 tracking-tighter text-center">أشهر الماركات العالمية</h2>
+          </div>
+          <div className="flex justify-center">
+            <motion.div 
+              className="flex gap-8 items-center"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+            >
+              {[...brands, ...brands, ...brands, ...brands].map((brand, i) => (
+                <div key={i} className="text-2xl font-display font-black text-slate-300 whitespace-nowrap px-4 hover:text-rose-600 transition-colors cursor-pointer">
+                  {brand}
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       <div className="h-10" />
     </div>

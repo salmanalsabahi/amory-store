@@ -52,7 +52,6 @@ import { AdminCategories } from './pages/admin/AdminCategories';
 import { AdminUsers } from './pages/admin/AdminUsers';
 import { AdminConsultations } from './pages/admin/AdminConsultations';
 import { AdminPackages } from './pages/admin/AdminPackages';
-import { AdminOffers } from './pages/admin/AdminOffers';
 import { AdminCoupons } from './pages/admin/AdminCoupons';
 import { AdminSiteSettings } from './pages/admin/AdminSiteSettings';
 import { AdminArticles } from './pages/admin/AdminArticles';
@@ -221,7 +220,6 @@ function AppRoutes() {
           <Route path="users" element={<PageWrapper key="admin-users"><AdminUsers /></PageWrapper>} />
           <Route path="consultations" element={<PageWrapper key="admin-consultations"><AdminConsultations /></PageWrapper>} />
           <Route path="packages" element={<PageWrapper key="admin-packages"><AdminPackages /></PageWrapper>} />
-          <Route path="offers" element={<PageWrapper key="admin-offers"><AdminOffers /></PageWrapper>} />
           <Route path="coupons" element={<PageWrapper key="admin-coupons"><AdminCoupons /></PageWrapper>} />
           <Route path="articles" element={<PageWrapper key="admin-articles"><AdminArticles /></PageWrapper>} />
           <Route path="reviews" element={<PageWrapper key="admin-reviews"><AdminReviews /></PageWrapper>} />

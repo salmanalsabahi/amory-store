@@ -91,7 +91,7 @@ export function Packages() {
         id: pkg.id,
         name: pkg.title,
         price: pkg.price || 0,
-        imageUrl: '', // Packages don't seem to have images in the provided view
+        imageUrl: pkg.imageUrl || '', // Included image if package has one
         category: 'باقة',
         brand: ''
       });
@@ -179,12 +179,21 @@ export function Packages() {
               transition={{ delay: idx * 0.1 }}
               className="bg-white rounded-[2rem] md:rounded-[3rem] p-4 sm:p-6 md:p-8 border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 text-center flex flex-col items-center group"
             >
-              <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-slate-50 text-rose-600 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                <PackageIcon className="w-8 h-8 md:w-12 md:h-12" />
-              </div>
+              {pkg.imageUrl ? (
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden mb-4 md:mb-6 shadow-md border-4 border-slate-50 group-hover:scale-105 transition-transform duration-500">
+                  <img src={pkg.imageUrl} alt={pkg.title} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-slate-50 text-rose-600 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                  <PackageIcon className="w-8 h-8 md:w-12 md:h-12" />
+                </div>
+              )}
               
               <h3 className="text-[13px] sm:text-base md:text-2xl font-display font-black text-slate-900 mb-1 md:mb-3 group-hover:text-rose-600 transition-colors uppercase tracking-tight line-clamp-2 md:line-clamp-none">{pkg.title}</h3>
               <p className="text-slate-500 mb-2 md:mb-4 text-[10px] md:text-sm font-medium line-clamp-2 md:line-clamp-none">{pkg.subtitle}</p>
+              {pkg.description && (
+                <p className="text-slate-400 text-xs md:text-sm mb-4 line-clamp-2 hidden md:block">{pkg.description}</p>
+              )}
               <div className="text-sm sm:text-lg md:text-2xl font-display font-black text-rose-600 mb-4 md:mb-8">{formatPrice(pkg.price)}</div>
               
               <button 

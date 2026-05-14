@@ -24,6 +24,7 @@ const navLinks: { name: string; path: string; hasDropdown?: boolean }[] = [
   { name: 'المنتجات', path: '/store' },
   { name: 'العروض', path: '/offers' },
   { name: 'الباقات', path: '/packages' },
+  { name: 'خدماتنا', path: '/services' },
   { name: 'تتبع طلبك', path: '/tracking' },
   { name: 'المقالات', path: '/articles' },
   { name: 'من نحن', path: '/about' },
@@ -270,7 +271,7 @@ export function Navbar() {
                     </div>
                   )}
                   <span className={cn("font-display font-bold text-sm tracking-tight transition-colors", !isTransparent ? "text-slate-900" : "text-white")}>
-                    {settings?.storeName || "عموري ستور"}
+                    {settings?.storeName || "عموري للتجميل"}
                   </span>
                 </Link>
               </div>
@@ -539,12 +540,12 @@ export function Navbar() {
                     دخول
                   </Link>
                 )}
-                <a href={settings?.phone ? `tel:${settings.phone}` : "tel:+1234567890"} className="flex items-center gap-2 text-slate-600 text-xs mt-1">
+                <a href={settings?.phone ? `tel:${settings.phone}` : "tel:770338163"} className="flex items-center gap-2 text-slate-600 text-xs mt-1">
                   <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
                     <Phone className="w-3 h-3 text-rose-600" />
                   </div>
                   <div className="truncate">
-                    <div className="font-bold text-slate-900" dir="ltr">{settings?.phone || "(555) 123-4567"}</div>
+                    <div className="font-bold text-slate-900" dir="ltr">{settings?.phone || "770338163"}</div>
                   </div>
                 </a>
                 <Link

@@ -71,11 +71,11 @@ export function About() {
             >
               <span className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-rose-100 text-rose-700 text-[10px] md:text-sm font-bold mb-4 md:mb-6">من نحن؟</span>
               <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-black text-slate-900 leading-tight mb-4 md:mb-8">
-                {settings?.storeName || "عموري ستور"} <br />
+                {settings?.storeName || "عموري للتجميل"} <br />
                 <span className="text-rose-600 underline decoration-rose-200 underline-offset-4 md:underline-offset-8 decoration-4">عالم من الفخامة</span> والأناقة
               </h1>
               <p className="border-r-2 border-r-rose-400 pr-3 md:border-none md:pr-0 text-sm md:text-lg text-slate-600 leading-relaxed max-w-xl whitespace-pre-wrap">
-                {settings?.aboutUs || "نحن في عموري ستور، نؤمن بأن الأناقة ليست ترفاً، بل هي لغة تعبر عن الرقي والتميز. نتخصص في تقديم تشكيلة حصرية من أرقى الساعات العالمية والعطور التي تأخذك في رحلة من السحر والجاذبية."}
+                {settings?.aboutUs || "نحن في عموري للتجميل، نؤمن بأن الأناقة ليست ترفاً، بل هي لغة تعبر عن الرقي والتميز. نتخصص في تقديم تشكيلة حصرية من أرقى الساعات العالمية والعطور التي تأخذك في رحلة من السحر والجاذبية."}
               </p>
             </motion.div>
 

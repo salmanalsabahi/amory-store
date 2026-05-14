@@ -74,7 +74,7 @@ export function PWAInstallPrompt() {
               </div>
 
               <div className="flex-1 text-right">
-                <h3 className="text-lg font-black mb-1">تطبيق عموري ستور</h3>
+                <h3 className="text-lg font-black mb-1">تطبيق عموري للتجميل</h3>
                 <p className="text-sm text-slate-400 font-medium leading-relaxed">ثبّت التطبيق الآن على هاتفك لتجربة تسوق أسرع وأسهل في أي وقت.</p>
                 
                 <div className="mt-6 flex flex-row-reverse gap-3">

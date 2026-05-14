@@ -3,7 +3,7 @@ import { getToken, onMessage } from 'firebase/messaging';
 import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
-const VAPID_KEY = ''; // The user will need to provide this for real background push
+const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || ''; // The user will need to provide this via .env for real background push
 
 export const notificationService = {
   async requestPermission() {
@@ -32,17 +32,18 @@ export const notificationService = {
       if (!m) return;
 
       // Register service worker if not registered
-      const registration = await navigator.serviceWorker.getRegistration();
+      let registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
-        console.log('Service worker not registered');
-        return;
+        console.log('Service worker not registered, attempting to register...');
+        registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
       }
 
-      // In a real app, you'd use a VAPID key: getToken(m, { vapidKey: '...', serviceWorkerRegistration: registration })
-      // For now, we'll try to get the token without it or just handle local notifications
+      // VAPID key is required for FCM Web Push. If the user hasn't provided one, 
+      // standard background push won't work, but we still save the token for future potential use.
       try {
         const token = await getToken(m, {
-          serviceWorkerRegistration: registration
+          serviceWorkerRegistration: registration,
+          vapidKey: VAPID_KEY || undefined
         });
 
         if (token) {
@@ -71,21 +72,18 @@ export const notificationService = {
   },
 
   // This handles foreground messages
-  onMessageListener() {
-    return messaging().then(m => {
-      if (!m) return null;
-      return new Promise((resolve) => {
-        onMessage(m, (payload) => {
-          console.log('Foreground message received:', payload);
-          resolve(payload);
-        });
+  onMessageListener(callback: (payload: any) => void) {
+    messaging().then(m => {
+      if (!m) return;
+      onMessage(m, (payload) => {
+        console.log('Foreground message received:', payload);
+        callback(payload);
       });
     });
   },
 
   async sendBroadcastNotification(title: string, body: string, link?: string) {
-    // In our simplified system, we write a "broadcast" document
-    // Clients listen to this collection and show local notifications
+    // 1. Write to firestore (so active users see it immediately via useBackgroundNotifications)
     await addDoc(collection(db, 'broadcasts'), {
       title,
       body,
@@ -93,5 +91,25 @@ export const notificationService = {
       createdAt: serverTimestamp(),
       sentBy: auth.currentUser?.uid
     });
+
+    // 2. Trigger FCM API to wake up background/offline devices
+    try {
+      const response = await fetch('/api/admin/send-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          body,
+          link: link || '/',
+          type: 'broadcast'
+        })
+      });
+      const data = await response.json();
+      console.log('FCM Dispatch result:', data);
+    } catch (err) {
+      console.warn('Could not dispatch FCM notification:', err);
+    }
   }
 };

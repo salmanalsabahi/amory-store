@@ -316,7 +316,7 @@ export function Consultation() {
                   </div>
                   <div>
                     <h4 className="font-black text-sm uppercase tracking-wider mb-1">للمساعدة العاجلة</h4>
-                    <p className="text-rose-50 text-base font-black">+967 774 974 712</p>
+                    <p className="text-rose-50 text-base font-black">770338163</p>
                   </div>
                 </div>
               </div>
@@ -331,7 +331,7 @@ export function Consultation() {
                 <span>طلب مساعدة فورية</span>
               </button>
               <p className="text-[10px] text-rose-200 font-bold uppercase tracking-widest text-center">
-                عموري ستور - خدمتكم غايتنا
+                عموري للتجميل - خدمتكم غايتنا
               </p>
             </div>
           </div>
@@ -341,7 +341,7 @@ export function Consultation() {
       <ConfirmationModal 
         isOpen={showWhatsAppConfirm}
         onClose={() => setShowWhatsAppConfirm(false)}
-        onConfirm={() => window.open(`https://wa.me/${settings?.phone?.replace(/[^0-9]/g, '') || '967774974712'}`, '_blank')}
+        onConfirm={() => window.open(`https://wa.me/${settings?.phone?.replace(/[^0-9]/g, '') || '967770338163'}`, '_blank')}
         title="تواصل معنا عبر واتساب"
         message="هل ترغب في الانتقال إلى واتساب للتحدث مباشرة مع أحد خبرائنا؟"
         confirmText="نعم، فتح واتساب"

@@ -69,7 +69,7 @@ export function Footer() {
               )}
               <div className="flex flex-col">
                 <span className="font-display font-bold text-xl tracking-tight text-white leading-tight">
-                  {settings?.storeName || "عموري ستور"}
+                  {settings?.storeName || "عموري للتجميل"}
                 </span>
                 <span className="text-[10px] text-rose-500 uppercase tracking-widest font-bold mt-1">للعناية والتجميل</span>
               </div>
@@ -169,7 +169,7 @@ export function Footer() {
                 <div>
                   <h4 className="text-xs font-bold text-rose-600 uppercase mb-1">الهاتف</h4>
                   <p className="text-sm text-slate-300" dir="ltr">
-                    {settings?.phone || "+967 774974712"}
+                    {settings?.phone || "770338163"}
                   </p>
                 </div>
               </div>
@@ -203,7 +203,7 @@ export function Footer() {
         {/* Footer Bottom */}
         <div className="pt-8 border-t border-slate-800 text-center">
           <p className="text-xs text-slate-500 font-medium tracking-wide">
-            &copy; {new Date().getFullYear()} {settings?.storeName || "عموري ستور"}. جميع الحقوق محفوظة.
+            &copy; {new Date().getFullYear()} {settings?.storeName || "عموري للتجميل"}. جميع الحقوق محفوظة.
           </p>
         </div>
       </div>

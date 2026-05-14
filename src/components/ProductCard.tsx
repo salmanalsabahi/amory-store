@@ -124,6 +124,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
         onClick={openModal}
       >
         <div className="relative aspect-square overflow-hidden bg-slate-50 flex justify-center items-center group/card">
+          {typeof product.originalPrice === 'number' && product.originalPrice > product.price && (
+            <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start">
+              <span className="bg-rose-600 text-white text-[10px] sm:text-xs font-black px-2 py-0.5 rounded shadow-sm">
+                -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+              </span>
+              {product.offerName && (
+                <span className="bg-emerald-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm max-w-[80px] text-center leading-tight truncate">
+                  {product.offerName}
+                </span>
+              )}
+            </div>
+          )}
           <button 
             onClick={handleWishlistToggle}
             className={cn(

@@ -137,6 +137,15 @@ export function ProductDetail() {
         const currentUser = auth.currentUser;
         if (!currentUser) return;
 
+        // Request permission if not granted
+        if ('Notification' in window && Notification.permission !== 'granted') {
+          const permission = await Notification.requestPermission();
+          if (permission !== 'granted') {
+            toast.error("يرجى تفعيل الإشعارات من إعدادات المتصفح لنتمكن من تنبيهك.");
+            return;
+          }
+        }
+
         await addDoc(collection(db, 'stock_notifications'), {
           productId: product.id,
           productName: product.name,
@@ -192,9 +201,9 @@ export function ProductDetail() {
     <div className="pt-16 md:pt-24 pb-16 bg-white min-h-screen">
       <SEO 
         title={product.name}
-        description={product.description?.substring(0, 160) || `تسوق ${product.name} من عموري ستور. أفضل الأسعار والجودة المضمونة.`}
+        description={product.description?.substring(0, 160) || `تسوق ${product.name} من عموري للتجميل. أفضل الأسعار والجودة المضمونة.`}
         image={images[0]}
-        keywords={`${product.name}, ${product.brand}, ${product.category}, عموري ستور`}
+        keywords={`${product.name}, ${product.brand}, ${product.category}, عموري للتجميل`}
         type="product"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

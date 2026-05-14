@@ -26,15 +26,14 @@ export const showNativeNotification = (title: string, options?: NotificationOpti
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then((registration) => {
                 registration.showNotification(title, {
-                    icon: '/icon.svg',
-                    vibrate: [200, 100, 200],
+                    icon: '/logo.png',
                     ...options
-                });
+                } as any);
             });
         } else {
             // Fallback to basic Notification API
             new Notification(title, {
-                icon: '/icon.svg',
+                icon: '/logo.png',
                 ...options
             });
         }
@@ -47,7 +46,7 @@ export const subscribeToNotifications = async () => {
         toast.success("تم تفعيل الإشعارات بنجاح!", { icon: '🔕' });
         
         // Show a welcome notification
-        showNativeNotification("عموري ستور | Amory Store", {
+        showNativeNotification("عموري للتجميل", {
             body: "أهلاً بك! ستصلك إشعارات عند توفر المنتجات التي تطلبها.",
         });
         

@@ -116,7 +116,7 @@ export function Checkout() {
   };
 
   const discountAmount = appliedCoupon ? (subtotal * appliedCoupon.discount / 100) : 0;
-  const finalShippingFee = subtotal > 10000 ? 0 : shippingFee;
+  const finalShippingFee = subtotal > 50000 ? 0 : shippingFee;
   const total = subtotal - discountAmount + finalShippingFee;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -273,7 +273,7 @@ export function Checkout() {
         >
           <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-slate-900 mb-2">تم استلام طلبك بنجاح!</h2>
-          <p className="text-slate-600 mb-6">شكراً لتسوقك من عموري ستور. سيتم معالجة طلبك قريباً.</p>
+          <p className="text-slate-600 mb-6">شكراً لتسوقك من عموري للتجميل. سيتم معالجة طلبك قريباً.</p>
           
           <div className="bg-white p-6 rounded-2xl inline-block text-right mb-8 w-full max-w-md shadow-sm">
             <div className="text-sm text-slate-500 mb-1">رقم الطلب الخاص بك:</div>
@@ -497,7 +497,7 @@ export function Checkout() {
             )}
             <div className="flex items-center justify-between text-sm text-white/80 border-b border-white/20 pb-2">
               <span>التوصيل:</span>
-              <span>{finalShippingFee === 0 && subtotal > 10000 ? 'مجاني' : formatPrice(finalShippingFee)}</span>
+              <span>{finalShippingFee === 0 && subtotal > 50000 ? 'مجاني' : formatPrice(finalShippingFee)}</span>
             </div>
             <div className="flex items-center justify-between font-bold text-white text-xl pt-1">
               <span>الإجمالي:</span>

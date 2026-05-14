@@ -15,6 +15,7 @@ interface ProductFormState {
   category: string;
   price: number;
   originalPrice: number;
+  offerName: string;
   stock: number;
   stockStatus: 'in_stock' | 'out_of_stock';
   isComingSoon: boolean;
@@ -28,6 +29,7 @@ const INITIAL_FORM_STATE: ProductFormState = {
   category: '',
   price: 0,
   originalPrice: 0,
+  offerName: '',
   stock: 10,
   stockStatus: 'in_stock',
   isComingSoon: false,
@@ -92,6 +94,13 @@ export function AdminProducts() {
 
       if (becameAvailable && editingId) {
         try {
+          // Trigger push notifications
+          fetch('/api/admin/notify-restock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: editingId, productName: formState.name })
+          }).catch(err => console.warn('Push notification failed:', err));
+
           const notifsQuery = query(
             collection(db, 'stock_notifications'),
             where('productId', '==', editingId),
@@ -150,6 +159,7 @@ export function AdminProducts() {
       category: product.category || '',
       price: product.price || 0,
       originalPrice: product.originalPrice || 0,
+      offerName: product.offerName || '',
       stock: product.stock || 0,
       stockStatus: product.stockStatus || 'in_stock',
       isComingSoon: product.isComingSoon || false,
@@ -484,7 +494,7 @@ export function AdminProducts() {
                            value={formState.originalPrice}
                            onChange={e => setFormState({...formState, originalPrice: Number(e.target.value)})}
                            className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-slate-500 focus:outline-none transition-all font-bold text-slate-400"
-                           placeholder="مثلاً: 15"
+                           placeholder="مثلاً: 150"
                          />
                       </div>
                       <div className="space-y-2 text-rose-600">
@@ -494,10 +504,23 @@ export function AdminProducts() {
                            value={formState.price}
                            onChange={e => setFormState({...formState, price: Number(e.target.value)})}
                            className="w-full px-5 py-3.5 rounded-2xl border-2 border-slate-100 focus:border-rose-500 focus:outline-none transition-all font-bold"
-                           placeholder="مثلاً: 1200"
+                           placeholder="مثلاً: 120"
                          />
                       </div>
                     </div>
+
+                    {formState.originalPrice > formState.price && (
+                      <div className="space-y-2 text-emerald-600">
+                         <label className="text-sm font-black block">اسم المناسبة / العرض (اختياري)</label>
+                         <input 
+                           type="text"
+                           value={formState.offerName}
+                           onChange={e => setFormState({...formState, offerName: e.target.value})}
+                           className="w-full px-5 py-3.5 rounded-2xl border-2 border-emerald-100 focus:border-emerald-500 focus:outline-none transition-all font-bold text-emerald-600"
+                           placeholder="مثال: بمناسبة العيد"
+                         />
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-4">
                        <div className="space-y-2">

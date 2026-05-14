@@ -54,7 +54,7 @@ export function Contact() {
       try {
         const response = await ai.models.generateContent({
           model: "gemini-1.5-flash",
-          contents: `Provide the address and a brief description of the location for 'Amory Store' (عموري ستور) in Sana'a, Yemen. Admin says: ${settings?.location || 'Sana\'a'}. Format in Arabic with bullet points.`,
+          contents: `Provide the address and a brief description of the location for 'Amory Store' (عموري للتجميل) in Sana'a, Yemen. Admin says: ${settings?.location || 'Sana\'a'}. Format in Arabic with bullet points.`,
           config: {
             tools: [{ googleMaps: {} }],
           },
@@ -336,7 +336,7 @@ export function Contact() {
                 </div>
                 <div className="flex flex-col text-right overflow-hidden">
                   <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">اتصل بنا</span>
-                  <span className="text-xl font-black text-slate-900 truncate" dir="ltr">{settings?.phone || '967 774 974 712'}</span>
+                  <span className="text-xl font-black text-slate-900 truncate" dir="ltr">{settings?.phone || '770338163'}</span>
                 </div>
               </motion.div>
 

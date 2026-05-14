@@ -107,7 +107,6 @@ export function AdminLayout() {
     { name: 'الطلبات', path: '/admin', icon: ShoppingCart },
     { name: 'المنتجات', path: '/admin/products', icon: Package },
     { name: 'الأصناف', path: '/admin/categories', icon: Grid },
-    { name: 'العروض', path: '/admin/offers', icon: Ticket },
     { name: 'الباقات', path: '/admin/packages', icon: Package },
     { name: 'الكوبونات', path: '/admin/coupons', icon: Ticket },
     { name: 'المقالات', path: '/admin/articles', icon: ImageIcon },

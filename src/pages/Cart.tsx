@@ -122,7 +122,7 @@ export function Cart() {
                    <div className="bg-rose-50 p-1.5 md:p-2 rounded-lg flex-shrink-0">
                       <Truck className="w-4 h-4 md:w-5 md:h-5" />
                    </div>
-                   <span className="font-bold text-[10px] md:text-sm">شحن مجاني للطلبات الكبيرة</span>
+                   <span className="font-bold text-[10px] md:text-sm">شحن مجاني للطلبات فوق 50,000 ريال</span>
                 </div>
                 <button 
                   onClick={() => navigate('/store')}

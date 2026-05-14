@@ -15,7 +15,8 @@ export function AdminPackages() {
     title: '',
     subtitle: '',
     price: '',
-    description: ''
+    description: '',
+    imageUrl: ''
   });
 
   const fetchPackages = async () => {
@@ -44,7 +45,7 @@ export function AdminPackages() {
 
       setIsModalOpen(false);
       setEditingPackage(null);
-      setFormData({ title: '', subtitle: '', price: '', description: '' });
+      setFormData({ title: '', subtitle: '', price: '', description: '', imageUrl: '' });
       fetchPackages();
     } catch (error) {
       console.error("Error saving package:", error);
@@ -80,7 +81,7 @@ export function AdminPackages() {
         <button 
           onClick={() => {
             setEditingPackage(null);
-            setFormData({ title: '', subtitle: '', price: '', description: '' });
+            setFormData({ title: '', subtitle: '', price: '', description: '', imageUrl: '' });
             setIsModalOpen(true);
           }}
           className="w-full md:w-auto bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 md:py-2 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-sm"
@@ -105,6 +106,17 @@ export function AdminPackages() {
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-right font-bold transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5 text-right">رابط صورة الباقة</label>
+                <input
+                  type="url"
+                  value={formData.imageUrl}
+                  onChange={e => setFormData({...formData, imageUrl: e.target.value})}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-left font-medium transition-all"
+                  dir="ltr"
+                  placeholder="https://..."
                 />
               </div>
               <div>
@@ -176,8 +188,12 @@ export function AdminPackages() {
             <div className="py-12 text-center text-slate-400 font-bold">لا توجد باقات هدايا مسجلة</div>
           ) : filteredPackages.map(pkg => (
             <div key={pkg.id} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm flex-shrink-0">
-                <PackageIcon className="w-6 h-6 text-rose-600" />
+              <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm flex-shrink-0 overflow-hidden">
+                {pkg.imageUrl ? (
+                  <img src={pkg.imageUrl} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <PackageIcon className="w-6 h-6 text-rose-600" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-black text-slate-900 truncate">{pkg.title}</div>
@@ -192,7 +208,8 @@ export function AdminPackages() {
                       title: pkg.title || '',
                       subtitle: pkg.subtitle || '',
                       price: pkg.price?.toString() || '',
-                      description: pkg.description || ''
+                      description: pkg.description || '',
+                      imageUrl: pkg.imageUrl || ''
                     });
                     setIsModalOpen(true);
                   }}
@@ -230,8 +247,12 @@ export function AdminPackages() {
                 <tr key={pkg.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm">
-                        <PackageIcon className="w-6 h-6 text-rose-600" />
+                      <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shadow-sm overflow-hidden flex-shrink-0">
+                        {pkg.imageUrl ? (
+                          <img src={pkg.imageUrl} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <PackageIcon className="w-6 h-6 text-rose-600" />
+                        )}
                       </div>
                       <div>
                         <div className="font-black text-slate-900 mb-0.5">{pkg.title}</div>
@@ -251,7 +272,8 @@ export function AdminPackages() {
                             title: pkg.title || '',
                             subtitle: pkg.subtitle || '',
                             price: pkg.price?.toString() || '',
-                            description: pkg.description || ''
+                            description: pkg.description || '',
+                            imageUrl: pkg.imageUrl || ''
                           });
                           setIsModalOpen(true);
                         }}

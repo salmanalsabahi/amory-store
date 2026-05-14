@@ -23,25 +23,26 @@ export function Store() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   
-  const brands = ["CeraVe", "Bioderma", "La Roche-Posay", "Cetaphil", "Garnier", "Vichy", "Eucerin", "The Ordinary", "PanOxyl", "Avene"];
+  const brands = Array.from(new Set(products.map(p => p.brand).filter(Boolean)));
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const productsSnapshot = await getDocs(query(collection(db, 'products')));
-        setProducts(productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        
-        const categoriesSnapshot = await getDocs(collection(db, 'categories'));
-        const uniqueNames = Array.from(new Set(categoriesSnapshot.docs.map(doc => doc.data().name)));
-        setCategories(uniqueNames as string[]);
-      } catch (error) {
-        handleFirestoreError(error, OperationType.LIST, 'products', auth);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const unsubscribeProducts = onSnapshot(query(collection(db, 'products')), (snapshot) => {
+      setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'products', auth);
+      setLoading(false);
+    });
 
-    fetchInitialData();
+    const unsubscribeCategories = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      const uniqueNames = Array.from(new Set(snapshot.docs.map(doc => doc.data().name)));
+      setCategories(uniqueNames as string[]);
+    });
+
+    return () => {
+      unsubscribeProducts();
+      unsubscribeCategories();
+    };
 
     const catParam = searchParams.get('category');
     if (catParam) setSelectedCategories([catParam]);
@@ -131,10 +132,10 @@ export function Store() {
                <div>
                   <h4 className="font-bold text-slate-800 mb-3 md:mb-4 text-xs md:text-sm">الماركات</h4>
                   <div className="flex flex-wrap gap-2">
-                    {brands.map((brand) => (
+                    {brands.map((brand: any) => (
                       <button
                         key={brand}
-                        onClick={() => toggleBrand(brand)}
+                        onClick={() => toggleBrand(brand as string)}
                         className={cn(
                           "px-4 py-2 rounded-full text-xs font-bold transition-all border",
                           selectedBrands.includes(brand) 

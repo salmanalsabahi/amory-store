@@ -91,7 +91,7 @@ export async function seedAmoryData() {
   // 3. Site Settings
   const settingsRef = doc(db, 'siteSettings', 'general');
   batch.set(settingsRef, {
-    storeName: 'عموري ستور',
+    storeName: 'عموري للتجميل',
     storeDescription: 'متجرك الأول لمنتجات العناية بالبشرة والتجميل الأصلية',
     workingHours: 'يومياً: 9 صباحاً - 11 مساءً',
     phone: '777000000',

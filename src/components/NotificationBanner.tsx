@@ -9,8 +9,12 @@ export function NotificationBanner() {
 
   useEffect(() => {
     // Show after 5 seconds if not yet granted or denied
+    // AND if they haven't dismissed it in the last 24 hours
+    const dismissedAt = localStorage.getItem('notifications_banner_dismissed_at');
+    const isRecentlyDismissed = dismissedAt && (Date.now() - parseInt(dismissedAt)) < 24 * 60 * 60 * 1000;
+
     const timer = setTimeout(() => {
-      if (permission === 'default') {
+      if (permission === 'default' && !isRecentlyDismissed) {
         setIsVisible(true);
       }
     }, 5000);
@@ -21,7 +25,13 @@ export function NotificationBanner() {
     const granted = await requestPermission();
     if (granted) {
       setIsVisible(false);
+      localStorage.setItem('notifications_banner_dismissed_at', Date.now().toString());
     }
+  };
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+    localStorage.setItem('notifications_banner_dismissed_at', Date.now().toString());
   };
 
   return (
@@ -37,7 +47,7 @@ export function NotificationBanner() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
             
             <button 
-              onClick={() => setIsVisible(false)}
+              onClick={handleDismiss}
               className="absolute top-3 left-3 text-white/40 hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
@@ -60,7 +70,7 @@ export function NotificationBanner() {
                     تفعيل التنبيهات
                   </button>
                   <button 
-                    onClick={() => setIsVisible(false)}
+                    onClick={handleDismiss}
                     className="px-4 py-2 text-white/50 text-xs font-bold hover:text-white"
                   >
                     ليس الآن

@@ -191,7 +191,7 @@ export function AdminMessages() {
                   
                   <div className="mt-8 flex gap-4">
                     <a
-                      href={`mailto:${selectedMessage.email}?subject=بخصوص استفسارك في متجر عموري ستور`}
+                      href={`mailto:${selectedMessage.email}?subject=بخصوص استفسارك في متجر عموري للتجميل`}
                       className="flex-1 bg-slate-900 text-white py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
                     >
                       <Mail className="w-5 h-5" />

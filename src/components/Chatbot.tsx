@@ -18,7 +18,7 @@ export function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'مرحباً بك في عالم الفخامة.. أنا "سند"، مستشارك الرقمي في عموري ستور. يسعدني جداً مساعدتك في اختيار أرقى الساعات أو العطور التي تليق بذوقك الرفيع. كيف يمكنني خدمتك اليوم؟' }
+    { role: 'model', text: 'مرحباً بك في عالم الفخامة.. أنا "سند"، مستشارك الرقمي في عموري للتجميل. يسعدني جداً مساعدتك في اختيار أرقى الساعات أو العطور التي تليق بذوقك الرفيع. كيف يمكنني خدمتك اليوم؟' }
   ]);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   
@@ -224,7 +224,7 @@ export function Chatbot() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-[15px] font-black leading-none mb-1">مساعد عموري ستور</h3>
+                  <h3 className="text-[15px] font-black leading-none mb-1">مساعد عموري للتجميل</h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 bg-rose-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.8)]" />
                     <span className="text-[10px] text-rose-100 font-medium">سند متصل الآن</span>

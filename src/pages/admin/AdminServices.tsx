@@ -44,7 +44,11 @@ export function AdminServices() {
     if (docData) {
       setEditingId(docData.id);
       setFormData({
-        ...docData,
+        title: docData.title || '',
+        shortDesc: docData.shortDesc || '',
+        icon: docData.icon || 'Shield',
+        duration: docData.duration || '',
+        results: docData.results || '',
         benefits: docData.benefits ? docData.benefits.join(', ') : '',
         steps: docData.steps ? docData.steps.join(', ') : ''
       });

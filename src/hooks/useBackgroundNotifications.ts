@@ -8,62 +8,94 @@ export const useBackgroundNotifications = () => {
         const currentUser = auth.currentUser;
         if (!currentUser) return;
 
-        // Listen for stock notifications that are ready to be sent to the user
-        // In a real app, a cloud function would set status to "ready" when stock > 0
-        const q = query(
+        // Get seen notifications once at the start of the effect
+        const initialSeen = JSON.parse(localStorage.getItem('seen_notifications') || '[]');
+        const seenNotifications = new Set<string>(initialSeen);
+
+        // Track when this specific session started to avoid showing old things as "new"
+        const sessionStartTime = Date.now();
+        
+        // Listen for stock notifications
+        const stockQuery = query(
             collection(db, 'stock_notifications'),
             where('userId', '==', currentUser.uid),
-            where('status', '==', 'ready') // "ready" means admin updated stock and it's time to notify
+            where('status', '==', 'ready')
         );
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        const unsubscribeStock = onSnapshot(stockQuery, (snapshot) => {
             snapshot.docChanges().forEach(async (change) => {
                 if (change.type === 'added') {
                     const data = change.doc.data();
+                    const notifId = change.doc.id;
                     
-                    // Show the native system notification
-                    showNativeNotification(`المنتج متوفر الآن! 🕒`, {
-                        body: `ياحبوب، المنتج الذي طلبته "${data.productName}" متوفر الآن في عموري ستور. سارع بالطلب!`,
-                        tag: data.productId, // Avoid duplicates
-                        data: {
-                            url: `/product/${data.productId}`
-                        }
-                    });
+                    // Only show if it's recent (less than 10 mins old)
+                    const createdAt = data.createdAt?.toMillis() || Date.now();
+                    const isRelevant = (Date.now() - createdAt) < 600000; // 10 minutes
 
-                    // Update status to "sent" so it doesn't trigger again
-                    try {
-                        await updateDoc(doc(db, 'stock_notifications', change.doc.id), {
-                            status: 'sent',
-                            notifiedAt: serverTimestamp()
+                    if (!seenNotifications.has(notifId) && isRelevant) {
+                        // Mark as seen IMMEDIATELY in our local set to prevent race conditions
+                        seenNotifications.add(notifId);
+                        localStorage.setItem('seen_notifications', JSON.stringify(Array.from(seenNotifications).slice(-100)));
+
+                        showNativeNotification(`المنتج متوفر الآن! 🕒`, {
+                            body: `المنتج الذي طلبته "${data.productName}" متوفر الآن.`,
+                            tag: `stock-${data.productId}`,
+                            icon: '/logo.png',
+                            data: { url: `/product/${data.productId}` }
                         });
-                    } catch (error) {
-                        console.error("Error updating notification status:", error);
+
+                        try {
+                            // Update Firestore so other devices/sessions also know it's sent
+                            await updateDoc(doc(db, 'stock_notifications', notifId), {
+                                status: 'sent',
+                                notifiedAt: serverTimestamp()
+                            });
+                        } catch (error) {
+                            console.error("Error updating notification status:", error);
+                        }
                     }
                 }
             });
         });
 
-        // Also listen for broad marketing broadcasts
-        const broadcastsQuery = query(
+        // Listen for broad marketing broadcasts from the last 30 minutes
+        const broadQuery = query(
             collection(db, 'broadcasts'),
-            where('createdAt', '>', new Date(Date.now() - 1000 * 60 * 5)) // last 5 minutes
+            where('createdAt', '>', new Date(Date.now() - 1000 * 60 * 30))
         );
 
-        const unsubscribeBroadcasts = onSnapshot(broadcastsQuery, (snapshot) => {
-             snapshot.docChanges().forEach((change) => {
+        const unsubscribeBroadcasts = onSnapshot(broadQuery, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const data = change.doc.data();
-                    showNativeNotification(data.title, {
-                        body: data.body,
-                        data: { url: data.link || '/' }
-                    });
+                    const broadcastId = change.doc.id;
+                    const createdAt = data.createdAt?.toMillis() || Date.now();
+                    
+                    // Logic: 
+                    // 1. Must not have been seen before (persistent)
+                    // 2. Must be fresh:
+                    //    - Either created AFTER this tab was opened (sessionStartTime)
+                    //    - OR created very recently (last 15 seconds) if this is the first load
+                    const isNewInSession = createdAt > sessionStartTime;
+                    const isVeryFreshOnLoad = (Date.now() - createdAt) < 15000; // Only 15 seconds grace period on refresh
+
+                    if (!seenNotifications.has(broadcastId) && (isNewInSession || isVeryFreshOnLoad)) {
+                        seenNotifications.add(broadcastId);
+                        localStorage.setItem('seen_notifications', JSON.stringify(Array.from(seenNotifications).slice(-100)));
+
+                        showNativeNotification(data.title, {
+                            body: data.body,
+                            icon: '/logo.png',
+                            data: { url: data.link || '/' }
+                        });
+                    }
                 }
-             });
+            });
         });
 
         return () => {
-            unsubscribe();
+            unsubscribeStock();
             unsubscribeBroadcasts();
         };
-    }, []);
+    }, [auth.currentUser]); // Re-run when user logs in/out
 };

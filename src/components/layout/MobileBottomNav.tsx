@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Store, Percent, Package, User, Settings, Home } from 'lucide-react';
+import { Store, Percent, Package, User, Settings, Home, Sparkles, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -8,7 +8,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 const prefetchMap: Record<string, () => Promise<any>> = {
   '/': () => import('../../pages/Home'),
   '/store': () => import('../../pages/Store'),
-  '/offers': () => import('../../pages/Offers'),
+  '/services': () => import('../../pages/Services'),
+  '/tracking': () => import('../../pages/OrderTracking'),
   '/packages': () => import('../../pages/Packages'),
   '/profile': () => import('../../pages/Profile'),
   '/auth': () => import('../../pages/Auth'),
@@ -43,7 +44,8 @@ export function MobileBottomNav() {
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Home },
     { name: 'المتجر', path: '/store', icon: Store },
-    { name: 'العروض', path: '/offers', icon: Percent },
+    { name: 'خدماتنا', path: '/services', icon: Sparkles },
+    { name: 'التتبع', path: '/tracking', icon: Truck },
     { name: 'الباقات', path: '/packages', icon: Package },
     accountItem,
   ];

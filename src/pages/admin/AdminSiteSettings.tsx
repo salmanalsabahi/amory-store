@@ -67,7 +67,7 @@ export function AdminSiteSettings() {
   const isOnline = useOnlineStatus();
 
   const handleSeed = async () => {
-    if (!window.confirm('هل أنت متأكد من رغبتك في إضافة بيانات "عموري ستور"؟ سيتم إضافة أصناف ومنتجات جديدة وتحديث إعدادات المتجر.')) return;
+    if (!window.confirm('هل أنت متأكد من رغبتك في إضافة بيانات "عموري للتجميل"؟ سيتم إضافة أصناف ومنتجات جديدة وتحديث إعدادات المتجر.')) return;
     setSeeding(true);
     try {
       await seedAmoryData();
@@ -171,7 +171,7 @@ export function AdminSiteSettings() {
             className="w-full md:w-auto flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-3 md:py-2 rounded-xl font-bold transition-all border border-red-100 shadow-sm text-sm"
           >
             {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
-            تهيئة بيانات "عموري ستور"
+            تهيئة بيانات "عموري للتجميل"
           </button>
           <button
             onClick={sendTestNotification}
