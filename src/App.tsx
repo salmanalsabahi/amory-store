@@ -19,7 +19,6 @@ import { CurrencyProvider } from './contexts/CurrencyContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { seedInitialData } from './lib/seedData';
 import { useCachePreloader } from './hooks/useCachePreloader';
-import { InstallAppPrompt } from './components/InstallAppPrompt';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { db } from './firebase';
 import { doc, getDocFromServer } from 'firebase/firestore';
@@ -168,7 +167,6 @@ export default function App() {
                 },
               }}
             />
-            <InstallAppPrompt />
             <RouteProgress />
             <ScrollToTop />
             <ErrorBoundary>

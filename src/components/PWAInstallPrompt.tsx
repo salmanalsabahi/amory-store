@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X, Smartphone, Monitor } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function PWAInstallPrompt() {
@@ -52,59 +52,35 @@ export function PWAInstallPrompt() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
+          initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-[400px] z-[100]"
+          exit={{ y: -100, opacity: 0 }}
+          className="fixed top-0 left-0 right-0 z-[200] bg-white border-b border-slate-200 shadow-md px-4 py-3"
         >
-          <div className="bg-rose-600 text-white hover:bg-rose-700 rounded-[2rem] p-6 shadow-2xl border border-white/10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl -z-10 -translate-y-1/2 translate-x-1/2" />
-            
-            <button 
-              onClick={handleDismiss}
-              className="absolute top-4 left-4 p-2 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex gap-5 items-start">
-              <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/20">
-                <Smartphone className="w-7 h-7 text-white hidden md:block" />
-                <Download className="w-7 h-7 text-white md:hidden" />
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center shrink-0">
+                <Download className="w-5 h-5 text-rose-600" />
               </div>
-
-              <div className="flex-1 text-right">
-                <h3 className="text-lg font-black mb-1">تطبيق عموري للتجميل</h3>
-                <p className="text-sm text-slate-400 font-medium leading-relaxed">ثبّت التطبيق الآن على هاتفك لتجربة تسوق أسرع وأسهل في أي وقت.</p>
-                
-                <div className="mt-6 flex flex-row-reverse gap-3">
-                  <button
-                    onClick={handleInstallClick}
-                    className="flex-1 bg-white text-slate-900 font-black py-3 rounded-xl hover:bg-rose-50 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    <span>تثبيت الآن</span>
-                    <Download className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleDismiss}
-                    className="px-6 py-3 font-bold text-slate-400 hover:text-white transition-colors"
-                  >
-                    لاحقاً
-                  </button>
-                </div>
+              <div>
+                <h3 className="font-bold text-slate-900 leading-tight text-sm md:text-base">تثبيت تطبيق عموري للتجميل</h3>
+                <p className="text-[10px] md:text-xs text-slate-500 mt-0.5">احصل على تجربة تسوق أسرع وأفضل</p>
               </div>
             </div>
             
-            <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-center gap-4">
-              <div className="flex items-center gap-1.5 opacity-50">
-                <Smartphone className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-tighter">iOS & Android</span>
-              </div>
-              <div className="w-1 h-1 bg-white/20 rounded-full" />
-              <div className="flex items-center gap-1.5 opacity-50">
-                <Monitor className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-tighter">Desktop</span>
-              </div>
+            <div className="flex items-center gap-1 md:gap-2 shrink-0">
+              <button
+                onClick={handleInstallClick}
+                className="bg-rose-600 text-white font-bold text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors"
+              >
+                موافق
+              </button>
+              <button
+                onClick={handleDismiss}
+                className="text-slate-500 font-medium text-xs md:text-sm px-2 md:px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                عدم السماح
+              </button>
             </div>
           </div>
         </motion.div>

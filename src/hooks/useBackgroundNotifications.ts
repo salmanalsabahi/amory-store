@@ -58,10 +58,10 @@ export const useBackgroundNotifications = () => {
             });
         });
 
-        // Listen for broad marketing broadcasts from the last 30 minutes
+        // Listen for broad marketing broadcasts from the last 7 days
         const broadQuery = query(
             collection(db, 'broadcasts'),
-            where('createdAt', '>', new Date(Date.now() - 1000 * 60 * 30))
+            where('createdAt', '>', new Date(Date.now() - 1000 * 60 * 60 * 24 * 7))
         );
 
         const unsubscribeBroadcasts = onSnapshot(broadQuery, (snapshot) => {
@@ -69,17 +69,9 @@ export const useBackgroundNotifications = () => {
                 if (change.type === 'added') {
                     const data = change.doc.data();
                     const broadcastId = change.doc.id;
-                    const createdAt = data.createdAt?.toMillis() || Date.now();
                     
-                    // Logic: 
-                    // 1. Must not have been seen before (persistent)
-                    // 2. Must be fresh:
-                    //    - Either created AFTER this tab was opened (sessionStartTime)
-                    //    - OR created very recently (last 15 seconds) if this is the first load
-                    const isNewInSession = createdAt > sessionStartTime;
-                    const isVeryFreshOnLoad = (Date.now() - createdAt) < 15000; // Only 15 seconds grace period on refresh
-
-                    if (!seenNotifications.has(broadcastId) && (isNewInSession || isVeryFreshOnLoad)) {
+                    // Logic: Must not have been seen before (persistent)
+                    if (!seenNotifications.has(broadcastId)) {
                         seenNotifications.add(broadcastId);
                         localStorage.setItem('seen_notifications', JSON.stringify(Array.from(seenNotifications).slice(-100)));
 
