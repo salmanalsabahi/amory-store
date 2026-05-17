@@ -13,11 +13,10 @@ export function PWAInstallPrompt() {
       // Stash the event so it can be triggered later.
       setDeferredPrompt(e);
       // Show our custom prompt if the user hasn't dismissed it recently
-      const lastDismissed = localStorage.getItem('pwa-prompt-dismissed');
-      const now = new Date().getTime();
+      const lastDismissed = sessionStorage.getItem('pwa-prompt-dismissed');
       
-      // Only show if not dismissed in the last 7 days
-      if (!lastDismissed || now - parseInt(lastDismissed) > 7 * 24 * 60 * 60 * 1000) {
+      // Only show if not dismissed in this session
+      if (!lastDismissed) {
         setIsVisible(true);
       }
     };
@@ -45,7 +44,7 @@ export function PWAInstallPrompt() {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem('pwa-prompt-dismissed', new Date().getTime().toString());
+    sessionStorage.setItem('pwa-prompt-dismissed', new Date().getTime().toString());
   };
 
   return (
