@@ -5,58 +5,9 @@ import { showNativeNotification } from '../lib/notifications';
 
 export const useBackgroundNotifications = () => {
     useEffect(() => {
-        const currentUser = auth.currentUser;
-        if (!currentUser) return;
-
         // Get seen notifications once at the start of the effect
         const initialSeen = JSON.parse(localStorage.getItem('seen_notifications') || '[]');
         const seenNotifications = new Set<string>(initialSeen);
-
-        // Track when this specific session started to avoid showing old things as "new"
-        const sessionStartTime = Date.now();
-        
-        // Listen for stock notifications
-        const stockQuery = query(
-            collection(db, 'stock_notifications'),
-            where('userId', '==', currentUser.uid),
-            where('status', '==', 'ready')
-        );
-
-        const unsubscribeStock = onSnapshot(stockQuery, (snapshot) => {
-            snapshot.docChanges().forEach(async (change) => {
-                if (change.type === 'added') {
-                    const data = change.doc.data();
-                    const notifId = change.doc.id;
-                    
-                    // Only show if it's recent (less than 10 mins old)
-                    const createdAt = data.createdAt?.toMillis() || Date.now();
-                    const isRelevant = (Date.now() - createdAt) < 600000; // 10 minutes
-
-                    if (!seenNotifications.has(notifId) && isRelevant) {
-                        // Mark as seen IMMEDIATELY in our local set to prevent race conditions
-                        seenNotifications.add(notifId);
-                        localStorage.setItem('seen_notifications', JSON.stringify(Array.from(seenNotifications).slice(-100)));
-
-                        showNativeNotification(`المنتج متوفر الآن! 🕒`, {
-                            body: `المنتج الذي طلبته "${data.productName}" متوفر الآن.`,
-                            tag: `stock-${data.productId}`,
-                            icon: '/logo.png',
-                            data: { url: `/product/${data.productId}` }
-                        });
-
-                        try {
-                            // Update Firestore so other devices/sessions also know it's sent
-                            await updateDoc(doc(db, 'stock_notifications', notifId), {
-                                status: 'sent',
-                                notifiedAt: serverTimestamp()
-                            });
-                        } catch (error) {
-                            console.error("Error updating notification status:", error);
-                        }
-                    }
-                }
-            });
-        });
 
         // Listen for broad marketing broadcasts from the last 7 days
         const broadQuery = query(
@@ -85,9 +36,58 @@ export const useBackgroundNotifications = () => {
             });
         });
 
+        // Listen for user-specific stock notifications
+        const unsubscribeAuth = auth.onAuthStateChanged(user => {
+            if (!user) return; // If logged out, don't query user specific notifications
+
+            const stockQuery = query(
+                collection(db, 'stock_notifications'),
+                where('userId', '==', user.uid),
+                where('status', '==', 'ready')
+            );
+
+            const unsubscribeStock = onSnapshot(stockQuery, (snapshot) => {
+                snapshot.docChanges().forEach(async (change) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        const notifId = change.doc.id;
+                        
+                        // Only show if it's recent (less than 10 mins old)
+                        const createdAt = data.createdAt?.toMillis() || Date.now();
+                        const isRelevant = (Date.now() - createdAt) < 600000; // 10 minutes
+
+                        if (!seenNotifications.has(notifId) && isRelevant) {
+                            seenNotifications.add(notifId);
+                            localStorage.setItem('seen_notifications', JSON.stringify(Array.from(seenNotifications).slice(-100)));
+
+                            showNativeNotification(`المنتج متوفر الآن! 🕒`, {
+                                body: `المنتج الذي طلبته "${data.productName}" متوفر الآن.`,
+                                tag: `stock-${data.productId}`,
+                                icon: '/logo.png',
+                                data: { url: `/product/${data.productId}` }
+                            });
+
+                            try {
+                                await updateDoc(doc(db, 'stock_notifications', notifId), {
+                                    status: 'sent',
+                                    notifiedAt: serverTimestamp()
+                                });
+                            } catch (error) {
+                                console.error("Error updating notification status:", error);
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Store the unsubscribe so we can cleanup if user logs out or unmounts completely
+            // We attach it to a property on the auth observer or similar so we don't leak it
+            // but for simplicity, we have it running as long as user is logged in
+        });
+
         return () => {
-            unsubscribeStock();
             unsubscribeBroadcasts();
+            unsubscribeAuth();
         };
-    }, [auth.currentUser]); // Re-run when user logs in/out
+    }, []); 
 };

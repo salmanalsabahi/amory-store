@@ -17,8 +17,6 @@ import { WishlistProvider } from './contexts/WishlistContext';
 import { CartProvider } from './contexts/CartContext';
 import { CurrencyProvider } from './contexts/CurrencyContext';
 import { NotificationProvider } from './contexts/NotificationContext';
-import { seedInitialData } from './lib/seedData';
-import { useCachePreloader } from './hooks/useCachePreloader';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { db } from './firebase';
 import { doc, getDocFromServer } from 'firebase/firestore';
@@ -105,12 +103,12 @@ function PageWrapper({ children, ...props }: { children: React.ReactNode, key?: 
 
 import { useBackgroundNotifications } from './hooks/useBackgroundNotifications';
 
+import { PushNotificationPrompt } from './components/PushNotificationPrompt';
+
 export default function App() {
   useBackgroundNotifications();
   
   useEffect(() => {
-    seedInitialData().catch(console.error);
-
     // Connection test
     async function testConnection() {
       try {
@@ -125,8 +123,6 @@ export default function App() {
     }
     testConnection();
   }, []);
-
-  useCachePreloader();
 
   return (
     <HelmetProvider>
@@ -167,6 +163,7 @@ export default function App() {
                 },
               }}
             />
+            <PushNotificationPrompt />
             <RouteProgress />
             <ScrollToTop />
             <ErrorBoundary>

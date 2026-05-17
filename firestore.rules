@@ -107,9 +107,9 @@ service cloud.firestore {
     }
 
     match /stock_notifications/{notificationId} {
-      allow read: if isAdmin();
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
       allow create: if true;
-      allow update, delete: if isAdmin();
+      allow update, delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
     }
 
     match /contactMessages/{messageId} {

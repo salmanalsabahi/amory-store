@@ -5,7 +5,6 @@ import { db, auth } from '../../firebase';
 import { Grid, Plus, Trash2, Edit2, Loader2, X, Save, Database, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { handleFirestoreError, OperationType } from '../../lib/firebaseErrorHandler';
-import { seedInitialData } from '../../lib/seedData';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 
 export function AdminCategories() {
@@ -28,17 +27,7 @@ export function AdminCategories() {
   }, []);
 
   const handleSeed = async () => {
-    if (!window.confirm('هل تريد إضافة الأصناف والمنتجات الافتراضية؟')) return;
-    setSeeding(true);
-    try {
-      await seedInitialData();
-      alert('تمت إضافة البيانات بنجاح');
-    } catch (error) {
-      console.error(error);
-      alert('حدث خطأ أثناء إضافة البيانات');
-    } finally {
-      setSeeding(false);
-    }
+    alert('This feature has been disabled.');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
