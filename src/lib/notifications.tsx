@@ -1,5 +1,4 @@
-import React from 'react';
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast';
 
 export const requestNotificationPermission = async () => {
     if (!("Notification" in window)) {
@@ -19,28 +18,7 @@ export const requestNotificationPermission = async () => {
     return false;
 };
 
-export const showNativeNotification = (title: string, options?: NotificationOptions & { inApp?: boolean }) => {
-    // Show prominent in-app toast by default
-    if (options?.inApp !== false) {
-        toast.custom((t) => (
-            <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} max-w-sm w-full bg-white shadow-2xl rounded-[1.5rem] pointer-events-auto flex ring-1 ring-black/5 p-4 border-l-4 border-rose-500`}>
-                <div className="flex-1 w-0 flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
-                        <img src={options?.icon || '/logo.png'} alt="" className="w-6 h-6 object-contain" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-900 truncate">
-                            {title}
-                        </p>
-                        <p className="mt-1 text-sm text-slate-500 font-medium line-clamp-2">
-                            {options?.body}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        ), { duration: 5000, position: 'top-center' });
-    }
-
+export const showNativeNotification = (title: string, options?: NotificationOptions & { inApp?: boolean, data?: { url?: string } }) => {
     if (!("Notification" in window)) return;
 
     if (Notification.permission === "granted") {
@@ -49,15 +27,24 @@ export const showNativeNotification = (title: string, options?: NotificationOpti
             navigator.serviceWorker.ready.then((registration) => {
                 registration.showNotification(title, {
                     icon: '/logo.png',
+                    requireInteraction: true,
                     ...options
                 } as any);
             });
         } else {
             // Fallback to basic Notification API
-            new Notification(title, {
+            const notif = new Notification(title, {
                 icon: '/logo.png',
+                requireInteraction: true,
                 ...options
             });
+            notif.onclick = function(event) {
+                event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                notif.close();
+                if (options?.data?.url) {
+                    window.location.href = options.data.url;
+                }
+            };
         }
     }
 };
@@ -67,9 +54,10 @@ export const subscribeToNotifications = async () => {
     if (granted) {
         toast.success("تم تفعيل الإشعارات بنجاح!", { icon: '🔕' });
         
-        // Show a welcome notification
-        showNativeNotification("عموري للتجميل", {
-            body: "أهلاً بك! ستصلك إشعارات عند توفر المنتجات التي تطلبها.",
+        // Show a welcome notification natively
+        showNativeNotification("تذكير عموري", {
+            body: "أهلاً بك! ستصلك إشعارات عند توفر المنتجات والعروض.",
+            data: { url: "/" }
         });
         
         return true;
