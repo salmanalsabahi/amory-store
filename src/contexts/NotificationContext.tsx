@@ -3,7 +3,7 @@ import { collection, query, orderBy, limit, onSnapshot, where, Timestamp } from 
 import { db, auth } from '../firebase';
 import { notificationService } from '../services/notificationService';
 import toast from 'react-hot-toast';
-import { Bell } from 'lucide-react';
+import { Bell, X } from 'lucide-react';
 
 interface NotificationContextType {
   permission: NotificationPermission;
@@ -35,14 +35,27 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
               if (payload.data?.url) window.location.href = payload.data.url;
               toast.dismiss(t.id);
             }}
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'} cursor-pointer max-w-md w-full bg-white shadow-xl rounded-2xl pointer-events-auto flex ring-1 ring-black ring-opacity-5 p-4 items-center gap-4 hover:bg-slate-50 transition-colors`}
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'} cursor-pointer max-w-sm w-full bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] rounded-[1.5rem] pointer-events-auto flex flex-col ring-1 ring-black/5 overflow-hidden relative`}
           >
-            <div className="bg-rose-100 p-2 rounded-full">
-              <Bell className="w-6 h-6 text-rose-600" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-black text-slate-900">{payload.notification?.title}</p>
-              <p className="mt-1 text-sm text-slate-500">{payload.notification?.body}</p>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-rose-100/40 to-rose-500/0 rounded-full blur-2xl -mt-8 -mr-8 pointer-events-none" />
+            
+            <div className="p-4 flex items-start gap-4">
+               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100 flex items-center justify-center shrink-0 shadow-inner">
+                 <img src="/logo.png" alt="" className="w-7 h-7 object-contain drop-shadow-sm" />
+               </div>
+               <div className="flex-1 min-w-0 pt-0.5">
+                  <p className="text-[15px] font-bold text-slate-900 truncate leading-tight">{payload.notification?.title}</p>
+                  <p className="mt-1.5 text-[13px] text-slate-500 font-medium line-clamp-2 leading-relaxed">{payload.notification?.body}</p>
+               </div>
+               <button 
+                   onClick={(e) => {
+                       e.stopPropagation();
+                       toast.dismiss(t.id);
+                   }}
+                   className="p-1.5 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full transition-colors shrink-0"
+               >
+                   <X className="w-4 h-4" />
+               </button>
             </div>
           </div>
         ), { duration: 5000 });

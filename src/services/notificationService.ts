@@ -3,7 +3,7 @@ import { getToken, onMessage } from 'firebase/messaging';
 import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 
-const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || ''; // The user will need to provide this via .env for real background push
+const VAPID_KEY = 'BDfcOrphBI_qWDVo2MUgC9aE2ryTSTasvGbvIVikNGZMVOj4x6j7A49YWTqFNnVz9fWuS4fxhMylDErKrIvrnQs';
 
 export const notificationService = {
   async requestPermission() {

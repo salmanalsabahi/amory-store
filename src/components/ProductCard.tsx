@@ -53,16 +53,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, idx }) => {
   const handleNotifyMe = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // First request browser notifications
-    const hasPermission = await subscribeToNotifications();
-    if (!hasPermission) return;
 
     requireAuth(async () => {
+      const currentUser = auth.currentUser;
+      if (!currentUser) return;
+      
+      // Request browser notifications and save FCM token for this user
+      const hasPermission = await subscribeToNotifications(currentUser.uid);
+      if (!hasPermission) return;
+
       try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) return;
-        
         await addDoc(collection(db, 'stock_notifications'), {
           productId: product.id,
           productName: product.name,

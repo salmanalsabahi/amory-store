@@ -89,11 +89,42 @@ export const showNativeNotification = (title: string, options?: NotificationOpti
     }
 };
 
-export const subscribeToNotifications = async () => {
+export const subscribeToNotifications = async (userId?: string) => {
     const granted = await requestNotificationPermission();
     if (granted) {
         toast.success("تم تفعيل الإشعارات بنجاح!", { icon: '🔕' });
         
+        try {
+            // Attempt to get FCM token for background pushes
+            const { messaging, db } = await import('../firebase');
+            const msg = await messaging();
+            if (msg) {
+                let registration = null;
+                if ('serviceWorker' in navigator) {
+                    registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    await navigator.serviceWorker.ready;
+                }
+
+                const { getToken } = await import('firebase/messaging');
+                const token = await getToken(msg, { 
+                    vapidKey: 'BDfcOrphBI_qWDVo2MUgC9aE2ryTSTasvGbvIVikNGZMVOj4x6j7A49YWTqFNnVz9fWuS4fxhMylDErKrIvrnQs',
+                    serviceWorkerRegistration: registration || undefined
+                });
+                
+                if (token && userId) {
+                    const { doc, setDoc } = await import('firebase/firestore');
+                    await setDoc(doc(db, 'fcm_tokens', token), {
+                        token,
+                        userId,
+                        updatedAt: new Date().toISOString()
+                    });
+                    console.log("FCM Token saved successfully.");
+                }
+            }
+        } catch (error) {
+            console.error("Error setting up Firebase Cloud Messaging:", error);
+        }
+
         // Show a welcome notification natively
         showNativeNotification("تذكير عموري", {
             body: "أهلاً بك! ستصلك إشعارات عند توفر المنتجات والعروض.",
